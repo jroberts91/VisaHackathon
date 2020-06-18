@@ -1,0 +1,14 @@
+{
+  "name": "visa_hackathon",
+  "version": "1.0.0",
+  "description": "Hackathon project for 2020 Visa Summer Internship",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write '**/*.js'",
+    "dev": "concurrently \"npm run start\" \"cd.. && cd FrontEnd && npm run start\""
+  },
+  "author": "",
+  "license": "ISC"
+}
