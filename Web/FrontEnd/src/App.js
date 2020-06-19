@@ -7,9 +7,9 @@ export default class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path='/login' component={LoginPage} />
-          <Route path='/signup' component={SignUp} />
-          <Route path='/' component={LoginPage} />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/" component={LoginPage} />
         </Switch>
       </Router>
     );
