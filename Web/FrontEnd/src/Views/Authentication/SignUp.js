@@ -120,54 +120,54 @@ export default class SignUp extends React.Component {
           <Title level={2}>Sign Up</Title>
           <StyledTextField
             onChange={this.handleChangeStoreName}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Store Name'
-            size='small'
+            label="Store Name"
+            size="small"
           />
           <StyledTextField
             onChange={this.handleChangeStoreDescription}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Store Description'
+            label="Store Description"
             multiline
             rows={4}
-            size='small'
+            size="small"
           />
           <StyledTextField
             onChange={this.handleChangeEmail}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Email'
-            size='small'
+            label="Email"
+            size="small"
           />
           <StyledTextField
-            type='password'
+            type="password"
             onChange={this.handleChangePassword}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Password'
-            size='small'
+            label="Password"
+            size="small"
           />
           <StyledTextField
-            type='password'
+            type="password"
             onChange={this.handleChangeConfirmPassword}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Confirm Password'
-            size='small'
+            label="Confirm Password"
+            size="small"
           />
-          <StyledButton type='primary' onClick={this.handleSubmit}>
+          <StyledButton type="primary" onClick={this.handleSubmit}>
             Register
           </StyledButton>
         </FieldsContainer>
@@ -177,7 +177,7 @@ export default class SignUp extends React.Component {
     return (
       <div>
         <StyledLeftContainer>
-          <Logo src={LogoTagLine} alt='Visell Logo' />
+          <Logo src={LogoTagLine} alt="Visell Logo" />
         </StyledLeftContainer>
         {SignUpPageFields}
       </div>
