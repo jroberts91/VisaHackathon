@@ -72,7 +72,7 @@ export default class TopBar extends React.Component {
       buttons = (
         <div>
           <StyledsUserName>{username}</StyledsUserName>
-          <StyledAvatar size='large' icon={<UserOutlined />} onClick={this.handleUserMenuClick} />
+          <StyledAvatar size="large" icon={<UserOutlined />} onClick={this.handleUserMenuClick} />
           <StyledRegisterButton onClick={handleLogoutClick}> Logout </StyledRegisterButton>
         </div>
       );
@@ -87,12 +87,8 @@ export default class TopBar extends React.Component {
 
     return (
       <StyledHeader>
-        {collapsed && (
-          <StyledButton ghost icon={<MenuUnfoldOutlined />} onClick={toggleSideDrawer} />
-        )}
-        {!collapsed && (
-          <StyledButton ghost icon={<MenuFoldOutlined />} onClick={toggleSideDrawer} />
-        )}
+        {collapsed && <StyledButton ghost icon={<MenuUnfoldOutlined />} onClick={toggleSideDrawer} />}
+        {!collapsed && <StyledButton ghost icon={<MenuFoldOutlined />} onClick={toggleSideDrawer} />}
         {buttons}
       </StyledHeader>
     );

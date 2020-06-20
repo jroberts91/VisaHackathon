@@ -47,28 +47,28 @@ export default class SideBar extends React.Component {
 
     if (isLoggedIn) {
       buttons = (
-        <StyledMenu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
-          <StyledMenuItem key='1' icon={<HomeOutlined />}>
+        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
           </StyledMenuItem>
-          <StyledMenuItem key='2' icon={<HistoryOutlined />}>
+          <StyledMenuItem key="2" icon={<HistoryOutlined />}>
             Sales History
           </StyledMenuItem>
-          <StyledMenuItem key='3' icon={<TagOutlined />}>
+          <StyledMenuItem key="3" icon={<TagOutlined />}>
             Offers
           </StyledMenuItem>
-          <StyledMenuItem key='4' icon={<ShopOutlined />}>
+          <StyledMenuItem key="4" icon={<ShopOutlined />}>
             My Shop
           </StyledMenuItem>
         </StyledMenu>
       );
     } else {
       buttons = (
-        <StyledMenu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
-          <StyledMenuItem key='1' icon={<HomeOutlined />}>
+        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+          <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
           </StyledMenuItem>
-          <StyledMenuItem key='3' icon={<TagOutlined />}>
+          <StyledMenuItem key="3" icon={<TagOutlined />}>
             Offers
           </StyledMenuItem>
         </StyledMenu>
@@ -78,8 +78,8 @@ export default class SideBar extends React.Component {
     return (
       <StyledSider trigger={null} collapsible collapsed={this.props.collapsed}>
         <StyledImageContainer>
-          {!collapsed && <StyledLogo src={LogoNoTagLine} alt='Visell Logo' />}
-          {collapsed && <StyledLogo src={Logo} alt='Visell Logo' />}
+          {!collapsed && <StyledLogo src={LogoNoTagLine} alt="Visell Logo" />}
+          {collapsed && <StyledLogo src={Logo} alt="Visell Logo" />}
         </StyledImageContainer>
         {buttons}
       </StyledSider>
