@@ -134,30 +134,30 @@ export default class LoginPage extends React.Component {
           <Title level={2}>Login</Title>
           <StyledTextField
             onChange={this.handleEmail}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Email'
-            size='small'
+            label="Email"
+            size="small"
           />
           <StyledTextField
-            type='password'
+            type="password"
             onChange={this.handlePassword}
-            variant='outlined'
-            margin='normal'
+            variant="outlined"
+            margin="normal"
             required
             fullWidth
-            label='Password'
-            size='small'
+            label="Password"
+            size="small"
           />
-          <StyledButton type='primary' onClick={this.handleSubmit}>
+          <StyledButton type="primary" onClick={this.handleSubmit}>
             Login
           </StyledButton>
         </FieldsContainer>
         <StyledSignUpFields>
           New to Visell?
-          <StyledLinkButton type='link' onClick={this.handleSignUp}>
+          <StyledLinkButton type="link" onClick={this.handleSignUp}>
             Sign Up
           </StyledLinkButton>
         </StyledSignUpFields>
@@ -167,7 +167,7 @@ export default class LoginPage extends React.Component {
     return (
       <div>
         <StyledLeftContainer>
-          <Logo src={LogoTagLine} alt='Visell Logo' />
+          <Logo src={LogoTagLine} alt="Visell Logo" />
         </StyledLeftContainer>
         {LoginPageFields}
       </div>
