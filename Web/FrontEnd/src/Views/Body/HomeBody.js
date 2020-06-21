@@ -12,10 +12,10 @@ class MerchantList extends React.Component {
     return (
       <Row gutter={[32, 32]}>
         {this.props.merchants.map((merchant, index) => {
-          const { name, profileImage, description, rating } = merchant;
+          const { name, profileImage, description, rating, _id } = merchant;
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-              <MerchantCard title={name} imageUrl={profileImage} description={description} rating={rating} />
+              <MerchantCard id={_id} title={name} imageUrl={profileImage} description={description} rating={rating} />
             </Col>
           );
         })}

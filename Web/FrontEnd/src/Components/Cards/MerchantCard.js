@@ -3,6 +3,7 @@ import { Card, Rate } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import 'antd/dist/antd.css';
+import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
 
@@ -25,19 +26,25 @@ export default class MerchantCard extends React.Component {
       imageUrl: this.props.imageUrl,
       description: this.props.description,
       rating: this.props.rating,
+      id: this.props.id,
     };
   }
 
   componentDidMount = () => {};
 
   render() {
-    const { imageUrl, title, description, rating } = this.state;
+    const { imageUrl, title, description, rating, id } = this.state;
+    const merchantHref = `/${id}`;
     return (
       <Card
         style={{ width: '100%', minWidth: 250 }}
         cover={<img alt="example" src={imageUrl || MaiYuGe} />}
         hoverable
-        actions={[<HomeOutlined key="visit" />]}
+        actions={[
+          <Link to={merchantHref}>
+            <HomeOutlined key="visit" />
+          </Link>,
+        ]}
         tabBarExtraContent={<Rate value={rating} />}
       >
         <Meta title={title} description={<MerchantDescription description={description} rating={rating} />} />
