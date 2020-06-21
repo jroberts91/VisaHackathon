@@ -24,8 +24,12 @@ app.use(cookieParser());
 //api
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/order', require('./routes/order'));
+app.use('/api/merchant', require('./routes/merchant'));
+app.use('/api/product', require('./routes/product'));
 
-// TODO app route path
+//to retrieve images
+app.use('/uploads', express.static('uploads'));
+
 
 const port = process.env.PORT;
 
