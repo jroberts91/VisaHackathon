@@ -39,6 +39,41 @@ export default class ProductCard extends React.Component {
     })
   }
 
+  getActionList = (productLink, isOwnerShop) => {
+    if (isOwnerShop) {
+      return ([
+        <Button
+          type="primary"
+          style={{ backgroundColor: "#FAAA13" }}
+          onClick={(event) => {
+            event.preventDefault();
+            this.copyLinkToClipboard(productLink);
+          }}>
+          <LinkOutlined />Copy
+          </Button>,
+        <Row>
+          <Col span={12}>
+            <Button style={{ width: '100%' }}>Edit</Button>
+          </Col>
+          <Col span={12}>
+            <Button style={{ width: '100%' }}>Delete</Button>
+          </Col>
+
+        </Row>
+      ])
+    }
+    return ([
+      <Button
+          type="primary"
+          onClick={(event) => {
+            event.preventDefault();
+            this.copyLinkToClipboard(productLink);
+          }}>
+          <LinkOutlined />Copy
+          </Button>
+    ])
+  }
+
   render() {
     const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
 
@@ -52,30 +87,7 @@ export default class ProductCard extends React.Component {
             cover={<img alt="example" src={imageUrl} />}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
-            actions={[
-              <Button
-                type="primary"
-                style={{ backgroundColor: "#FAAA13" }}
-                onClick={(event) => {
-                  event.preventDefault();
-                  this.copyLinkToClipboard(productUrl);
-                }}>
-                <LinkOutlined />Copy
-          </Button>,
-              <div>
-                {isOwnerShop &&
-                  <Row>
-                    <Col span={12}>
-                      <Button style={{ width: '100%' }}>Edit</Button>
-                    </Col>
-                    <Col span={12}>
-                      <Button style={{ width: '100%' }}>Delete</Button>
-                    </Col>
-
-                  </Row>
-                }
-              </div>
-            ]}
+            actions={this.getActionList(productUrl, isOwnerShop)}
           >
             <Meta title={title} description={<Rate value={this.props.rating} disabled />} />
           </Card>

@@ -67,9 +67,9 @@ export default class MerchantShop extends React.Component {
     }
   }
 
-  componentDidMount = () => {
+  getProductFromApi = (merchantId) => {
     const body = {
-      merchantId: this.state.merchantId
+      merchantId: merchantId
     }
     axios
       .post('api/product/getAll', body)
@@ -77,22 +77,45 @@ export default class MerchantShop extends React.Component {
         this.setState({ products: res.data.products });
       })
       .catch((err) => console.error(err));
+  }
+
+  getMerchantNameFromApi = (merchantId) => {
     axios
-      .get('api/merchant/get?id=' + this.state.merchantId)
+      .get('api/merchant/get?id=' + merchantId)
       .then((res) => {
         this.setState({ merchantName: res.data.merchant.name });
       })
       .catch((err) => console.error(err));
+  }
+
+  getIsOwnerShopFromApi = (merchantId) => {
     axios
       .get('api/merchant/auth').then((res) => {
         const { success, _id } = res.data;
         if (success) {
           this.setState({
-            isOwnerShop: _id === this.state.merchantId
+            isOwnerShop: _id === merchantId
           });
         }
       });
+  }
+
+  componentDidMount = () => {
+    const merchantId = this.state.merchantId;
+    this.getProductFromApi(merchantId);
+    this.getMerchantNameFromApi(merchantId);
+    this.getIsOwnerShopFromApi(merchantId);
   };
+
+  componentWillReceiveProps = (nextProps) => {
+    const newMerchantId = nextProps.match.params.merchantId;
+    if (newMerchantId !== this.props.match.params.merchantId) {
+      this.setState({ merchantId: newMerchantId });
+      this.getProductFromApi(newMerchantId);
+      this.getMerchantNameFromApi(newMerchantId);
+      this.getIsOwnerShopFromApi(newMerchantId);
+    }
+  }
 
   render() {
     const { merchantId, products, isOwnerShop } = this.state;

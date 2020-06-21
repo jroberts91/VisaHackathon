@@ -5,6 +5,7 @@ import TopBar from '../Components/Layout/TopBar';
 import SideBar from '../Components/Layout/SideBar';
 import HomeBody from './Body/HomeBody';
 import SalesHistory from './SalesHistory/SalesHistory';
+import MerchantShop from './MerchantShop/MerchantShop';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
