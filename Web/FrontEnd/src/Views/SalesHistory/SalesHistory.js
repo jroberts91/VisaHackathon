@@ -143,14 +143,10 @@ export default class SalesHistory extends React.Component {
     };
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   render() {
-    const searchBar = <Search
-      placeholder="input search text"
-      onSearch={value => console.log(value)}
-      enterButton
-    />;
+    const searchBar = <Search placeholder="input search text" onSearch={(value) => console.log(value)} enterButton />;
 
     return (
       <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto' }}>
