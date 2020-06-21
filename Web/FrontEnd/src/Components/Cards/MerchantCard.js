@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Card, Rate } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
+import MaiYuGe from '../../images/maiyuge.jpg';
 import 'antd/dist/antd.css';
 
 const { Meta } = Card;
@@ -35,7 +35,7 @@ export default class MerchantCard extends React.Component {
     return (
       <Card
         style={{ width: '100%', minWidth: 250 }}
-        cover={<img alt="example" src={imageUrl} />}
+        cover={<img alt="example" src={imageUrl || MaiYuGe} />}
         hoverable
         actions={[<HomeOutlined key="visit" />]}
         tabBarExtraContent={<Rate value={rating} />}

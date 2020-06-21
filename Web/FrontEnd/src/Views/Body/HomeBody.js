@@ -1,50 +1,10 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
-import MaiYuGe from '../../images/maiyuge.jpg';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
 
 const { Content } = Layout;
 const { Option } = Select;
 const { Text, Title } = Typography;
-
-const listOfMerchants = [
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-];
 
 class MerchantList extends React.Component {
   render() {
@@ -73,7 +33,12 @@ export default class HomeBody extends React.Component {
   }
 
   componentDidMount = () => {
-    this.setState({ merchants: listOfMerchants });
+    axios
+      .post('api/merchant/getAll')
+      .then((res) => {
+        this.setState({ merchants: res.data.merchants });
+      })
+      .catch((err) => console.error(err));
   };
 
   render() {
