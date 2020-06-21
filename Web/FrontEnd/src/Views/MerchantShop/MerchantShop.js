@@ -22,27 +22,31 @@ const StyledIcon = styled(PlusOutlined)`
 
 class ProductList extends React.Component {
   render() {
-    const merchantId = this.props.merchantId;
+    const { merchantId, products, isOwnerShop } = this.props;
 
     return (
       <Row gutter={[32, 32]}>
-        <Col key={-1} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-          <Link to={`/${merchantId}/addproduct`}>
-            <Card
-              style={{ width: '100%', minWidth: 250, height: '100%' }}
-              hoverable
-              cover={<StyledIcon />}
-            >
-              <Meta title={"Add New Product"} />
-            </Card>
-          </Link>
-        </Col>
-        {this.props.products.map((product, index) => {
+        {
+          isOwnerShop &&
+          <Col key={-1} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+            <Link to={`/${merchantId}/addproduct`}>
+              <Card
+                style={{ width: '100%', minWidth: 250, height: '100%' }}
+                hoverable
+                cover={<StyledIcon />}
+              >
+                <Meta title={"Add New Product"} />
+              </Card>
+            </Link>
+          </Col>
+        }
+        {products.map((product, index) => {
           const { name, images, url, rating, _id } = product;
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <ProductCard title={name} imageUrl={images[0]} rating={rating}
-                productUrl={url} productId={_id} merchantId={merchantId} />
+                productUrl={url} productId={_id} merchantId={merchantId}
+                isOwnerShop={isOwnerShop} />
             </Col>
           );
         })
@@ -58,7 +62,8 @@ export default class MerchantShop extends React.Component {
     this.state = {
       merchantId: this.props.match.params.merchantId,
       products: [],
-      merchantName: ""
+      merchantName: "",
+      isOwnerShop: false
     }
   }
 
@@ -78,17 +83,26 @@ export default class MerchantShop extends React.Component {
         this.setState({ merchantName: res.data.merchant.name });
       })
       .catch((err) => console.error(err));
+    axios
+      .get('api/merchant/auth').then((res) => {
+        const { success, _id } = res.data;
+        if (success) {
+          this.setState({
+            isOwnerShop: _id === this.state.merchantId
+          });
+        }
+      });
   };
 
   render() {
-    const { merchantId, products } = this.state;
+    const { merchantId, products, isOwnerShop } = this.state;
 
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{color: "#828282"}}><HomeOutlined /> / <UserOutlined /> { this.state.merchantName }</Title>
+          <Title level={4} style={{ color: "#828282" }}><HomeOutlined /> / <UserOutlined /> {this.state.merchantName}</Title>
         </Row>
-        <ProductList merchantId={merchantId} products={products} />
+        <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>
     );
   }
