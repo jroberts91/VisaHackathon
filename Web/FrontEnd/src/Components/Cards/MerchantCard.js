@@ -1,7 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Card, Rate } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 const { Meta } = Card;

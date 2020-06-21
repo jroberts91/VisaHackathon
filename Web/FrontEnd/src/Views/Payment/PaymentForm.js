@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const layout = {
   labelCol: {
     span: 8,
