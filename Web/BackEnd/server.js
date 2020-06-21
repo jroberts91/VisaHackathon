@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan')
 const app = express();
 const cookieParser = require("cookie-parser");
 
@@ -15,12 +16,14 @@ const connect = mongoose.connect(process.env.MONGO_SECRET,
   .catch(err => console.log(err));
 
 
-app.use('/uploads', express.static('uploads'));
+app.use(morgan('combined'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //api
+app.use('/api/payment', require('./routes/payment'));
+app.use('/api/order', require('./routes/order'));
 app.use('/api/merchant', require('./routes/merchant'));
 app.use('/api/product', require('./routes/product'));
 

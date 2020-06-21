@@ -1,2 +1,6 @@
 # dependencies
 /node_modules
+
+# cert and key
+/resources/cert.pem
+/resources/key.pem
