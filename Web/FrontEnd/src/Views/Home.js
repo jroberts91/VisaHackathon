@@ -4,8 +4,10 @@ import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
 import SideBar from '../Components/Layout/SideBar';
 import HomeBody from './Body/HomeBody';
+import SalesHistory from './SalesHistory/SalesHistory';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
+import AddProduct from './AddProduct/AddProduct';
 import axios from 'axios';
 
 export default class Home extends React.Component {
@@ -62,8 +64,10 @@ export default class Home extends React.Component {
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
+            <Route path="/:merchantId/history" component={SalesHistory} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
             <Route path="/order/:orderId" component={OrderSummary} />
+            <Route path="/:merchantId/addproduct" component={AddProduct} />
           </Switch>
         </Layout>
       </Layout>
