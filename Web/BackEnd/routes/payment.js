@@ -3,7 +3,7 @@ const router = express.Router();
 // const { Merchant } = require("../models/Merchant");
 // const { Product } = require("../models/Product");
 const { Payment } = require("../models/Payment");
-// const { Order } = require("../models/Order");
+const { Order } = require("../models/Order");
 const { PullFundsTransaction, PushFundsTransaction } = require("../external/visaDirect");
 
 //=================================
@@ -33,7 +33,7 @@ router.post("/direct", async (req, res) => {
     const payment = new Payment(paymentBody);
     // order is created after payment is saved
     orderBody.product = product;
-    // const order = new Order(orderBody);
+    const order = new Order(orderBody);
     try {
         // pull from consumer
         await PullFundsTransaction();
