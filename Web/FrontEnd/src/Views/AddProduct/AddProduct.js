@@ -15,7 +15,6 @@ const getFile = (e) => {
 };
 
 class ProductForm extends React.Component {
-
   render() {
     return (
       <div style={{ margin: '2%' }}>
@@ -69,9 +68,9 @@ export default class AddProduct extends React.Component {
     return (
       <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto', marginTop: '20vh' }}>
         <Row align="top">
-          <Col lg={{ span: 8 }} span={24} >
-            <Form.Item wrapperCol={{span:20}} >
-              <Form.Item style={{ margin: '0 auto'}} getValueFromEvent={getFile} >
+          <Col lg={{ span: 8 }} span={24}>
+            <Form.Item wrapperCol={{ span: 20 }}>
+              <Form.Item style={{ margin: '0 auto' }} getValueFromEvent={getFile}>
                 <Upload.Dragger name="files" action="/upload.do">
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
@@ -79,7 +78,7 @@ export default class AddProduct extends React.Component {
                   <p className="ant-upload-text">Click or drag file to this area to upload your product image</p>
                 </Upload.Dragger>
               </Form.Item>
-            </Form.Item >
+            </Form.Item>
           </Col>
           <Col lg={{ span: 12 }} span={24}>
             <ProductForm></ProductForm>
