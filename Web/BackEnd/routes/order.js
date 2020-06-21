@@ -1,15 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { Order } = require('../models/Order')
-// const { auth } = require("../middleware/auth");
+const { auth } = require("../middleware/auth");
 
 //=================================
 //            Order
 //=================================
 
-// router.post("/fulfill", auth, async (req,res) => {
-router.post("/fulfill", async (req,res) => {
-
+router.post("/fulfill", auth, async (req,res) => {
     let orderId = req.body.orderId
     const order = await Order.findOne({"_id": orderId})
     order.isFulfilled = true;
@@ -21,9 +19,7 @@ router.post("/fulfill", async (req,res) => {
 } )
 
 
-// router.get("/getAll", auth, (req,res)=>{
-router.get("/getAll", (req,res)=>{
-
+router.get("/getAll", auth, (req,res)=>{
     let order = req.body.order ? req.body.orderBy : "desc";
     let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
 
@@ -54,8 +50,7 @@ router.get("/getAll", (req,res)=>{
 })
 
 //?id=${orderId}
-// router.get("/get", auth, async (req,res)=>{
-router.get("/get", async (req,res)=>{  
+router.get("/get", auth, async (req,res)=>{
     let orderId = req.query.orderId
     const order = await Order.findOne({"_id": orderId})
     if (!order) return res.status(400).json({success: false})

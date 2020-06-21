@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-// const { Merchant } = require("../models/Merchant");
-// const { Product } = require("../models/Product");
+const { Merchant } = require("../models/Merchant");
+const { Product } = require("../models/Product");
 const { Payment } = require("../models/Payment");
 const { Order } = require("../models/Order");
 const { PullFundsTransaction, PushFundsTransaction } = require("../external/visaDirect");
@@ -16,12 +16,12 @@ router.post("/direct", async (req, res) => {
     var paymentBody = req.body.payment;
 
     let merchantId = orderBody.merchantId;
-    // const merchant = await Merchant.findOne({"_id": merchantId })
-    // if (!merchant) return res.status(400).json({success: false})
+    const merchant = await Merchant.findOne({"_id": merchantId })
+    if (!merchant) return res.status(400).json({success: false})
 
     let productId = orderBody.product;
-    // const product = await Product.findOne({"_id": productId})
-    // if (!product) return res.status(400).json({success: false})
+    const product = await Product.findOne({"_id": productId})
+    if (!product) return res.status(400).json({success: false})
 
     // check product belong to merchant
     if (product.merchantId != merchantId ) {
