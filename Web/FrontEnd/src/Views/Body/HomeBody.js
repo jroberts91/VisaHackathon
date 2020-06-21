@@ -1,6 +1,7 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
+import axios from 'axios';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -36,6 +37,7 @@ export default class HomeBody extends React.Component {
     axios
       .post('api/merchant/getAll')
       .then((res) => {
+        console.log(res);
         this.setState({ merchants: res.data.merchants });
       })
       .catch((err) => console.error(err));
