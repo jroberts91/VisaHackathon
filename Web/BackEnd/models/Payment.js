@@ -4,10 +4,13 @@ const paymentSchema = mongoose.Schema({
     address: String,
     phoneNumber: String,
     firstName: String,
-    lastName:String,
+    lastName: String,
+    email: String,
+    postal: String,
+    country: String,
     dateTime : Date
 })
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
-module.exports = { Payment }
+module.exports = { Payment };
