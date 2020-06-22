@@ -113,11 +113,12 @@ export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      storeName: '',
-      storeDescription: '',
       email: '',
       password: '',
       confirmPassword: '',
+      storeName: '',
+      storeDescription: '',
+      cardNumber: '',
       current: 0,
     };
   }
@@ -199,7 +200,7 @@ export default class SignUp extends React.Component {
   };
 
   render() {
-    const { current, imageUrl } = this.state;
+    const { email, password, confirmPassword, storeName, storeDescription, cardNumber, current, imageUrl } = this.state;
 
     const uploadButton = (
       <div>
@@ -214,8 +215,19 @@ export default class SignUp extends React.Component {
           <StyledTitle level={2}>Sign Up</StyledTitle>
           <StyledSteps current={current} onChange={this.onChange}>
             <Step title="Personal" />
-            <Step title="Store" />
-            <Step title="Payment" />
+            <Step title="Store" disabled={!(email.length && password.length && confirmPassword.length)} />
+            <Step
+              title="Payment"
+              disabled={
+                !(
+                  email.length &&
+                  password.length &&
+                  confirmPassword.length &&
+                  storeName.length &&
+                  storeDescription.length
+                )
+              }
+            />
           </StyledSteps>
           {this.state.current === 0 && (
             <div>
@@ -227,6 +239,7 @@ export default class SignUp extends React.Component {
                 fullWidth
                 label="Email"
                 size="small"
+                value={email}
               />
               <StyledTextField
                 type="password"
@@ -237,6 +250,7 @@ export default class SignUp extends React.Component {
                 fullWidth
                 label="Password"
                 size="small"
+                value={password}
               />
               <StyledTextField
                 type="password"
@@ -247,11 +261,34 @@ export default class SignUp extends React.Component {
                 fullWidth
                 label="Confirm Password"
                 size="small"
+                value={confirmPassword}
               />
             </div>
           )}
           {this.state.current === 1 && (
             <div>
+              <StyledTextFieldTop
+                onChange={this.handleChangeStoreName}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Store Name"
+                size="small"
+                value={storeName}
+              />
+              <StyledTextField
+                onChange={this.handleChangeStoreDescription}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Store Description"
+                multiline
+                rows={4}
+                size="small"
+                value={storeDescription}
+              />
               <StyledUploadGroup>
                 <StyledText> Store Picture </StyledText>
                 <StyledUpload
@@ -266,26 +303,6 @@ export default class SignUp extends React.Component {
                   {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </StyledUpload>
               </StyledUploadGroup>
-              <StyledTextFieldTop
-                onChange={this.handleChangeStoreName}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Store Name"
-                size="small"
-              />
-              <StyledTextField
-                onChange={this.handleChangeStoreDescription}
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Store Description"
-                multiline
-                rows={4}
-                size="small"
-              />
             </div>
           )}
           {this.state.current === 2 && (
@@ -299,7 +316,20 @@ export default class SignUp extends React.Component {
                 label="Card Number"
                 size="small"
               />
-              <StyledButton type="primary" onClick={this.handleSubmit}>
+              <StyledButton
+                type="primary"
+                onClick={this.handleSubmit}
+                disabled={
+                  !(
+                    email.length &&
+                    password.length &&
+                    confirmPassword.length &&
+                    storeName.length &&
+                    storeDescription.length &&
+                    cardNumber.length
+                  )
+                }
+              >
                 Register
               </StyledButton>
             </div>
@@ -311,7 +341,7 @@ export default class SignUp extends React.Component {
     return (
       <div>
         <StyledLeftContainer>
-          <Logo src={LogoTagLine} alt="Visell Logo" />
+          <Logo src={LogoTagLine} alt="Visell Logo" onClick={() => this.props.history.push('/')} />
         </StyledLeftContainer>
         {SignUpPageFields}
       </div>

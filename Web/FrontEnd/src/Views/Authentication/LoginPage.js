@@ -164,7 +164,7 @@ export default class LoginPage extends React.Component {
     return (
       <div>
         <StyledLeftContainer>
-          <Logo src={LogoTagLine} alt="Visell Logo" />
+          <Logo src={LogoTagLine} alt="Visell Logo" onClick={() => this.props.history.push('/')} />
         </StyledLeftContainer>
         {LoginPageFields}
       </div>
