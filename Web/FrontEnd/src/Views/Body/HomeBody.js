@@ -1,7 +1,7 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
-import axios from 'axios';
+import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -34,7 +34,7 @@ export default class HomeBody extends React.Component {
   }
 
   componentDidMount = () => {
-    axios
+    API
       .post('api/merchant/getAll')
       .then((res) => {
         console.log(res);
