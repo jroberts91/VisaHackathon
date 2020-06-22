@@ -64,12 +64,13 @@ export default class Home extends React.Component {
             isLoggedIn={isLoggedIn}
             handleLogoutClick={this.handleLogoutClick}
             username={username}
+            merchantId={merchantId}
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
             <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
             <Route path="/:merchantId" exact component={MerchantShop} />
-            <Route path="profile/:merchantId" exact component={Profile} />
+            <Route path="/profile/:merchantId" render={(props) => <Profile loggedInUserId={merchantId} {...props} />} />
             <Route path="/:merchantId/history" component={SalesHistory} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />

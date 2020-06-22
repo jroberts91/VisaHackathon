@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import 'antd/dist/antd.css';
 import { Layout, Button, Avatar, Typography } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 const { Header } = Layout;
 const { Text } = Typography;
 
@@ -64,15 +65,17 @@ export default class TopBar extends React.Component {
   handleUserMenuClick = () => {};
 
   render() {
-    const { toggleSideDrawer, collapsed, isLoggedIn, handleLogoutClick, username } = this.props;
+    const { toggleSideDrawer, collapsed, isLoggedIn, handleLogoutClick, username, merchantId } = this.props;
 
     let buttons;
 
     if (isLoggedIn) {
       buttons = (
         <div>
-          <StyledsUserName>{username}</StyledsUserName>
-          <StyledAvatar size="large" icon={<UserOutlined />} onClick={this.handleUserMenuClick} />
+          <Link to={`/profile/${merchantId}`}>
+            <StyledsUserName>{username}</StyledsUserName>
+            <StyledAvatar size="large" icon={<UserOutlined />} onClick={this.handleUserMenuClick} />
+          </Link>
           <StyledRegisterButton onClick={handleLogoutClick}> Logout </StyledRegisterButton>
         </div>
       );
