@@ -50,7 +50,7 @@ export default class ProductDetail extends React.Component {
             {description || "No Description Provided"}
           </Col>
         </Row>
-        <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
+        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>
           ${(price || 0).toFixed(2)}
         </Row>
         <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
