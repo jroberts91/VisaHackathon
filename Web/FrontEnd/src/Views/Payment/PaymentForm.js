@@ -58,6 +58,7 @@ export default class PaymentForm extends React.Component {
       };
       API.post('api/direct', data)
         .then((res) => {
+          console.log(res)
           const { orderId } = res;
           // successful payment, direct user to order summary page
           this.props.history.push({
@@ -133,7 +134,7 @@ export default class PaymentForm extends React.Component {
             },
           ]}
         >
-          <Select style={{ width: 'max(30%, 200px)' }} defaultValue="Singapore">
+          <Select style={{ width: 'max(30%, 200px)' }}>
             <Option value="Singapore">Singapore</Option>
             <Option value="Malaysia">Malaysia</Option>
             <Option value="Vietnam">Vietnam</Option>

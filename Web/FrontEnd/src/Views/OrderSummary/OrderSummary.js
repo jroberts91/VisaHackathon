@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Row, Layout, Typography, Divider, message } from 'antd';
-import MaiYuGe from '../../images/maiyuge.jpg';
 import { defaultTheme } from '../../utils/theme';
 import OrderSummaryTitleRow from './OrderSummaryTitleRow';
 import OrderSummaryPrices from './OrderSummaryPrices';
@@ -46,8 +45,9 @@ export default class OrderSummary extends React.Component {
 
   render() {
     const { order } = this.state;
-    const totalPrice = product.price * qty;
-    const totalPriceAndShipping = totalPrice + product.shippingFee;
+    const { product, quantity } = order;
+    const totalPrice = product.price * quantity;
+    const totalPriceAndShipping = totalPrice + (product.shippingFee || 2); // product shipping fee is not available yet, using default val
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%', marginTop: '40px' }}>
         <Title level={2}>Order Summary:</Title>
@@ -55,16 +55,16 @@ export default class OrderSummary extends React.Component {
           <OrderSummaryTitleRow />
           <Divider style={{ borderTop: `1px solid ${defaultTheme.colors.secondary3}` }} />
           <OrderSummaryContentRow
-            title={product.title}
+            title={product.name}
             price={product.price.toFixed(2)}
-            imageUrl={product.imageUrl}
+            imageUrl={`${baseUrl}${product.images[0]}`}
             totalPrice={totalPrice.toFixed(2)}
-            qty={qty}
+            qty={quantity}
           />
         </Row>
         <OrderSummaryPrices
           cartPrice={product.price.toFixed(2)}
-          shippingFee={product.shippingFee.toFixed(2)}
+          shippingFee={(product.shippingFee || 2).toFixed(2)}
           totalPrice={totalPriceAndShipping.toFixed(2)}
         />
       </Content>
