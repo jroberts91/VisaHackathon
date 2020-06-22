@@ -1,23 +1,13 @@
 import React from 'react';
-import { Form, Input, Button, Upload, Row, Col } from 'antd';
+import { Form, Input, Button, Upload, Row, Col,message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import API, { baseUrl } from '../../utils/baseUrl';
+import API from '../../utils/baseUrl';
 
 const { TextArea } = Input;
 const validateMessages = {
   required: 'This field is required.',
 };
-
-const props = {
-  multiple: true,
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-  },
-}
 
 export default class AddProduct extends React.Component {
 
@@ -32,6 +22,23 @@ export default class AddProduct extends React.Component {
   render() {
 
     const merchantId = this.state.merchantId;
+
+    const dragger_props = {
+      name:'file',
+      multiple: true,
+      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      onChange(info) {
+        const { status } = info.file;
+        if (status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully.`);
+        } else if (status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    }
 
     // add in images later
     const handleCreate = (values) => {
@@ -76,7 +83,7 @@ export default class AddProduct extends React.Component {
               style={{ margin: '0 auto' }}
             >
               <Upload.Dragger 
-                {...props}
+                {...dragger_props}
               >
                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
                 <p className="ant-upload-text">Click or drag file to this area to upload your product image</p>
