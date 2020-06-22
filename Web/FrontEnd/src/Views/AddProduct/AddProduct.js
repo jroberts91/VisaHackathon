@@ -2,19 +2,22 @@ import React from 'react';
 import { Form, Input, Button, Upload, Row, Col } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
-import API from '../../utils/baseUrl';
+import API, { baseUrl } from '../../utils/baseUrl';
 
 const { TextArea } = Input;
 const validateMessages = {
   required: 'This field is required.',
 };
-const getFile = (e) => {
-  console.log('Upload event:', e);
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList;
-};
+
+const props = {
+  multiple: true,
+  onChange(info) {
+    const { status } = info.file;
+    if (status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+  },
+}
 
 export default class AddProduct extends React.Component {
 
@@ -32,7 +35,12 @@ export default class AddProduct extends React.Component {
 
     // add in images later
     const handleCreate = (values) => {
-      const { name, price, quantity, description } = values.pdt;
+      const { name, price, quantity, description, images } = values.pdt;
+
+      const files = images.fileList.map((image) => image.originFileObj);
+      let formdata = new FormData();
+      formdata.append("files",files);
+
       const body = {
         name: name,
         description: description,
@@ -43,10 +51,10 @@ export default class AddProduct extends React.Component {
 
       console.log(body);
 
-      API.post('api/product/create', true, null, body)
+      API.post('api/product/create', formdata, body)
         .then((res) => {
           this.props.history.push({
-            pathname: `${merchantId}`,
+            pathname: `/${merchantId}`,
           });
         })
         .catch((err) => console.log('error adding product'));
@@ -63,12 +71,12 @@ export default class AddProduct extends React.Component {
         <Row align="top">
           <Col lg={{ span: 8 }} span={24}>
             <Form.Item
+              name={['pdt', 'images']}
               wrapperCol={{ span: 20 }}
               style={{ margin: '0 auto' }}
             >
               <Upload.Dragger 
-                name={['pdt', 'images']}
-                getValueFromEvent={getFile}
+                {...props}
               >
                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
                 <p className="ant-upload-text">Click or drag file to this area to upload your product image</p>
