@@ -1,46 +1,59 @@
 const mongoose = require('mongoose');
 
-const productSchema = mongoose.Schema({
+const productSchema = mongoose.Schema(
+  {
     name: {
-        type:String,
-        max:50
+      type: String,
+      max: 50,
     },
     description: {
-        type:String,
-        max: 100
+      type: String,
+      max: 100,
     },
     url: {
-        type: String
+      type: String,
     },
     price: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
     images: {
-        type: Array,
-        default: []
+      type: Array,
+      default: [],
     },
-    rating:{
-        type: Number
+    rating: {
+      type: Number,
     },
     shippingFee: {
-        type: Number
+      type: Number,
     },
-    merchantId:{
-        type: String
-    }
-},{timestamps: true})
+    merchantId: {
+      type: String,
+    },
+    soldQty: {
+      type: Number,
+      default: 0,
+    },
+    totalQty: {
+      type: Number,
+    },
+  },
+  { timestamps: true }
+);
 
-productSchema.index({ 
-    merchantId:'text',
+productSchema.index(
+  {
+    merchantId: 'text',
     name: 'text',
-}, {
+  },
+  {
     weights: {
-        merchantId: 5,
-        name: 1,
-    }
-})
+      merchantId: 5,
+      name: 1,
+    },
+  }
+);
 
 const Product = mongoose.model('Product', productSchema);
 
-module.exports = { Product }
+module.exports = { Product };
