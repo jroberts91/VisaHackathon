@@ -70,7 +70,7 @@ export default class Home extends React.Component {
             <Route path="/:merchantId/history" exact component={SalesHistory} />
             <Route path="/:merchantId/product/:productId" exact exact component={ProductPage} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
-            <Route path="/order/:orderId" component={OrderSummary} />
+            <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
             <Route path="/:merchantId/addproduct" component={AddProduct} />
           </Switch>
         </Layout>
