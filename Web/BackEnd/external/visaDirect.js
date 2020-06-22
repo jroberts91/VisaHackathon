@@ -1,21 +1,21 @@
 const https = require('https');
 const axios = require('axios');
-const path = require("path");
+const path = require('path');
 fs = require('fs');
 
 require('dotenv').config();
 
 var config = {
-    method: 'post',
-    url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
-    headers: { 
-      'Content-Type': 'application/json', 
-      'Authorization': "Basic " + new Buffer(process.env.VD_USERNAME + ":" + process.env.VD_PASSWORD).toString("base64")
-    },
-    httpsAgent: new https.Agent({
-        cert: fs.readFileSync(path.resolve(__dirname, "../resources/cert.pem")),
-        key: fs.readFileSync(path.resolve(__dirname, "../resources/key.pem")),
-    })
+  method: 'post',
+  url: 'https://sandbox.api.visa.com/visadirect/fundstransfer/v1/pullfundstransactions',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: 'Basic ' + new Buffer(process.env.VD_USERNAME + ':' + process.env.VD_PASSWORD).toString('base64'),
+  },
+  httpsAgent: new https.Agent({
+    cert: fs.readFileSync(path.resolve(__dirname, '../resources/cert.pem')),
+    key: fs.readFileSync(path.resolve(__dirname, '../resources/key.pem')),
+  }),
 };
 
   
@@ -31,7 +31,7 @@ let PushFundsTransaction = async() => {
         console.log(error);
         throw new Error("visa direct push funds API error");
     });
-}
+};
 
 let PullFundsTransaction = () => {
     // hard coded for now
@@ -45,7 +45,7 @@ let PullFundsTransaction = () => {
         console.log(error);
         throw new Error("visa direct pull funds API error");
     });
-}
+};
 
 /**
  * Source from: https://stackoverflow.com/questions/38816337/convert-javascript-date-format-to-yyyy-mm-ddthhmmss?rq=1

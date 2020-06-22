@@ -49,6 +49,12 @@
 - GET '/get' get 1 product based on productId in the params (.../get?id=${productId})
     - returns {success: true, product: product}
 
+- GET '/updateSoldQty' takes in 2 params (.../?id=${productId}&soldQty=${soldQty})
+    - returns {success: true, product: product}
+
+- GET '/updateTotalQty' takes in 2 params (.../?id=${productId}&totalQty=${totalQty})
+    - returns {success: true, product: product}    
+
 ## api/payment
 
 - POST '/direct' makes a payment by creating an order associated with payment, the backend will call and handle push and pull funds transfer (currently with dummy payload)
@@ -178,3 +184,6 @@ TBD
 
 https://developer.visa.com/capabilities/vmorc/reference#vmorc__offers_data_api__v1__retrieve_offers_by_filter
 ```
+
+
+
