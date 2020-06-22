@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Button, Typography, Steps, Upload, message } from 'antd';
+import { Button, Typography, Steps, Upload, message, Alert } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { TextField } from '@material-ui/core';
 import API from '../../utils/baseUrl';
@@ -91,6 +91,11 @@ const StyledUploadGroup = styled.div`
   width: 100%;
 `;
 
+const StyledAlerts = styled(Alert)`
+  width: 60%;
+  right: -20%;
+`;
+
 function beforeUpload(file) {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
@@ -113,11 +118,14 @@ export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      differentPasswords: false,
       email: '',
       password: '',
       confirmPassword: '',
       storeName: '',
       storeDescription: '',
+      telNumber: '',
+      address: '',
       cardNumber: '',
       current: 0,
     };
@@ -131,7 +139,7 @@ export default class SignUp extends React.Component {
    * IF response.status !==200, user is routed to './'
    */
   handleSubmit = () => {
-    const { storeName, storeDescription, email, password } = this.state;
+    const { storeName, storeDescription, email, password, differentPasswords } = this.state;
     const { history } = this.props;
     const sendObject = { name: storeName, email, password, description: storeDescription };
     API.post('api/merchant/register', sendObject).then((res) => {
@@ -169,8 +177,28 @@ export default class SignUp extends React.Component {
   };
 
   handleChangeConfirmPassword = (event) => {
+    if (event.target.value !== this.state.password) {
+      this.setState({
+        differentPasswords: true,
+        confirmPassword: event.target.value,
+      });
+    } else {
+      this.setState({
+        differentPasswords: false,
+        confirmPassword: event.target.value,
+      });
+    }
+  };
+
+  handleChangeTelNumber = (event) => {
     this.setState({
-      confirmPassword: event.target.value,
+      telNumber: event.target.value,
+    });
+  };
+
+  handleChangeAddress = (event) => {
+    this.setState({
+      address: event.target.value,
     });
   };
 
@@ -200,7 +228,19 @@ export default class SignUp extends React.Component {
   };
 
   render() {
-    const { email, password, confirmPassword, storeName, storeDescription, cardNumber, current, imageUrl } = this.state;
+    const {
+      email,
+      password,
+      confirmPassword,
+      storeName,
+      storeDescription,
+      telNumber,
+      address,
+      cardNumber,
+      current,
+      imageUrl,
+      differentPasswords,
+    } = this.state;
 
     const uploadButton = (
       <div>
@@ -224,7 +264,9 @@ export default class SignUp extends React.Component {
                   password.length &&
                   confirmPassword.length &&
                   storeName.length &&
-                  storeDescription.length
+                  storeDescription.length &&
+                  telNumber.length &&
+                  address.length
                 )
               }
             />
@@ -263,6 +305,7 @@ export default class SignUp extends React.Component {
                 size="small"
                 value={confirmPassword}
               />
+              {differentPasswords && <StyledAlerts message="Passwords do not match" type="warning" showIcon />}
             </div>
           )}
           {this.state.current === 1 && (
@@ -273,9 +316,29 @@ export default class SignUp extends React.Component {
                 margin="normal"
                 required
                 fullWidth
-                label="Store Name"
+                label="Name"
                 size="small"
                 value={storeName}
+              />
+              <StyledTextField
+                onChange={this.handleChangeTelNumber}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Telephone No."
+                size="small"
+                value={telNumber}
+              />
+              <StyledTextField
+                onChange={this.handleChangeAddress}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Address"
+                size="small"
+                value={address}
               />
               <StyledTextField
                 onChange={this.handleChangeStoreDescription}
@@ -283,14 +346,14 @@ export default class SignUp extends React.Component {
                 margin="normal"
                 required
                 fullWidth
-                label="Store Description"
+                label="Description"
                 multiline
                 rows={4}
                 size="small"
                 value={storeDescription}
               />
               <StyledUploadGroup>
-                <StyledText> Store Picture </StyledText>
+                <StyledText> Picture </StyledText>
                 <StyledUpload
                   name="avatar"
                   listType="picture-card"
