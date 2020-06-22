@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography, Steps, Upload, message, Alert } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { TextField } from '@material-ui/core';
+import { TextField, Button as MaterialButton } from '@material-ui/core';
 import API from '../../utils/baseUrl';
 import 'antd/dist/antd.css';
 
@@ -28,7 +28,7 @@ const StyledRightContainer = styled.div`
 `;
 
 const FieldsContainer = styled.div`
-  top: 15%;
+  top: 10%;
   position: relative;
 `;
 
@@ -83,6 +83,7 @@ const StyledSteps = styled(Steps)`
 const StyledUpload = styled(Upload)`
   position: absolute;
   left: calc(20% + 100px);
+  width: 0%;
 `;
 
 const StyledUploadGroup = styled.div`
@@ -94,6 +95,22 @@ const StyledUploadGroup = styled.div`
 const StyledAlerts = styled(Alert)`
   width: 60%;
   right: -20%;
+`;
+
+const StyledMaterialButtonRight = styled(MaterialButton)`
+  && {
+    position: absolute;
+    top: 140%;
+    right: 20%;
+  }
+`;
+
+const StyledMaterialButtonLeft = styled(MaterialButton)`
+  && {
+    position: absolute;
+    top: 140%;
+    left: 20%;
+  }
 `;
 
 function beforeUpload(file) {
@@ -227,6 +244,14 @@ export default class SignUp extends React.Component {
     this.setState({ current });
   };
 
+  nextSection = () => {
+    this.setState({ current: this.state.current + 1 });
+  };
+
+  prevSection = () => {
+    this.setState({ current: this.state.current - 1 });
+  };
+
   render() {
     const {
       email,
@@ -306,6 +331,14 @@ export default class SignUp extends React.Component {
                 value={confirmPassword}
               />
               {differentPasswords && <StyledAlerts message="Passwords do not match" type="warning" showIcon />}
+              <StyledMaterialButtonRight
+                variant="contained"
+                color="primary"
+                onClick={this.nextSection}
+                disabled={!(email.length && password.length && confirmPassword.length)}
+              >
+                Next
+              </StyledMaterialButtonRight>
             </div>
           )}
           {this.state.current === 1 && (
@@ -366,6 +399,27 @@ export default class SignUp extends React.Component {
                   {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                 </StyledUpload>
               </StyledUploadGroup>
+              <StyledMaterialButtonLeft variant="contained" color="primary" onClick={this.prevSection}>
+                Back
+              </StyledMaterialButtonLeft>
+              <StyledMaterialButtonRight
+                variant="contained"
+                color="primary"
+                onClick={this.nextSection}
+                disabled={
+                  !(
+                    email.length &&
+                    password.length &&
+                    confirmPassword.length &&
+                    storeName.length &&
+                    storeDescription.length &&
+                    telNumber.length &&
+                    address.length
+                  )
+                }
+              >
+                Next
+              </StyledMaterialButtonRight>
             </div>
           )}
           {this.state.current === 2 && (
@@ -379,8 +433,12 @@ export default class SignUp extends React.Component {
                 label="Card Number"
                 size="small"
               />
-              <StyledButton
-                type="primary"
+              <StyledMaterialButtonLeft variant="contained" color="primary" onClick={this.prevSection}>
+                Back
+              </StyledMaterialButtonLeft>
+              <StyledMaterialButtonRight
+                variant="contained"
+                color="primary"
                 onClick={this.handleSubmit}
                 disabled={
                   !(
@@ -389,12 +447,14 @@ export default class SignUp extends React.Component {
                     confirmPassword.length &&
                     storeName.length &&
                     storeDescription.length &&
+                    telNumber.length &&
+                    address.length &&
                     cardNumber.length
                   )
                 }
               >
-                Register
-              </StyledButton>
+                Submit
+              </StyledMaterialButtonRight>
             </div>
           )}
         </FieldsContainer>
