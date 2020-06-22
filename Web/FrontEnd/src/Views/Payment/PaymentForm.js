@@ -1,7 +1,8 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -114,6 +115,35 @@ export default class PaymentForm extends React.Component {
           rules={[
             {
               type: 'email',
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['card', 'number']}
+          label="Credit Card No"
+          rules={[
+            {
+              type: 'number',
+              required: true,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          help={
+            <Tooltip placement="topRight" title="CVV number is the 3 digit number on the back of your Visa card.">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          }
+          name={['card', 'cvv']}
+          label="CVV number"
+          rules={[
+            {
+              type: 'number',
               required: true,
             },
           ]}
