@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { Layout } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
@@ -9,7 +10,7 @@ import MerchantShop from './MerchantShop/MerchantShop';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
-import axios from 'axios';
+import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class Home extends React.Component {
   };
 
   handleCheckAuth = () => {
-    axios.get('api/merchant/auth').then((res) => {
+    API.get('api/merchant/auth').then((res) => {
       const { success, name, _id } = res.data;
       if (success) {
         this.setState({
@@ -40,7 +41,7 @@ export default class Home extends React.Component {
   };
 
   handleLogoutClick = () => {
-    axios.get('api/merchant/logout').then((res) => {
+    API.get('api/merchant/logout').then((res) => {
       console.log(res);
     });
     this.setState({

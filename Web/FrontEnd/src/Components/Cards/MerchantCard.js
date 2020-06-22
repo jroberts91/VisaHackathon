@@ -4,6 +4,7 @@ import { HomeOutlined } from '@ant-design/icons';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
@@ -34,11 +35,12 @@ export default class MerchantCard extends React.Component {
 
   render() {
     const { imageUrl, title, description, rating, id } = this.state;
+    const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
     const merchantHref = `/${id}`;
     return (
       <Card
         style={{ width: '100%', minWidth: 250 }}
-        cover={<img alt="example" src={imageUrl || MaiYuGe} />}
+        cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
         hoverable
         actions={[
           <Link to={merchantHref}>

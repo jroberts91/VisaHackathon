@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
 import { Row, Col, Layout, Typography, Card } from 'antd';
 import { PlusOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import Meta from 'antd/lib/card/Meta';
+import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -71,7 +71,7 @@ export default class MerchantShop extends React.Component {
     const body = {
       merchantId: merchantId
     }
-    axios
+    API
       .post('api/product/getAll', body)
       .then((res) => {
         this.setState({ products: res.data.products });
@@ -80,7 +80,7 @@ export default class MerchantShop extends React.Component {
   }
 
   getMerchantNameFromApi = (merchantId) => {
-    axios
+    API
       .get('api/merchant/get?id=' + merchantId)
       .then((res) => {
         this.setState({ merchantName: res.data.merchant.name });
@@ -89,7 +89,7 @@ export default class MerchantShop extends React.Component {
   }
 
   getIsOwnerShopFromApi = (merchantId) => {
-    axios
+    API
       .get('api/merchant/auth').then((res) => {
         const { success, _id } = res.data;
         if (success) {

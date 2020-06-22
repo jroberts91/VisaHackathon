@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography } from 'antd';
 import { TextField } from '@material-ui/core';
-import axios from 'axios';
 import 'antd/dist/antd.css';
+import API from '../../utils/baseUrl';
 
 const { Title } = Typography;
 
@@ -81,7 +82,7 @@ export default class LoginPage extends React.Component {
     const { email, password } = this.state;
     const { history } = this.props;
     const sendObject = { email, password };
-    axios.post('api/merchant/login', sendObject).then((res) => {
+    API.post('api/merchant/login', sendObject).then((res) => {
       console.log(res);
       const success = res.data.success;
       if (success) {

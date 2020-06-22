@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Row, Col, Card, Rate, Button, Alert } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
+import MaiYuGe from '../../images/maiyuge.jpg';
+import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
@@ -78,13 +80,14 @@ export default class ProductCard extends React.Component {
     const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
 
     const productLink = `/${merchantId}/product/${productId}`
-
+    const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
+    
     return (
       <div>
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img alt="example" src={imageUrl} />}
+            cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}

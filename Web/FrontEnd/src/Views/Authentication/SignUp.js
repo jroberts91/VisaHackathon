@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography } from 'antd';
 import { TextField } from '@material-ui/core';
-import axios from 'axios';
+import API from '../../utils/baseUrl';
 import 'antd/dist/antd.css';
 
 const { Title } = Typography;
@@ -73,7 +73,7 @@ export default class SignUp extends React.Component {
     const { storeName, storeDescription, email, password } = this.state;
     const { history } = this.props;
     const sendObject = { name: storeName, email, password, description: storeDescription };
-    axios.post('api/merchant/register', sendObject).then((res) => {
+    API.post('api/merchant/register', sendObject).then((res) => {
       console.log(res);
       const success = res.data.success;
       if (success) {
