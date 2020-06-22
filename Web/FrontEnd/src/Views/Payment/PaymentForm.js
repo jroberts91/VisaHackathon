@@ -3,6 +3,7 @@ import { Form, Input, Typography, Button, Select, Row, Col, Tooltip } from 'antd
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import API from '../../utils/baseUrl';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -17,11 +18,8 @@ const layout = {
 const validateMessages = {
   required: '${label} is required',
   types: {
-    email: '${label} is not validate email',
-    number: '${label} is not a validate number',
-  },
-  number: {
-    range: '${label} must be between ${min} and ${max}',
+    email: '${label} is not valid email',
+    number: '${label} is not a valid number',
   },
 };
 
@@ -32,18 +30,50 @@ const PayButton = styled(Button)`
 `;
 
 export default class PaymentForm extends React.Component {
+  formRef = React.createRef();
   constructor(props) {
     super(props);
-    this.state = {
-      firstName: '',
-      lastName: '',
-      address: '',
-      country: '',
-    };
   }
   render() {
+    const handlePay = (values) => {
+      const { number, cvv } = values.card;
+      const { address, country, postal, email, firstName, lastName, phoneNumber } = values.user;
+      const data = {
+        order: {
+          merchantId: this.props.merchantId,
+          product: this.props.productId,
+          qty: this.props.qty,
+        },
+        payment: {
+          address: address,
+          country: country,
+          postal: postal,
+          email: email,
+          phoneNumber: phoneNumber,
+          firstName: firstName,
+          lastName: lastName,
+          creditCardNumber: number,
+          cvv: cvv,
+        },
+      };
+      API.post('api/direct', data)
+        .then((res) => {
+          const { orderId } = res;
+          // successful payment, direct user to order summary page
+          this.props.history.push({
+            pathname: `/order/${orderId}`,
+          });
+        })
+        .catch((err) => console.log('error paying'));
+    };
     return (
-      <Form {...layout} name="nest-messages" onFinish validateMessages={validateMessages}>
+      <Form
+        {...layout}
+        ref={this.formRef}
+        name="nest-messages"
+        onFinish={handlePay}
+        validateMessages={validateMessages}
+      >
         <Form.Item
           name={['user', 'firstName']}
           label="First Name"
@@ -79,30 +109,38 @@ export default class PaymentForm extends React.Component {
           <Input />
         </Form.Item>
         <Form.Item
-          name={['user', 'country']}
-          label="Country"
+          name={['user', 'phoneNumber']}
+          label="Phone Number"
           rules={[
             {
-              type: 'email',
               required: true,
             },
           ]}
         >
-          <Input.Group>
-            <Select style={{ width: '30%' }} defaultValue="Singapore">
-              <Option value="Singapore">Singapore</Option>
-              <Option value="Malaysia">Malaysia</Option>
-              <Option value="Vietnam">Vietnam</Option>
-              <Option value="Thailand">Thailand</Option>
-            </Select>
-          </Input.Group>
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name={['user', 'country']}
+          label="Country"
+          initialValue="Singapore"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
+          <Select style={{ width: 'max(30%, 200px)' }} defaultValue="Singapore">
+            <Option value="Singapore">Singapore</Option>
+            <Option value="Malaysia">Malaysia</Option>
+            <Option value="Vietnam">Vietnam</Option>
+            <Option value="Thailand">Thailand</Option>
+          </Select>
         </Form.Item>
         <Form.Item
           name={['user', 'address']}
           label="Address"
           rules={[
             {
-              type: 'email',
               required: true,
             },
           ]}
@@ -114,7 +152,6 @@ export default class PaymentForm extends React.Component {
           label="Postal Code"
           rules={[
             {
-              type: 'email',
               required: true,
             },
           ]}
@@ -126,7 +163,6 @@ export default class PaymentForm extends React.Component {
           label="Credit Card No"
           rules={[
             {
-              type: 'number',
               required: true,
             },
           ]}
@@ -143,7 +179,6 @@ export default class PaymentForm extends React.Component {
           label="CVV number"
           rules={[
             {
-              type: 'number',
               required: true,
             },
           ]}
