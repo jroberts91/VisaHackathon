@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, message } from 'antd';
+import { Row, Col, Card, Rate, Button, message, Modal } from 'antd';
 import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
@@ -38,6 +38,14 @@ export default class ProductCard extends React.Component {
       });
     })
   }
+
+  showQRCode = () => {
+    this.setState({ isShowQR: true });
+  };
+
+  hideQRCode = () => {
+    this.setState({ isShowQR: false });
+  };
 
   getActionList = (productLink, isOwnerShop) => {
     if (isOwnerShop) {
