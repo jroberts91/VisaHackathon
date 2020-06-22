@@ -2,11 +2,10 @@ import React from 'react';
 
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, Select, Typography } from 'antd';
+import { Row, Col, Layout } from 'antd';
 import MaiYuGe from '../../images/maiyuge.jpg';
 
 const { Content } = Layout;
-const { Text, Title } = Typography;
 
 export default class Payment extends React.Component {
   constructor(props) {
