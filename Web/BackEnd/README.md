@@ -48,3 +48,9 @@
 
 - GET '/get' get 1 product based on productId in the params (.../get?id=${productId})
     - returns {success: true, product: product}
+
+- GET '/updateSoldQty' takes in 2 params (.../?id=${productId}&soldQty=${soldQty})
+    - returns {success: true, product: product}
+
+- GET '/updateTotalQty' takes in 2 params (.../?id=${productId}&totalQty=${totalQty})
+    - returns {success: true, product: product}

@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { Merchant } = require("../models/Merchant");
-const { Product } = require("../models/Product");
-const { Payment } = require("../models/Payment");
-const { Order } = require("../models/Order");
-const { PullFundsTransaction, PushFundsTransaction } = require("../external/visaDirect");
+const { Merchant } = require('../models/Merchant');
+const { Product } = require('../models/Product');
+const { Payment } = require('../models/Payment');
+const { Order } = require('../models/Order');
+const { PullFundsTransaction, PushFundsTransaction } = require('../external/visaDirect');
 
 //=================================
 //             Payment
