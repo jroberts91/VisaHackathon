@@ -62,6 +62,7 @@ export default class PaymentForm extends React.Component {
           // successful payment, direct user to order summary page
           this.props.history.push({
             pathname: `/order/${orderId}`,
+            state: { isSuccessfulPaymentJustMade: true }
           });
         })
         .catch(() => message.error({

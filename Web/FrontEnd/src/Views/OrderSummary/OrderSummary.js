@@ -6,6 +6,7 @@ import { defaultTheme } from '../../utils/theme';
 import OrderSummaryTitleRow from './OrderSummaryTitleRow';
 import OrderSummaryPrices from './OrderSummaryPrices';
 import OrderSummaryContentRow from './OrderSummaryContentRow';
+import API, { baseUrl } from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -14,14 +15,9 @@ export default class OrderSummary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      product: {
-        title: 'Tom Yum Fish',
-        price: 13.3,
-        imageUrl: MaiYuGe,
-        shippingFee: 2,
-      },
-      qty: 1,
-      isSuccessfulPaymentJustMade: true,
+      order: null,
+      // only available when successful payment routes to order summary page
+      isSuccessfulPaymentJustMade: this.props.location.state.isSuccessfulPaymentJustMade,
     };
   }
 
@@ -33,10 +29,23 @@ export default class OrderSummary extends React.Component {
         duration: 5,
       });
     }
+
+    API.get(`api/order/get?orderId=${this.props.match.params.orderId}`).then((res) => {
+      if (res.status === 200) {
+        this.setState({ order: res.data.order });
+      } else {
+        message.error({
+          content: `Invalid order id ${this.props.match.params.orderId}.`,
+          duration: 5,
+        });
+      }
+    }).catch((err) => {
+      console.error(err);
+    })
   };
 
   render() {
-    const { product, qty } = this.state;
+    const { order } = this.state;
     const totalPrice = product.price * qty;
     const totalPriceAndShipping = totalPrice + product.shippingFee;
     return (
