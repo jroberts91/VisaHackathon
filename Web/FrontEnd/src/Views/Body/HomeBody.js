@@ -1,60 +1,21 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
-import MaiYuGe from '../../images/maiyuge.jpg';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
+import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Option } = Select;
 const { Text, Title } = Typography;
-
-const listOfMerchants = [
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 4,
-  },
-  {
-    name: 'Mai Yu Ge Seafood',
-    profileImage: MaiYuGe,
-    description: 'Mainly selling seafood that is freshly taken from Johor Bahru',
-    rating: 3,
-  },
-];
 
 class MerchantList extends React.Component {
   render() {
     return (
       <Row gutter={[32, 32]}>
         {this.props.merchants.map((merchant, index) => {
-          const { name, profileImage, description, rating } = merchant;
+          const { name, profileImage, description, rating, _id } = merchant;
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-              <MerchantCard title={name} imageUrl={profileImage} description={description} rating={rating} />
+              <MerchantCard id={_id} title={name} imageUrl={profileImage} description={description} rating={rating} />
             </Col>
           );
         })}
@@ -73,7 +34,13 @@ export default class HomeBody extends React.Component {
   }
 
   componentDidMount = () => {
-    this.setState({ merchants: listOfMerchants });
+    API
+      .post('api/merchant/getAll')
+      .then((res) => {
+        console.log(res);
+        this.setState({ merchants: res.data.merchants });
+      })
+      .catch((err) => console.error(err));
   };
 
   render() {
