@@ -42,7 +42,7 @@ export default class PaymentForm extends React.Component {
         order: {
           merchantId: this.props.merchantId,
           product: this.props.productId,
-          qty: this.props.qty,
+          quantity: this.props.qty,
         },
         payment: {
           address: address,
@@ -56,20 +56,24 @@ export default class PaymentForm extends React.Component {
           cvv: cvv,
         },
       };
-      API.post('api/direct', data)
+      API.post('api/payment/direct', data)
         .then((res) => {
-          console.log(res)
-          const { orderId } = res;
-          // successful payment, direct user to order summary page
-          this.props.history.push({
-            pathname: `/order/${orderId}`,
-            state: { isSuccessfulPaymentJustMade: true }
-          });
+          console.log(res);
+          if (res.status === 200) {
+            const { orderId } = res.data;
+            // successful payment, direct user to order summary page
+            this.props.history.push({
+              pathname: `/order/${orderId}`,
+              state: { isSuccessfulPaymentJustMade: true },
+            });
+          } else {
+            message.error({
+              content: `Error occurred when trying to pay for the item, please ensure you entered the correct Visa credentials.`,
+              duration: 5,
+            });
+          }
         })
-        .catch(() => message.error({
-          content: `Error occurred when trying to pay for the item, please ensure you entered the correct Visa credentials.`,
-          duration: 5,
-        }));
+        .catch((err) => console.error(err));
     };
     return (
       <Form

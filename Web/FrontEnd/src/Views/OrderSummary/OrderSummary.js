@@ -16,7 +16,7 @@ export default class OrderSummary extends React.Component {
     this.state = {
       order: null,
       // only available when successful payment routes to order summary page
-      isSuccessfulPaymentJustMade: this.props.location.state.isSuccessfulPaymentJustMade,
+      isSuccessfulPaymentJustMade: this.props.location.state.isSuccessfulPaymentJustMade || false,
     };
   }
 
@@ -29,22 +29,28 @@ export default class OrderSummary extends React.Component {
       });
     }
 
-    API.get(`api/order/get?orderId=${this.props.match.params.orderId}`).then((res) => {
-      if (res.status === 200) {
-        this.setState({ order: res.data.order });
-      } else {
-        message.error({
-          content: `Invalid order id ${this.props.match.params.orderId}.`,
-          duration: 5,
-        });
-      }
-    }).catch((err) => {
-      console.error(err);
-    })
+    API.get(`api/order/get?orderId=${this.props.match.params.orderId}`)
+      .then((res) => {
+        if (res.status === 200) {
+          this.setState({ order: res.data.order });
+        } else {
+          message.error({
+            content: `Invalid order id ${this.props.match.params.orderId}.`,
+            duration: 5,
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   render() {
     const { order } = this.state;
+    if (order == null) {
+      // haven't populate order yet
+      return null;
+    }
     const { product, quantity } = order;
     const totalPrice = product.price * quantity;
     const totalPriceAndShipping = totalPrice + (product.shippingFee || 2); // product shipping fee is not available yet, using default val

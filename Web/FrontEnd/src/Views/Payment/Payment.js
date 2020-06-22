@@ -61,6 +61,7 @@ export default class Payment extends React.Component {
               qty={qty}
               totalPrice={totalPrice}
               shippingFee={product.shippingFee || 2}
+              history={this.props.history}
             />
           </Col>
         </Row>
