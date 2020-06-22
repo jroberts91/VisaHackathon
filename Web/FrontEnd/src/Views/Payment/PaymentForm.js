@@ -66,6 +66,7 @@ export default class PaymentForm extends React.Component {
               pathname: `/order/${orderId}`,
               state: { isSuccessfulPaymentJustMade: true },
             });
+            // TODO: send order email to customer
           } else {
             message.error({
               content: `Error occurred when trying to pay for the item, please ensure you entered the correct Visa credentials.`,
