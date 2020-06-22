@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, Alert, message } from 'antd';
-import { LinkOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Rate, Button, message } from 'antd';
+import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
+import QRCode from 'qrcode.react';
 
 const { Meta } = Card;
 
@@ -22,7 +23,7 @@ export default class ProductCard extends React.Component {
     };
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(() => {
@@ -40,16 +41,28 @@ export default class ProductCard extends React.Component {
 
   getActionList = (productLink, isOwnerShop) => {
     if (isOwnerShop) {
-      return ([
+      return [
         <Button
           type="primary"
-          style={{ backgroundColor: "#FAAA13" }}
+          style={{ backgroundColor: '#FAAA13' }}
           onClick={(event) => {
             event.preventDefault();
             this.copyLinkToClipboard(productLink);
-          }}>
-          <LinkOutlined />Copy
-          </Button>,
+          }}
+        >
+          <LinkOutlined />
+          Copy
+        </Button>,
+        <Button
+          type="primary"
+          onClick={(event) => {
+            event.preventDefault();
+            this.showQRCode();
+          }}
+        >
+          <QrcodeOutlined />
+          QR Code
+        </Button>,
         <Row>
           <Col span={12}>
             <Button style={{ width: '100%' }}>Edit</Button>
@@ -57,30 +70,51 @@ export default class ProductCard extends React.Component {
           <Col span={12}>
             <Button style={{ width: '100%' }}>Delete</Button>
           </Col>
-
-        </Row>
-      ])
+        </Row>,
+      ];
     }
-    return ([
+    return [
       <Button
-          type="primary"
-          onClick={(event) => {
-            event.preventDefault();
-            this.copyLinkToClipboard(productLink);
-          }}>
-          <LinkOutlined />Copy
-          </Button>
-    ])
-  }
+        type="primary"
+        onClick={(event) => {
+          event.preventDefault();
+          this.copyLinkToClipboard(productLink);
+        }}
+      >
+        <LinkOutlined />
+        Copy
+      </Button>,
+      <Button
+        type="primary"
+        onClick={(event) => {
+          event.preventDefault();
+          this.showQRCode();
+        }}
+      >
+        <QrcodeOutlined />
+        QR Code
+      </Button>,
+    ];
+  };
 
   render() {
     const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
 
-    const productLink = `/${merchantId}/product/${productId}`
+    const productLink = `/${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
-    
+
     return (
       <div>
+        <Modal
+          title="QR Code"
+          visible={this.state.isShowQR}
+          onCancel={this.hideQRCode}
+          centered
+          style={{ textAlign: 'center' }}
+          footer={null}
+        >
+          <QRCode value={productLink} size={256} />
+        </Modal>
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}

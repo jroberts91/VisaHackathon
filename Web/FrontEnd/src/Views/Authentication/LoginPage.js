@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Button, Typography } from 'antd';
+import { Button, Typography, Alert } from 'antd';
 import { TextField } from '@material-ui/core';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
@@ -62,6 +62,11 @@ const StyledSignUpFields = styled.div`
   color: #75787b;
 `;
 
+const StyledAlerts = styled(Alert)`
+  width: 60%;
+  right: -20%;
+`;
+
 /**
  * Handles the logic and design of the Login Page.
  * It redirects user to their accessible pages after logging in.
@@ -72,6 +77,7 @@ export default class LoginPage extends React.Component {
     this.state = {
       email: '',
       password: '',
+      invalidLogin: false,
     };
   }
 
@@ -86,25 +92,13 @@ export default class LoginPage extends React.Component {
       const success = res.data.success;
       if (success) {
         history.push('/');
+      } else {
+        console.log('asd');
+        this.setState({
+          invalidLogin: true,
+        });
       }
     });
-  };
-
-  handleSuccessfulLogin = (decoded) => {
-    const { history } = this.props;
-    const { email } = this.state;
-    const { username, companyName, first_login } = decoded;
-    this.setState({
-      isFirstChangePassword: !!first_login,
-      isLogin: !!!first_login,
-      email: email || username,
-    });
-
-    !!!first_login &&
-      history.push({
-        pathname: '/',
-        state: { email: email || username, companyName },
-      });
   };
 
   handleSignUp = () => {
@@ -128,7 +122,7 @@ export default class LoginPage extends React.Component {
   };
 
   render() {
-    const { email, password } = this.state;
+    const { email, password, invalidLogin } = this.state;
     const LoginPageFields = (
       <StyledRightContainer>
         <FieldsContainer>
@@ -152,6 +146,7 @@ export default class LoginPage extends React.Component {
             label="Password"
             size="small"
           />
+          {invalidLogin && <StyledAlerts message="Invalid Email or Password" type="error" showIcon />}
           <StyledButton type="primary" disabled={!(email.length && password.length)} onClick={this.handleSubmit}>
             Login
           </StyledButton>
@@ -168,7 +163,7 @@ export default class LoginPage extends React.Component {
     return (
       <div>
         <StyledLeftContainer>
-          <Logo src={LogoTagLine} alt="Visell Logo" />
+          <Logo src={LogoTagLine} alt="Visell Logo" onClick={() => this.props.history.push('/')} />
         </StyledLeftContainer>
         {LoginPageFields}
       </div>
