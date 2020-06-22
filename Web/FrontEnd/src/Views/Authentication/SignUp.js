@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Button, Typography } from 'antd';
+import { Button, Typography, Steps, Upload, message } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { TextField } from '@material-ui/core';
 import API from '../../utils/baseUrl';
 import 'antd/dist/antd.css';
 
-const { Title } = Typography;
+const { Step } = Steps;
+
+const { Title, Text } = Typography;
 
 const StyledLeftContainer = styled.div`
   background: linear-gradient(#1f417c, 20%, #00276a);
@@ -29,6 +32,12 @@ const FieldsContainer = styled.div`
   position: relative;
 `;
 
+const StyledTitle = styled(Title)`
+  && {
+    margin-bottom: 20px;
+  }
+`;
+
 const Logo = styled.img`
   top: 43%;
   position: relative;
@@ -40,7 +49,9 @@ const StyledButton = styled(Button)`
   background-color: #00276a;
   color: white;
   border: none;
-  margin-top: 40px;
+  position: absolute;
+  right: 20%;
+  top: 160%;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -49,6 +60,54 @@ const StyledTextField = styled(TextField)`
     margin-top: 10px;
   }
 `;
+
+const StyledTextFieldTop = styled(TextField)`
+  && {
+    width: 60%;
+    margin-top: 80px;
+  }
+`;
+
+const StyledText = styled(Text)`
+  position: absolute;
+  left: 20%;
+  top: 40px;
+`;
+
+const StyledSteps = styled(Steps)`
+  width: 75%;
+  right: 13%;
+  position: absolute;
+`;
+
+const StyledUpload = styled(Upload)`
+  position: absolute;
+  left: calc(20% + 100px);
+`;
+
+const StyledUploadGroup = styled.div`
+  position: absolute;
+  top: 105%;
+  width: 100%;
+`;
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+}
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
 
 export default class SignUp extends React.Component {
   constructor(props) {
@@ -59,6 +118,7 @@ export default class SignUp extends React.Component {
       email: '',
       password: '',
       confirmPassword: '',
+      current: 0,
     };
   }
 
@@ -113,63 +173,137 @@ export default class SignUp extends React.Component {
     });
   };
 
+  handleChangeCardNumber = (event) => {
+    this.setState({
+      cardNumber: event.target.value,
+    });
+  };
+
+  handleChangePic = (info) => {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true });
+      return;
+    }
+    if (info.file.status === 'done') {
+      getBase64(info.file.originFileObj, (imageUrl) =>
+        this.setState({
+          imageUrl,
+          loading: false,
+        })
+      );
+    }
+  };
+
+  onChange = (current) => {
+    this.setState({ current });
+  };
+
   render() {
+    const { current, imageUrl } = this.state;
+
+    const uploadButton = (
+      <div>
+        {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
+        <div className="ant-upload-text">Upload</div>
+      </div>
+    );
+
     const SignUpPageFields = (
       <StyledRightContainer>
         <FieldsContainer>
-          <Title level={2}>Sign Up</Title>
-          <StyledTextField
-            onChange={this.handleChangeStoreName}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Store Name"
-            size="small"
-          />
-          <StyledTextField
-            onChange={this.handleChangeStoreDescription}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Store Description"
-            multiline
-            rows={4}
-            size="small"
-          />
-          <StyledTextField
-            onChange={this.handleChangeEmail}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Email"
-            size="small"
-          />
-          <StyledTextField
-            type="password"
-            onChange={this.handleChangePassword}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            size="small"
-          />
-          <StyledTextField
-            type="password"
-            onChange={this.handleChangeConfirmPassword}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Confirm Password"
-            size="small"
-          />
-          <StyledButton type="primary" onClick={this.handleSubmit}>
-            Register
-          </StyledButton>
+          <StyledTitle level={2}>Sign Up</StyledTitle>
+          <StyledSteps current={current} onChange={this.onChange}>
+            <Step title="Personal" />
+            <Step title="Store" />
+            <Step title="Payment" />
+          </StyledSteps>
+          {this.state.current === 0 && (
+            <div>
+              <StyledTextFieldTop
+                onChange={this.handleChangeEmail}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Email"
+                size="small"
+              />
+              <StyledTextField
+                type="password"
+                onChange={this.handleChangePassword}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                size="small"
+              />
+              <StyledTextField
+                type="password"
+                onChange={this.handleChangeConfirmPassword}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Confirm Password"
+                size="small"
+              />
+            </div>
+          )}
+          {this.state.current === 1 && (
+            <div>
+              <StyledUploadGroup>
+                <StyledText> Store Picture </StyledText>
+                <StyledUpload
+                  name="avatar"
+                  listType="picture-card"
+                  className="avatar-uploader"
+                  showUploadList={false}
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  beforeUpload={beforeUpload}
+                  onChange={this.handleChangePic}
+                >
+                  {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                </StyledUpload>
+              </StyledUploadGroup>
+              <StyledTextFieldTop
+                onChange={this.handleChangeStoreName}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Store Name"
+                size="small"
+              />
+              <StyledTextField
+                onChange={this.handleChangeStoreDescription}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Store Description"
+                multiline
+                rows={4}
+                size="small"
+              />
+            </div>
+          )}
+          {this.state.current === 2 && (
+            <div>
+              <StyledTextFieldTop
+                onChange={this.handleChangeCardNumber}
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Card Number"
+                size="small"
+              />
+              <StyledButton type="primary" onClick={this.handleSubmit}>
+                Register
+              </StyledButton>
+            </div>
+          )}
         </FieldsContainer>
       </StyledRightContainer>
     );
