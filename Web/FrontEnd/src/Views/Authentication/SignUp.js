@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Button, Typography, Steps, Upload, message, Alert } from 'antd';
+import { Typography, Steps, Upload, message, Alert } from 'antd';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { TextField, Button as MaterialButton } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 import API from '../../utils/baseUrl';
 import 'antd/dist/antd.css';
 
@@ -41,17 +41,6 @@ const StyledTitle = styled(Title)`
 const Logo = styled.img`
   top: 43%;
   position: relative;
-`;
-
-const StyledButton = styled(Button)`
-  width: 60%;
-  height: 35px;
-  background-color: #00276a;
-  color: white;
-  border: none;
-  position: absolute;
-  right: 20%;
-  top: 160%;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -97,7 +86,7 @@ const StyledAlerts = styled(Alert)`
   right: -20%;
 `;
 
-const StyledMaterialButtonRight = styled(MaterialButton)`
+const StyledMaterialButtonRight = styled(Button)`
   && {
     position: absolute;
     top: 140%;
@@ -105,7 +94,7 @@ const StyledMaterialButtonRight = styled(MaterialButton)`
   }
 `;
 
-const StyledMaterialButtonLeft = styled(MaterialButton)`
+const StyledMaterialButtonLeft = styled(Button)`
   && {
     position: absolute;
     top: 140%;
@@ -141,7 +130,7 @@ export default class SignUp extends React.Component {
       confirmPassword: '',
       storeName: '',
       storeDescription: '',
-      telNumber: '',
+      phoneNumber: '',
       address: '',
       cardNumber: '',
       current: 0,
@@ -207,9 +196,9 @@ export default class SignUp extends React.Component {
     }
   };
 
-  handleChangeTelNumber = (event) => {
+  handleChangePhoneNumber = (event) => {
     this.setState({
-      telNumber: event.target.value,
+      phoneNumber: event.target.value,
     });
   };
 
@@ -259,7 +248,7 @@ export default class SignUp extends React.Component {
       confirmPassword,
       storeName,
       storeDescription,
-      telNumber,
+      phoneNumber,
       address,
       cardNumber,
       current,
@@ -290,7 +279,7 @@ export default class SignUp extends React.Component {
                   confirmPassword.length &&
                   storeName.length &&
                   storeDescription.length &&
-                  telNumber.length &&
+                  phoneNumber.length &&
                   address.length
                 )
               }
@@ -354,14 +343,14 @@ export default class SignUp extends React.Component {
                 value={storeName}
               />
               <StyledTextField
-                onChange={this.handleChangeTelNumber}
+                onChange={this.handleChangePhoneNumber}
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
                 label="Telephone No."
                 size="small"
-                value={telNumber}
+                value={phoneNumber}
               />
               <StyledTextField
                 onChange={this.handleChangeAddress}
@@ -413,7 +402,7 @@ export default class SignUp extends React.Component {
                     confirmPassword.length &&
                     storeName.length &&
                     storeDescription.length &&
-                    telNumber.length &&
+                    phoneNumber.length &&
                     address.length
                   )
                 }
@@ -447,7 +436,7 @@ export default class SignUp extends React.Component {
                     confirmPassword.length &&
                     storeName.length &&
                     storeDescription.length &&
-                    telNumber.length &&
+                    phoneNumber.length &&
                     address.length &&
                     cardNumber.length
                   )
