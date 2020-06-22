@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography, Alert } from 'antd';
-import { TextField } from '@material-ui/core';
+import { TextField, Button as MaterialButton } from '@material-ui/core';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
 
@@ -35,13 +35,15 @@ const Logo = styled.img`
   position: relative;
 `;
 
-const StyledButton = styled(Button)`
-  width: 60%;
-  height: 35px;
-  background-color: #00276a;
-  color: white;
-  border: none;
-  margin-top: 40px;
+const StyledButton = styled(MaterialButton)`
+  && {
+    width: 60%;
+    height: 35px;
+    background-color: #00276a;
+    color: white;
+    border: none;
+    margin-top: 40px;
+  }
 `;
 
 const StyledLinkButton = styled(Button)`
@@ -148,7 +150,12 @@ export default class LoginPage extends React.Component {
             size="small"
           />
           {invalidLogin && <StyledAlerts message="Invalid Email or Password" type="error" showIcon />}
-          <StyledButton type="primary" disabled={!(email.length && password.length)} onClick={this.handleSubmit}>
+          <StyledButton
+            color="primary"
+            variant="contained"
+            disabled={!(email.length && password.length)}
+            onClick={this.handleSubmit}
+          >
             Login
           </StyledButton>
         </FieldsContainer>
