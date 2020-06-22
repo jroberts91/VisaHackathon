@@ -128,6 +128,7 @@ export default class LoginPage extends React.Component {
   };
 
   render() {
+    const { email, password } = this.state;
     const LoginPageFields = (
       <StyledRightContainer>
         <FieldsContainer>
@@ -151,7 +152,7 @@ export default class LoginPage extends React.Component {
             label="Password"
             size="small"
           />
-          <StyledButton type="primary" onClick={this.handleSubmit}>
+          <StyledButton type="primary" disabled={!(email.length && password.length)} onClick={this.handleSubmit}>
             Login
           </StyledButton>
         </FieldsContainer>
