@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col, Tooltip } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, Tooltip, message } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 import { QuestionCircleOutlined } from '@ant-design/icons';
@@ -64,7 +64,10 @@ export default class PaymentForm extends React.Component {
             pathname: `/order/${orderId}`,
           });
         })
-        .catch((err) => console.log('error paying'));
+        .catch(() => message.error({
+          content: `Error occurred when trying to pay for the item, please ensure you entered the correct Visa credentials.`,
+          duration: 5,
+        }));
     };
     return (
       <Form
