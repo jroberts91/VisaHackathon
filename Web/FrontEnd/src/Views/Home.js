@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Layout } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
@@ -10,6 +9,7 @@ import MerchantShop from './MerchantShop/MerchantShop';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
+import Profile from './Profile/Profile';
 import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
@@ -67,6 +67,7 @@ export default class Home extends React.Component {
           <Switch>
             <Route path="/" exact component={HomeBody} />
             <Route path="/:merchantId" exact component={MerchantShop} />
+            <Route path="profile/:merchantId" exact component={Profile} />
             <Route path="/:merchantId/history" component={SalesHistory} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
