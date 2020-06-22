@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
@@ -39,26 +40,32 @@ export default class SideBar extends React.Component {
     this.state = { collapsed: false };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
 
   render() {
     const { collapsed, isLoggedIn } = this.props;
     let buttons;
-
+    const salesHistoryLink = `/${this.props.merchantId}/history`;
+    const myShopLink = `/${this.props.merchantId}`;
+    const offersLink = `/offers`;
     if (isLoggedIn) {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
+            <Link to="/" />
           </StyledMenuItem>
           <StyledMenuItem key="2" icon={<HistoryOutlined />}>
             Sales History
+            <Link to={salesHistoryLink} />
           </StyledMenuItem>
           <StyledMenuItem key="3" icon={<TagOutlined />}>
             Offers
+            <Link to={offersLink} />
           </StyledMenuItem>
           <StyledMenuItem key="4" icon={<ShopOutlined />}>
             My Shop
+            <Link to={myShopLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
@@ -67,9 +74,11 @@ export default class SideBar extends React.Component {
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
+            <Link to="/" />
           </StyledMenuItem>
           <StyledMenuItem key="3" icon={<TagOutlined />}>
             Offers
+            <Link to={offersLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
