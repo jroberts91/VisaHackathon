@@ -1,13 +1,17 @@
 import React from 'react';
+import axios from 'axios';
 import { Layout } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
 import SideBar from '../Components/Layout/SideBar';
 import HomeBody from './Body/HomeBody';
 import SalesHistory from './SalesHistory/SalesHistory';
+import MerchantShop from './MerchantShop/MerchantShop';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
-import axios from 'axios';
+import AddProduct from './AddProduct/AddProduct';
+import OfferPage from './Offers/OfferPage';
+import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -24,7 +28,7 @@ export default class Home extends React.Component {
   };
 
   handleCheckAuth = () => {
-    axios.get('api/merchant/auth').then((res) => {
+    API.get('api/merchant/auth').then((res) => {
       const { success, name, _id } = res.data;
       if (success) {
         this.setState({
@@ -38,7 +42,7 @@ export default class Home extends React.Component {
   };
 
   handleLogoutClick = () => {
-    axios.get('api/merchant/logout').then((res) => {
+    API.get('api/merchant/logout').then((res) => {
       console.log(res);
     });
     this.setState({
@@ -63,9 +67,12 @@ export default class Home extends React.Component {
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
+            <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
+            <Route path="/:merchantId" exact component={MerchantShop} />
             <Route path="/:merchantId/history" component={SalesHistory} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
-            <Route path="/order/:orderId" component={OrderSummary} />
+            <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
+            <Route path="/:merchantId/addproduct" component={AddProduct} />
           </Switch>
         </Layout>
       </Layout>

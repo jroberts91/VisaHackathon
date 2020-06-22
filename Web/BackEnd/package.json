@@ -6,12 +6,26 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write '**/*.js'",
+    "format": "prettier --write \"**/*.js\"",
     "dev": "concurrently \"npm run start\" \"cd.. && cd FrontEnd && npm run start\""
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bcrypt": "^5.0.0",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.18",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2"
+  },
   "devDependencies": {
-    "prettier": "^2.0.5"
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.4",
+    "prettier": "2.0.5"
   }
 }

@@ -8,7 +8,7 @@ import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
-class MerchantDescription extends React.Component {
+class OfferDescription extends React.Component {
   render() {
     return (
       <>
@@ -19,7 +19,7 @@ class MerchantDescription extends React.Component {
   }
 }
 
-export default class MerchantCard extends React.Component {
+export default class OfferCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +49,7 @@ export default class MerchantCard extends React.Component {
         ]}
         tabBarExtraContent={<Rate value={rating} />}
       >
-        <Meta title={title} description={<MerchantDescription description={description} rating={rating} />} />
+        <Meta title={title} description={<OfferDescription description={description} rating={rating} />} />
       </Card>
     );
   }
