@@ -50,7 +50,7 @@ router.get('/getAll', auth, (req, res) => {
 });
 
 //?id=${orderId}
-router.get('/get', auth, async (req, res) => {
+router.get('/get', async (req, res) => {
   let orderId = req.query.orderId;
   const order = await Order.findOne({ _id: orderId });
   if (!order) return res.status(400).json({ success: false });
