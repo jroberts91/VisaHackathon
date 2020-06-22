@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, Alert } from 'antd';
+import { Row, Col, Card, Rate, Button, Alert, message } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
@@ -18,9 +18,7 @@ export default class ProductCard extends React.Component {
       productUrl: this.props.productUrl,
       merchantId: this.props.merchantId,
       productId: this.props.productId,
-      isOwnerShop: this.props.isOwnerShop,
-      copySuccess: false,
-      copyFailure: false
+      isOwnerShop: this.props.isOwnerShop
     };
   }
 
@@ -28,16 +26,15 @@ export default class ProductCard extends React.Component {
 
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(() => {
-      console.log("Copied")
-      this.setState({
-        copySuccess: true,
-        copyFailure: false
-      })
+      message.success({
+        content: `Successfully Copied to Clipboard!`,
+        duration: 5,
+      });
     }, () => {
-      this.setState({
-        copySuccess: false,
-        copyFailure: true
-      })
+      message.error({
+        content: `Error Copying to Clipboard`,
+        duration: 5,
+      });
     })
   }
 
@@ -95,14 +92,6 @@ export default class ProductCard extends React.Component {
             <Meta title={title} description={<Rate value={this.props.rating} disabled />} />
           </Card>
         </Link>
-        {
-          this.state.copySuccess &&
-          <Alert message="Copied to Clipboard" type="success" showIcon closable />
-        }
-        {
-          this.state.copyFailure &&
-          <Alert message="Error Copying to Clipboard" type="error" showIcon closable />
-        }
       </div>
     );
   }
