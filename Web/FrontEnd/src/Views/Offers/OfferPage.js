@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Row, Col, Layout, Typography, Spin } from 'antd';
+import { TagOutlined } from '@ant-design/icons';
 import OfferCard from '../../Components/Cards/OfferCard';
 import API from '../../utils/baseUrl';
 
@@ -42,7 +43,7 @@ export default class OfferPage extends React.Component {
         {notLoaded && <StyledSpin size="large" />}
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
-            Offers
+            <TagOutlined /> Offers
           </Title>
         </Row>
         <Row gutter={[32, 32]}>

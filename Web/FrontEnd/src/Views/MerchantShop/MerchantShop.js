@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Layout, Typography, Card } from 'antd';
-import { PlusOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { PlusOutlined, ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import Meta from 'antd/lib/card/Meta';
 import API from '../../utils/baseUrl';
@@ -122,10 +122,7 @@ export default class MerchantShop extends React.Component {
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
-            <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined />
-            </Link>{' '}
-            / <UserOutlined /> {this.state.merchantName}
+            <ShopOutlined /> My Shop
           </Title>
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
