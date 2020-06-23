@@ -59,11 +59,9 @@ export default class AddProduct extends React.Component {
         formData.append(key, body[key]);
       }
 
-      console.log(formData);
       const config = {
         header: { 'content-type': 'multipart/form-data' },
       };
-
       API.post('api/product/create', formData, config)
         .then((res) => {
           this.props.history.push({

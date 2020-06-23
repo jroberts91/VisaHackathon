@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Card } from 'antd';
+import { Row, Col, Layout, Typography } from 'antd';
 import { PlusOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import OfferCard from '../../Components/Cards/OfferCard';
 import Meta from 'antd/lib/card/Meta';
