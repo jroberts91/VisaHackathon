@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import TopBar from './TopComponents/TopBar';
 import HomePage from './Pages/Home/HomePage';
+import ScanPage from './Pages/Scan/ScanPage';
 import ProfilePage from './Pages/Profile/ProfilePage';
 
 const styles = StyleSheet.create({
@@ -16,7 +17,9 @@ export default class MainContainer extends React.Component {
     return (
       <View style={styles.main}>
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
-        {pageName === 'Home' ? <HomePage /> : <ProfilePage personName={'John Does'} />}
+        {pageName === 'Home' && <HomePage />}
+        {pageName === 'Profile' && <ProfilePage personName={'John Does'} />}
+        {pageName === 'Scan' && <ScanPage />}
       </View>
     );
   }

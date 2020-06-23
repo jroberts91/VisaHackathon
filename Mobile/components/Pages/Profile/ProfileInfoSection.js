@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Divider} from 'react-native-elements';
+import { StyleSheet, Text, View } from 'react-native';
+import { Divider } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   body: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
 export default class ProfileInfoSection extends React.Component {
   render() {
-    const {personName} = this.props;
+    const { personName } = this.props;
     return (
       <View style={styles.body}>
         <Text style={styles.name}> {personName} </Text>
