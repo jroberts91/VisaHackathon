@@ -6,6 +6,7 @@ import SideBar from '../Components/Layout/SideBar';
 import HomeBody from './Body/HomeBody';
 import SalesHistory from './SalesHistory/SalesHistory';
 import MerchantShop from './MerchantShop/MerchantShop';
+import ProductPage from './ProductPage/ProductPage';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
@@ -71,7 +72,8 @@ export default class Home extends React.Component {
             <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
             <Route path="/:merchantId" exact component={MerchantShop} />
             <Route path="/profile/:merchantId" render={(props) => <Profile loggedInUserId={merchantId} {...props} />} />
-            <Route path="/:merchantId/history" component={SalesHistory} />
+            <Route path="/:merchantId/history" exact component={SalesHistory} />
+            <Route path="/:merchantId/product/:productId" exact component={ProductPage} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
             <Route path="/:merchantId/addproduct" component={AddProduct} />
