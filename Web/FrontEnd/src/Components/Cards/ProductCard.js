@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, message, Modal } from 'antd';
-import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { Card, Rate, Button, message, Modal } from 'antd';
+import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
@@ -12,15 +12,7 @@ const { Meta } = Card;
 export default class ProductCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: this.props.title,
-      imageUrl: this.props.imageUrl,
-      rating: this.props.rating,
-      productUrl: this.props.productUrl,
-      merchantId: this.props.merchantId,
-      productId: this.props.productId,
-      isOwnerShop: this.props.isOwnerShop,
-    };
+    this.state = {};
   }
 
   componentDidMount = () => {};
@@ -54,62 +46,55 @@ export default class ProductCard extends React.Component {
     if (isOwnerShop) {
       return [
         <Button
-          type="primary"
-          style={{ backgroundColor: '#FAAA13' }}
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.copyLinkToClipboard(productLink);
           }}
         >
           <LinkOutlined />
-          Copy
         </Button>,
         <Button
-          type="primary"
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.showQRCode();
           }}
         >
           <QrcodeOutlined />
-          QR Code
         </Button>,
-        <Row>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Edit</Button>
-          </Col>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Delete</Button>
-          </Col>
-        </Row>,
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
+          <EditOutlined />
+        </Button>,
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
+          <DeleteOutlined />
+        </Button>,
       ];
     }
     return [
       <Button
-        type="primary"
+        style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
           this.copyLinkToClipboard(productLink);
         }}
       >
         <LinkOutlined />
-        Copy
       </Button>,
       <Button
-        type="primary"
+        style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
           this.showQRCode();
         }}
       >
         <QrcodeOutlined />
-        QR Code
       </Button>,
     ];
   };
 
   render() {
-    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
+    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.props;
 
     const productLink = `/${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
@@ -129,12 +114,12 @@ export default class ProductCard extends React.Component {
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
+            cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}
           >
-            <Meta title={title} description={<Rate value={this.props.rating} disabled />} />
+            <Meta title={title} description={<Rate value={this.props.rating || 5} disabled />} />
           </Card>
         </Link>
       </div>

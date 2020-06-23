@@ -21,7 +21,7 @@ export default class AddProduct extends React.Component {
     super(props);
     this.state = {
       merchantId: this.props.match.params.merchantId,
-      merchantName: ''
+      merchantName: '',
     };
   }
 
@@ -134,7 +134,6 @@ export default class AddProduct extends React.Component {
             </Col>
           </Row>
         </Form>
-
       </Content>
     );
   }

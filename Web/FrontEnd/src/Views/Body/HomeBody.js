@@ -1,7 +1,7 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
-import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;

@@ -38,7 +38,7 @@ class ProductDisplay extends React.Component {
           <MerchantDetail
             name={merchant.name}
             address={merchant.address}
-            phone={merchant.phoneNumber}
+            phone={merchant.phone}
             rating={merchant.rating}
           />
         </Row>
