@@ -17,26 +17,26 @@ router.post("/direct", async (req, res) => {
 
     let merchantId = orderBody.merchantId;
     const merchant = await Merchant.findOne({"_id": merchantId })
-    if (!merchant) return res.status(400).json({success: false})
+    if (!merchant) return res.json({success: false})
 
     let productId = orderBody.product;
     const product = await Product.findOne({"_id": productId})
-    if (!product) return res.status(400).json({success: false})
+    if (!product) return res.json({success: false})
 
     // check product belong to merchant
     if (product.merchantId != merchantId ) {
         console.log("merchantId does not match under product");
-        return res.status(400).json({success: false});
+        return res.json({success: false});
     }
     if (orderBody.quantity < 0) {
         console.log("product qty cannot be zero");
-        return res.status(400).json({success: false});
+        return res.json({success: false});
     }
     // check if there is qty available
     let newSoldQty = orderBody.quantity + product.soldQty;
     if (newSoldQty > product.totalQty) {
         console.log("product not available");
-        return res.status(400).json({success: false});
+        return res.json({success: false});
     }
 
     paymentBody.dateTime = Date.now(); // set date
@@ -52,19 +52,19 @@ router.post("/direct", async (req, res) => {
         // save only if succesful
     } catch (err) {
         console.log(err);
-        return res.status(400).json({success: false, err})
+        return res.json({success: false, err})
     }
 
     // update product qty
     await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
 
     await payment.save(async function(err, payment) {
-        if (err) return res.status(400).json({ success: false, err })
+        if (err) return res.json({ success: false, err })
         order.paymentId = payment._id;
         order.isFulfilled = false;
         await order.save(async function(err, order) {
-            if (err) return res.status(400).json({ success: false, err })
-            return res.status(200).json({success: true, orderId: order._id, paymentId: order.paymentId})
+            if (err) return res.json({ success: false, err })
+            return res.json({success: true, orderId: order._id, paymentId: order.paymentId})
          });
      });
 });
