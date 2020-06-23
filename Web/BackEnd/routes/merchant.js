@@ -90,6 +90,7 @@ router.post('/uploadProfileImage', auth, imageUpload, (req, res) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
       success: true,
+      profileImage: req.files[0].path
     });
   });
 });
