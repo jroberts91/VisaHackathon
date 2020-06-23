@@ -10,7 +10,6 @@ const validateMessages = {
   required: 'This field is required.',
 };
 
-
 export default class AddProduct extends React.Component {
   formRef = React.createRef();
   constructor(props) {
@@ -24,13 +23,13 @@ export default class AddProduct extends React.Component {
     let formData = new FormData();
     const merchantId = this.state.merchantId;
 
-    const handleUpload= (info)=> {
-      formData.append("files",info.file)
+    const handleUpload = (info) => {
+      formData.append('files', info.file);
     };
 
     const handleCreate = (values) => {
       const { name, price, quantity, description } = values.pdt;
-      
+
       const body = {
         name: name,
         description: description,
@@ -39,14 +38,13 @@ export default class AddProduct extends React.Component {
         merchantId: merchantId,
       };
 
-      for ( var key in body ) {
+      for (var key in body) {
         formData.append(key, body[key]);
       }
-      
-      console.log(formData)
+
       const config = {
-        header: { 'content-type': 'multipart/form-data' }
-      }
+        header: { 'content-type': 'multipart/form-data' },
+      };
       API.post('api/product/create', formData, config)
         .then((res) => {
           this.props.history.push({
@@ -65,14 +63,14 @@ export default class AddProduct extends React.Component {
       >
         <Row align="top">
           <Col lg={{ span: 8 }} span={24}>
-
             <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }} style={{ margin: '0 auto' }}>
               <Dragger onChange={handleUpload} beforeUpload={() => false}>
-                <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
                 <p className="ant-upload-text">Click or drag file to this area to upload product image</p>
               </Dragger>
             </Form.Item>
-
           </Col>
 
           <Col lg={{ span: 12 }} span={24}>

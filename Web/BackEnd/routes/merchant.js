@@ -19,15 +19,13 @@ router.get('/auth', auth, (req, res) => {
   });
 });
 
-router.post('/register',imageUpload, async (req, res) => {
-  
+router.post('/register', imageUpload, async (req, res) => {
   //hashing password
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   req.body.password = hashedPassword;
   const merchant = new Merchant(req.body);
-  if (req.files) merchant.profileImage= req.files[0].path;
-
+  if (req.files) merchant.profileImage = req.files[0].path;
   //save to mongoDB
   try {
     await merchant.save();
