@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const { Merchant } = require("../models/Merchant");
-const { Product } = require("../models/Product");
-const { Payment } = require("../models/Payment");
-const { Order } = require("../models/Order");
-const { PullFundsTransaction, PushFundsTransaction } = require("../external/visaDirect");
+const { Merchant } = require('../models/Merchant');
+const { Product } = require('../models/Product');
+const { Payment } = require('../models/Payment');
+const { Order } = require('../models/Order');
+const { PullFundsTransaction, PushFundsTransaction } = require('../external/visaDirect');
 
 //=================================
 //             Payment
@@ -40,18 +40,19 @@ router.post("/direct", async (req, res) => {
         // push to merchant
         await PushFundsTransaction();
         // save only if succesful
-        await payment.save(async function(err, payment) {
-            order.paymentId = payment._id;
-            order.isFulfilled = false;
-            await order.save();
-         });
-        // TODO fix throw error
     } catch (err) {
         console.log(err);
         return res.status(400).json({success: false, err})
     }
-
-    res.status(200).json({success:true})
+    await payment.save(async function(err, payment) {
+        if (err) return res.status(400).json({ success: false, err })
+        order.paymentId = payment._id;
+        order.isFulfilled = false;
+        await order.save(async function(err, order) {
+            if (err) return res.status(400).json({ success: false, err })
+            return res.status(200).json({success: true, orderId: order._id, paymentId: order.paymentId})
+         });
+     });
 });
 
 module.exports = router;
