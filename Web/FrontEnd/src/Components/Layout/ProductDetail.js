@@ -25,32 +25,35 @@ export default class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 1
-    }
+      quantity: 1,
+    };
   }
 
-  componentDidMount = () => { }
+  componentDidMount = () => {};
 
   checkQuantity = () => {
-    if (this.state.quantity === "" || this.state.quantity === null) {
+    if (this.state.quantity === '' || this.state.quantity === null) {
       return true;
     }
     return false;
-  }
+  };
 
   copyLinkToClipboard = (productLink) => {
-    navigator.clipboard.writeText(productLink).then(() => {
-      message.success({
-        content: `Successfully Copied to Clipboard!`,
-        duration: 5,
-      });
-    }, () => {
-      message.error({
-        content: `Error Copying to Clipboard`,
-        duration: 5,
-      });
-    })
-  }
+    navigator.clipboard.writeText(productLink).then(
+      () => {
+        message.success({
+          content: `Successfully Copied to Clipboard!`,
+          duration: 5,
+        });
+      },
+      () => {
+        message.error({
+          content: `Error Copying to Clipboard`,
+          duration: 5,
+        });
+      }
+    );
+  };
 
   showQRCode = () => {
     this.setState({ isShowQR: true });
@@ -61,8 +64,8 @@ export default class ProductDetail extends React.Component {
   };
 
   getQtyPerecent = (qtySold, totalQty) => {
-    return (qtySold / totalQty) * 100
-  }
+    return (qtySold / totalQty) * 100;
+  };
 
   getTitle = (name, rating) => {
     return (
@@ -71,11 +74,11 @@ export default class ProductDetail extends React.Component {
           {name}
         </Col>
         <Col key={1} xs={24} md={24} lg={12} span={12}>
-          <Rate value={rating} disabled />
+          <Rate value={rating || 5} disabled />
         </Col>
       </Row>
-    )
-  }
+    );
+  };
 
   getBody = (description, price, totalQty, qtySold, quantity, paymentLink) => {
     qtySold = qtySold || 0;
@@ -94,17 +97,14 @@ export default class ProductDetail extends React.Component {
           <QRCode value={paymentLink} size={256} />
         </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
-          <Col span={24}>
-            {description || "No Description Provided"}
-          </Col>
+          <Col span={24}>{description || 'No Description Provided'}</Col>
         </Row>
-        <Row style={{ fontSize: '1.2em', color: 'black' }} gutter={[0, { sm: 48, md: 64, lg: 80 }]}>
-          ${(price || 0).toFixed(2)}
-        </Row>
+        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>${(price || 0).toFixed(2)}</Row>
         <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
           <Col style={{ fontSize: '1.2em' }} key={0} span={8}>
-            Quantity: <InputNumber
-              style={{ width: "52px" }}
+            Quantity:{' '}
+            <InputNumber
+              style={{ width: '52px' }}
               min={1}
               defaultValue={quantity}
               onChange={(value) => this.setState({ quantity: value })}
@@ -112,10 +112,11 @@ export default class ProductDetail extends React.Component {
           </Col>
           <Col key={1} span={16}>
             <Progress
-              style={{ width: "70%", fontSize: '1em' }}
-              size='small'
+              style={{ width: '70%', fontSize: '1em' }}
+              size="small"
               percent={this.getQtyPerecent(qtySold, totalQty)}
-              format={() => `${qtySold}/${totalQty} sold`} />
+              format={() => `${qtySold}/${totalQty} sold`}
+            />
           </Col>
         </Row>
         <Row gutter={[32, 32]}>
@@ -129,27 +130,30 @@ export default class ProductDetail extends React.Component {
             </WhiteButton>
           </Col>
           <Col key={1} span={12}>
-            <Link style={{ float: 'right', marginRight: '20%' }} to={paymentLink + "/payment?qty=" + this.state.quantity}>
-              <BlueButton type='primary' disabled={this.checkQuantity()}>Buy Now</BlueButton>
+            <Link
+              style={{ float: 'right', marginRight: '20%' }}
+              to={paymentLink + '/payment?qty=' + this.state.quantity}
+            >
+              <BlueButton type="primary" disabled={this.checkQuantity()}>
+                Buy Now
+              </BlueButton>
             </Link>
           </Col>
         </Row>
       </div>
-    )
-  }
+    );
+  };
 
   render() {
     const { name, rating, description, price, totalQty, qtySold, paymentLink } = this.props;
     const { quantity } = this.state;
 
     return (
-      <Card
-        style={{ width: '95%', marginLeft: '5%' }}
-        hoverable
-      >
+      <Card style={{ width: '95%', marginLeft: '5%' }} hoverable>
         <Meta
           title={this.getTitle(name, rating)}
-          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink)} />
+          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink)}
+        />
       </Card>
     );
   }

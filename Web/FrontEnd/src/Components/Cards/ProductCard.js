@@ -12,25 +12,27 @@ const { Meta } = Card;
 export default class ProductCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   copyLinkToClipboard = (productLink) => {
-    navigator.clipboard.writeText(productLink).then(() => {
-      message.success({
-        content: `Successfully Copied to Clipboard!`,
-        duration: 5,
-      });
-    }, () => {
-      message.error({
-        content: `Error Copying to Clipboard`,
-        duration: 5,
-      });
-    })
-  }
+    navigator.clipboard.writeText(productLink).then(
+      () => {
+        message.success({
+          content: `Successfully Copied to Clipboard!`,
+          duration: 5,
+        });
+      },
+      () => {
+        message.error({
+          content: `Error Copying to Clipboard`,
+          duration: 5,
+        });
+      }
+    );
+  };
 
   showQRCode = () => {
     this.setState({ isShowQR: true });
@@ -44,7 +46,7 @@ export default class ProductCard extends React.Component {
     if (isOwnerShop) {
       return [
         <Button
-          style={{ backgroundColor: "#fafafa", border: "0" }}
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.copyLinkToClipboard(productLink);
@@ -53,7 +55,7 @@ export default class ProductCard extends React.Component {
           <LinkOutlined />
         </Button>,
         <Button
-          style={{ backgroundColor: "#fafafa", border: "0" }}
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.showQRCode();
@@ -61,21 +63,17 @@ export default class ProductCard extends React.Component {
         >
           <QrcodeOutlined />
         </Button>,
-        <Button
-          style={{ backgroundColor: "#fafafa", border: "0" }}
-        >
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
           <EditOutlined />
         </Button>,
-        <Button
-          style={{ backgroundColor: "#fafafa", border: "0" }}
-        >
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
           <DeleteOutlined />
-        </Button>
+        </Button>,
       ];
     }
     return [
       <Button
-        style={{ backgroundColor: "#fafafa", border: "0" }}
+        style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
           this.copyLinkToClipboard(productLink);
@@ -84,14 +82,14 @@ export default class ProductCard extends React.Component {
         <LinkOutlined />
       </Button>,
       <Button
-        style={{ backgroundColor: "#fafafa", border: "0" }}
+        style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
           this.showQRCode();
         }}
       >
         <QrcodeOutlined />
-      </Button>
+      </Button>,
     ];
   };
 
@@ -116,12 +114,12 @@ export default class ProductCard extends React.Component {
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img style={{height: "200px", objectFit: "cover"}}  alt="example" src={fullImageUrl || MaiYuGe} />}
+            cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}
           >
-            <Meta title={title} description={<Rate value={this.props.rating} disabled />} />
+            <Meta title={title} description={<Rate value={this.props.rating || 5} disabled />} />
           </Card>
         </Link>
       </div>

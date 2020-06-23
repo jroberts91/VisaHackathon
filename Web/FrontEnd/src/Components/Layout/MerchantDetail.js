@@ -39,7 +39,7 @@ export default class MerchantDetail extends React.Component {
             <Title level={4} style={{ fontSize: '18px' }}>
               Rating:
             </Title>
-            <Rate value={rating} disabled />
+            <Rate value={rating || 5} disabled />
           </Col>
         </Row>
       </div>

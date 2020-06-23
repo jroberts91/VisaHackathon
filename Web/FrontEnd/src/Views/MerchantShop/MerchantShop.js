@@ -17,7 +17,6 @@ const AddButton = styled(Button)`
 `;
 
 class ProductList extends React.Component {
-
   render() {
     const { merchantId, products, isOwnerShop } = this.props;
 
@@ -89,7 +88,7 @@ export default class MerchantShop extends React.Component {
     }
     const nextIsOwnerShop = nextProps.loggedInId === newMerchantId;
     if (nextIsOwnerShop !== this.state.isOwnerShop) {
-      this.setState({ isOwnerShop: nextIsOwnerShop })
+      this.setState({ isOwnerShop: nextIsOwnerShop });
     }
   };
 
@@ -99,19 +98,18 @@ export default class MerchantShop extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-        <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+          <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
             <Title level={4} style={{ color: '#828282' }}>
-            <ShopOutlined /> My Shop
-          </Title>
+              <ShopOutlined /> My Shop
+            </Title>
           </Col>
-          {
-            isOwnerShop &&
+          {isOwnerShop && (
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-              <Link style={{float: 'right'}} to={`/${merchantId}/addproduct`}>
-              <AddButton type='primary'>Add New Product</AddButton>
+              <Link style={{ float: 'right' }} to={`/${merchantId}/addproduct`}>
+                <AddButton type="primary">Add New Product</AddButton>
               </Link>
             </Col>
-          }
+          )}
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

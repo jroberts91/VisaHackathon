@@ -40,16 +40,15 @@ export default class MerchantCard extends React.Component {
     return (
       <Card
         style={{ width: '100%', minWidth: 250 }}
-        cover={<img style={{height: "200px", objectFit: "cover"}} alt="example" src={fullImageUrl || MaiYuGe} />}
+        cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
         hoverable
         actions={[
           <Link to={merchantHref}>
             <HomeOutlined key="visit" />
           </Link>,
         ]}
-        tabBarExtraContent={<Rate value={rating} />}
       >
-        <Meta title={title} description={<MerchantDescription description={description} rating={rating} />} />
+        <Meta title={title} description={<MerchantDescription description={description} rating={rating || 5} />} />
       </Card>
     );
   }
