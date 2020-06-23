@@ -177,9 +177,17 @@ export default class SignUp extends React.Component {
   };
 
   handleChangePassword = (event) => {
-    this.setState({
-      password: event.target.value,
-    });
+    if (event.target.value !== this.state.confirmPassword) {
+      this.setState({
+        differentPasswords: true,
+        password: event.target.value,
+      });
+    } else {
+      this.setState({
+        differentPasswords: false,
+        password: event.target.value,
+      });
+    }
   };
 
   handleChangeConfirmPassword = (event) => {
@@ -324,7 +332,7 @@ export default class SignUp extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.nextSection}
-                disabled={!(email.length && password.length && confirmPassword.length)}
+                disabled={!(email.length && password.length && confirmPassword.length && !differentPasswords)}
               >
                 Next
               </StyledMaterialButtonRight>
