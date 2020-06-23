@@ -67,7 +67,7 @@ export default class Home extends React.Component {
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
-            <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
+            <Route path="/offers" component={OfferPage} />
             <Route path="/:merchantId" exact component={MerchantShop} />
             <Route path="/:merchantId/history" exact component={SalesHistory} />
             <Route path="/:merchantId/product/:productId" exact component={ProductPage} />

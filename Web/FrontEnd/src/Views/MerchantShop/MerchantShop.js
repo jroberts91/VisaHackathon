@@ -98,6 +98,7 @@ export default class MerchantShop extends React.Component {
   };
 
   componentDidMount = () => {
+    console.log('ASDASDASD');
     const merchantId = this.state.merchantId;
     this.getProductFromApi(merchantId);
     this.getMerchantNameFromApi(merchantId);
@@ -120,10 +121,11 @@ export default class MerchantShop extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: "#828282" }}>
-            <Link to={'/'} style={{ color: "#828282" }}>
+          <Title level={4} style={{ color: '#828282' }}>
+            <Link to={'/'} style={{ color: '#828282' }}>
               <HomeOutlined />
-            </Link> / <UserOutlined /> {this.state.merchantName}
+            </Link>{' '}
+            / <UserOutlined /> {this.state.merchantName}
           </Title>
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
