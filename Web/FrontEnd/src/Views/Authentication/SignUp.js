@@ -223,6 +223,7 @@ export default class SignUp extends React.Component {
   };
 
   handleChangePic = (info) => {
+    console.log(info.file);
     this.setState({
       loading: false,
       files: info.file,
