@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Layout, Typography, Button } from 'antd';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
-import { defaultTheme } from '../../utils/theme';
+import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import API from '../../utils/baseUrl';
+import { defaultTheme } from '../../utils/theme';
+import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -99,11 +99,10 @@ export default class MerchantShop extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-            <Title level={4} style={{ color: "#828282" }}>
-              <Link to={'/'} style={{ color: "#828282" }}>
-                <HomeOutlined />
-              </Link> / <UserOutlined /> {this.state.merchantName}</Title>
+        <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+            <Title level={4} style={{ color: '#828282' }}>
+            <ShopOutlined /> My Shop
+          </Title>
           </Col>
           {
             isOwnerShop &&
@@ -113,7 +112,6 @@ export default class MerchantShop extends React.Component {
               </Link>
             </Col>
           }
-
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

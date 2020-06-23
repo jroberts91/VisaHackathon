@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import {Divider} from 'react-native-elements';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { Divider } from 'react-native-elements';
 import ProfileInfoSection from './ProfileInfoSection';
 
 const styles = StyleSheet.create({
@@ -46,14 +46,11 @@ const styles = StyleSheet.create({
 
 export default class ProfilePage extends React.Component {
   render() {
-    const {personName} = this.props;
+    const { personName } = this.props;
     return (
       <View>
         <View style={styles.header} />
-        <Image
-          style={styles.avatar}
-          source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}
-        />
+        <Image style={styles.avatar} source={{ uri: 'https://bootdey.com/img/Content/avatar/avatar6.png' }} />
         <ProfileInfoSection personName={personName} />
         <Divider style={styles.divider} />
       </View>

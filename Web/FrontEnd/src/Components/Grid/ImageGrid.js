@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Col, Avatar } from 'antd';
 import 'antd/dist/antd.css';
-import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
 
 
@@ -26,7 +25,7 @@ export default class ImageGrid extends React.Component {
       <div>
         <Row gutter={[32, 32]}>
           <Col span={24}>
-            <Avatar shape="square" size={300} icon={<img style={{ cursor: 'pointer' }} src={coverImage} />} />
+            <Avatar shape="square" size={300} icon={<img alt="Img" style={{ cursor: 'pointer' }} src={coverImage} />} />
           </Col>
         </Row>
         <Row gutter={[32, 32]}>
@@ -39,6 +38,7 @@ export default class ImageGrid extends React.Component {
               <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
                 <Avatar shape="square" size={100} icon={
                   <img
+                    alt="Img"
                     onClick={() => { this.setState({ imageIndex: index }) }}
                     src={baseUrl + url}
                     style={{ cursor: 'pointer' }}

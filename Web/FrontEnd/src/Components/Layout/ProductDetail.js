@@ -15,16 +15,6 @@ const WhiteButton = styled(Button)`
   font-size: 1.2em;
 `;
 
-const GoldButton = styled(Button)`
-  background: #FAAA13;
-  border-color: #FAAA13;
-  margin-bottom: 0;
-  &:hover { 
-    background: #FDBB0A;
-    border-color: #FDBB0A;
-  }
-`;
-
 const BlueButton = styled(Button)`
   background: ${defaultTheme.colors.primary};
   border-color: ${defaultTheme.colors.primary};
