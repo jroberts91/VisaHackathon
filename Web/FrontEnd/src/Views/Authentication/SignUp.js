@@ -145,7 +145,7 @@ export default class SignUp extends React.Component {
    * IF response.status !==200, user is routed to './'
    */
   handleSubmit = () => {
-    const { storeName, storeDescription, email, password, differentPasswords } = this.state;
+    const { storeName, storeDescription, email, password } = this.state;
     const { history } = this.props;
     const sendObject = { name: storeName, email, password, description: storeDescription };
     API.post('api/merchant/register', sendObject).then((res) => {

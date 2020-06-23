@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Layout } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
