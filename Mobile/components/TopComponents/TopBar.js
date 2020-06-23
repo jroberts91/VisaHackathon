@@ -20,7 +20,7 @@ const LeftComponent = (props) => {
   let iconName, typeName;
   iconName = 'bars';
   typeName = 'font-awesome-5';
-  return <Icon name={iconName} type={typeName} color='white' onPress={props.openDrawer} />;
+  return <Icon name={iconName} type={typeName} color="white" onPress={props.openDrawer} />;
 };
 
 export default class TopBar extends React.Component {

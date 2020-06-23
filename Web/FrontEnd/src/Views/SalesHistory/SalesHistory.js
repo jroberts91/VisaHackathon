@@ -1,7 +1,9 @@
 import React from 'react';
-
-import { Layout, Tabs, Input, Table, Switch } from 'antd';
+import { Layout, Tabs, Input, Table, Switch, Typography, Row } from 'antd';
+import { HistoryOutlined } from '@ant-design/icons';
 import Column from 'antd/lib/table/Column';
+
+const { Title } = Typography;
 
 const { Content } = Layout;
 
@@ -150,6 +152,11 @@ export default class SalesHistory extends React.Component {
 
     return (
       <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto' }}>
+        <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+          <Title level={4} style={{ color: '#828282' }}>
+            <HistoryOutlined /> Sales History
+          </Title>
+        </Row>
         <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
           <TabPane tab="All" key="1">
             <SalesTable statusTab={true} />
