@@ -122,8 +122,9 @@ export default class MerchantShop extends React.Component {
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: "#828282" }}>
             <Link to={'/'} style={{ color: "#828282" }}>
-            <HomeOutlined />
-            </Link> / <UserOutlined /> {this.state.merchantName}</Title>
+              <HomeOutlined />
+            </Link> / <UserOutlined /> {this.state.merchantName}
+          </Title>
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

@@ -18,7 +18,7 @@ router.post('/fulfill', auth, async (req, res) => {
   });
 });
 
-router.get('/getAll', auth, (req, res) => {
+router.post('/getAll', auth, (req, res) => {
   let order = req.body.order ? req.body.orderBy : 'desc';
   let sortBy = req.body.sortBy ? req.body.sortBy : '_id';
 
