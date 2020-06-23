@@ -32,6 +32,14 @@
 - GET '/get' get 1 merchant based on merchantId in the params (.../get?id=${merchantId})
     - returns {success: true, merchant: merchant}
 
+- GET '/emailExist' takes in 1 param (.../?emai;=${email})
+    - returns false if email already exist
+
+- POST '/editProfile' allows merchant to edit product.
+    - e.g. req.body = { address: "hogwards", phone:"0238403984"}
+    - It will just update the address and phone.
+    - Can take it as many fields as the merchant schema
+
 ## api/product
 
 - POST '/create' creates a new product and store in database. It takes in 
