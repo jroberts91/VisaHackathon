@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Upload, Row, Col, message } from 'antd';
+import { Form, Input, Button, Upload, Row, Col } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
@@ -9,7 +9,7 @@ const { Dragger } = Upload;
 const validateMessages = {
   required: 'This field is required.',
 };
-var files = [];
+
 
 export default class AddProduct extends React.Component {
   formRef = React.createRef();
@@ -21,29 +21,33 @@ export default class AddProduct extends React.Component {
   }
 
   render() {
+    let formData = new FormData();
     const merchantId = this.state.merchantId;
 
-    const dragger_props = {
-      onChange(info) {
-        files = info.fileList.map((image) => image.originFileObj);
-      },
+    const handleUpload= (info)=> {
+      formData.append("files",info.file)
     };
 
     const handleCreate = (values) => {
       const { name, price, quantity, description } = values.pdt;
-
+      
       const body = {
         name: name,
         description: description,
-        images: files,
         price: price,
         totalQty: quantity,
         merchantId: merchantId,
       };
 
-      console.log(body);
-
-      API.post('api/product/create', body)
+      for ( var key in body ) {
+        formData.append(key, body[key]);
+      }
+      
+      console.log(formData)
+      const config = {
+        header: { 'content-type': 'multipart/form-data' }
+      }
+      API.post('api/product/create', formData, config)
         .then((res) => {
           this.props.history.push({
             pathname: `/${merchantId}`,
@@ -63,7 +67,7 @@ export default class AddProduct extends React.Component {
           <Col lg={{ span: 8 }} span={24}>
 
             <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }} style={{ margin: '0 auto' }}>
-              <Dragger {...dragger_props}>
+              <Dragger onChange={handleUpload} beforeUpload={() => false}>
                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
                 <p className="ant-upload-text">Click or drag file to this area to upload product image</p>
               </Dragger>
