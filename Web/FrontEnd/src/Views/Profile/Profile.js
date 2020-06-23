@@ -220,7 +220,7 @@ export default class Profile extends React.Component {
         </Row>
         {mode === 'edit' && (
           <ButtonContainer>
-            <Button type="primary" onClick={handleUpdateProfile}>
+            <Button type="primary" onClick={this.handleUpdateProfile}>
               Update
             </Button>
           </ButtonContainer>

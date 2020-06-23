@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
-import { Layout, Button, Avatar, Typography } from 'antd';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Button, Avatar, Typography, Menu, Dropdown } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, DownOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 const { Header } = Layout;
 const { Text } = Typography;
@@ -28,6 +28,22 @@ const StyledRegisterButton = styled(Button)`
   top: 15px;
   position: absolute;
   width: 90px;
+`;
+
+const StyledDropDownIcon = styled(DownOutlined)`
+  right: 110px;
+  top: 25px;
+  position: absolute;
+`;
+
+const StyledMenu = styled(Menu)`
+  width: 150px;
+  right: 50px;
+  position: absolute;
+`;
+
+const StyledMenuItem = styled(Menu.Item)`
+  margin: 0 auto;
 `;
 
 const StyledAvatar = styled(Avatar)`
@@ -62,22 +78,28 @@ export default class TopBar extends React.Component {
     });
   };
 
-  handleUserMenuClick = () => {};
-
   render() {
-    const { toggleSideDrawer, collapsed, isLoggedIn, handleLogoutClick, username, merchantId } = this.props;
+    const { toggleSideDrawer, collapsed, isLoggedIn, username, merchantId, handleLogoutClick } = this.props;
 
     let buttons;
+    const menu = (
+      <StyledMenu>
+        <StyledMenuItem>
+          <Link to={`/profile/${merchantId}`}>Profile</Link>
+        </StyledMenuItem>
+        <StyledMenuItem onClick={handleLogoutClick}>Logout</StyledMenuItem>
+      </StyledMenu>
+    );
 
     if (isLoggedIn) {
       buttons = (
-        <div>
-          <Link to={`/profile/${merchantId}`}>
+        <Dropdown overlay={menu} trigger={['click']}>
+          <div onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
             <StyledsUserName>{username}</StyledsUserName>
-            <StyledAvatar size="large" icon={<UserOutlined />} onClick={this.handleUserMenuClick} />
-          </Link>
-          <StyledRegisterButton onClick={handleLogoutClick}> Logout </StyledRegisterButton>
-        </div>
+            <StyledAvatar size="large" icon={<UserOutlined />} />
+            <StyledDropDownIcon />
+          </div>
+        </Dropdown>
       );
     } else {
       buttons = (
