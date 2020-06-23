@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, message, Empty, Radio, Input, Button, Upload } from 'antd';
+import { Row, Col, Layout, Typography, message, Empty, Radio, Input, Button, Upload, Tooltip } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { baseUrl } from '../../utils/baseUrl';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
@@ -31,6 +32,10 @@ class LeftProfileSection extends React.Component {
     const { profileImage, mode, editedProfileImage, setEditedProfileImage, setUploadedFile } = this.props;
     const handleChangePic = (info) => {
       setUploadedFile(info.file);
+      message.info({
+        content: `Uploaded ${info.file.name}, click on the update button to change your profile picture.`,
+        duration: 5,
+      });
     };
 
     return (
@@ -48,18 +53,27 @@ class LeftProfileSection extends React.Component {
             <Empty description="no profile image" />
           )}
         </Row>
-        <Row span={12} justify="center">
+        <Row span={12} justify="center" align="middle">
           {mode === 'edit' && (
-            <Upload
-              showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              beforeUpload={() => false}
-              onChange={handleChangePic}
-            >
-              <Button>
-                <UploadOutlined /> Click to Upload
-              </Button>
-            </Upload>
+            <>
+              <Upload
+                showUploadList={false}
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                beforeUpload={() => false}
+                onChange={handleChangePic}
+              >
+                <Button>
+                  <UploadOutlined /> Click to Upload
+                </Button>
+              </Upload>
+              <Tooltip
+                placement="top"
+                title="Image will be reflected clicking on update button."
+                style={{ marginLeft: '10px' }}
+              >
+                <QuestionCircleOutlined style={{ marginLeft: '10px' }} />
+              </Tooltip>
+            </>
           )}
         </Row>
       </Col>
@@ -242,12 +256,8 @@ export default class Profile extends React.Component {
         .then((res) => {
           if (res.status === 200) {
             message.success({ content: `Profile image updated successfully`, duration: 5 });
-            API.get(`/api/merchant/get?id=${merchantId}`).then((res) => {
-              if (res.status === 200) {
-                this.setState({ editedProfileImage: res.data.merchant.profileImage });
-                this.setState({ profileImage: res.data.merchant.profileImage });
-              }
-            });
+            this.setState({ editedProfileImage: res.data.profileImage });
+            this.setState({ profileImage: res.data.profileImage });
           }
         })
         .catch((err) => console.error(err));
