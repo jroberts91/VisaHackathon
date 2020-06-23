@@ -28,14 +28,12 @@ router.get('/emailExist', async (req, res) => {
 });
 
 router.post('/register',imageUpload, async (req, res) => {
-  
   //hashing password
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   req.body.password = hashedPassword;
   const merchant = new Merchant(req.body);
-  if (req.files) merchant.profileImage= req.files[0].path;
-
+  if (req.files) merchant.profileImage = req.files[0].path;
   //save to mongoDB
   try {
     await merchant.save();
@@ -48,18 +46,20 @@ router.post('/register',imageUpload, async (req, res) => {
 router.post('/login', async (req, res) => {
   //check if email exist
   const merchant = await Merchant.findOne({ email: req.body.email });
-  if (!merchant)
+  if (!merchant) {
     return res.json({
       success: false,
       message: 'Email is not found',
     });
+  }
   //check for valid password
   const validPass = await bcrypt.compare(req.body.password, merchant.password);
-  if (!validPass)
-    return res.status(400).json({
+  if (!validPass) {
+    return res.json({
       success: false,
       message: 'Password is incorrect',
     });
+  }
 
   //generate authentication token
   await merchant.generateToken((err, merchant) => {
