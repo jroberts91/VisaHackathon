@@ -25,6 +25,13 @@ const merchantSchema = mongoose.Schema({
   token: {
     type: String,
   },
+  address:{
+    type: String
+  },
+  phone:{
+    type: String
+  },
+
 });
 
 merchantSchema.index(
