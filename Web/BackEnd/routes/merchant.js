@@ -38,18 +38,20 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   //check if email exist
   const merchant = await Merchant.findOne({ email: req.body.email });
-  if (!merchant)
+  if (!merchant) {
     return res.json({
       success: false,
       message: 'Email is not found',
     });
+  }
   //check for valid password
   const validPass = await bcrypt.compare(req.body.password, merchant.password);
-  if (!validPass)
-    return res.status(400).json({
+  if (!validPass) {
+    return res.json({
       success: false,
       message: 'Password is incorrect',
     });
+  }
 
   //generate authentication token
   await merchant.generateToken((err, merchant) => {

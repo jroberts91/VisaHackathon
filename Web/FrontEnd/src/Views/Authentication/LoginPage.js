@@ -58,7 +58,7 @@ const StyledTextField = styled(TextField)`
 
 const StyledSignUpFields = styled.div`
   margin-top: 40px;
-  top: 60%;
+  top: 65%;
   position: absolute;
   right: 18%;
   color: #75787b;
@@ -90,12 +90,10 @@ export default class LoginPage extends React.Component {
     const { history } = this.props;
     const sendObject = { email, password };
     API.post('api/merchant/login', sendObject).then((res) => {
-      console.log(res);
       const success = res.data.success;
       if (success) {
         history.push('/');
       } else {
-        console.log('asd');
         this.setState({
           invalidLogin: true,
         });
