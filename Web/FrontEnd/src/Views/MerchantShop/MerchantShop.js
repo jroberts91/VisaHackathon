@@ -98,7 +98,6 @@ export default class MerchantShop extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log('ASDASDASD');
     const merchantId = this.state.merchantId;
     this.getProductFromApi(merchantId);
     this.getMerchantNameFromApi(merchantId);
