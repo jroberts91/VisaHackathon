@@ -25,7 +25,17 @@ router.post("/direct", async (req, res) => {
 
     // check product belong to merchant
     if (product.merchantId != merchantId ) {
-        console.err("merchantId does not match under product");
+        console.log("merchantId does not match under product");
+        return res.status(400).json({success: false});
+    }
+    if (orderBody.quantity < 0) {
+        console.log("product qty cannot be zero");
+        return res.status(400).json({success: false});
+    }
+    // check if there is qty available
+    let newSoldQty = orderBody.quantity + product.soldQty;
+    if (newSoldQty > product.totalQty) {
+        console.log("product not available");
         return res.status(400).json({success: false});
     }
 
@@ -44,6 +54,10 @@ router.post("/direct", async (req, res) => {
         console.log(err);
         return res.status(400).json({success: false, err})
     }
+
+    // update product qty
+    await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
+
     await payment.save(async function(err, payment) {
         if (err) return res.status(400).json({ success: false, err })
         order.paymentId = payment._id;
