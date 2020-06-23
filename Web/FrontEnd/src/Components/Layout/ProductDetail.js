@@ -9,22 +9,22 @@ export default class ProductDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      quantity: 1
-    }
+      quantity: 1,
+    };
   }
 
-  componentDidMount = () => { }
+  componentDidMount = () => {};
 
   checkQuantity = () => {
-    if (this.state.quantity === "" || this.state.quantity === null) {
+    if (this.state.quantity === '' || this.state.quantity === null) {
       return true;
     }
     return false;
-  }
+  };
 
   getQtyPerecent = (qtySold, totalQty) => {
-    return (qtySold / totalQty) * 100
-  }
+    return (qtySold / totalQty) * 100;
+  };
 
   getTitle = (name, rating) => {
     return (
@@ -36,8 +36,8 @@ export default class ProductDetail extends React.Component {
           <Rate value={rating} disabled />
         </Col>
       </Row>
-    )
-  }
+    );
+  };
 
   getBody = (description, price, totalQty, qtySold, quantity, paymentLink) => {
     qtySold = qtySold || 0;
@@ -46,17 +46,14 @@ export default class ProductDetail extends React.Component {
     return (
       <div>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
-          <Col span={24}>
-            {description || "No Description Provided"}
-          </Col>
+          <Col span={24}>{description || 'No Description Provided'}</Col>
         </Row>
-        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>
-          ${(price || 0).toFixed(2)}
-        </Row>
+        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>${(price || 0).toFixed(2)}</Row>
         <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
           <Col style={{ fontSize: '1.2em' }} key={0} span={8}>
-            Quantity: <InputNumber
-              style={{ width: "52px" }}
+            Quantity:{' '}
+            <InputNumber
+              style={{ width: '52px' }}
               min={1}
               defaultValue={quantity}
               onChange={(value) => this.setState({ quantity: value })}
@@ -64,39 +61,34 @@ export default class ProductDetail extends React.Component {
           </Col>
           <Col key={1} span={16}>
             <Progress
-              style={{ width: "70%", fontSize: '1em' }}
-              size='small'
+              style={{ width: '70%', fontSize: '1em' }}
+              size="small"
               percent={this.getQtyPerecent(qtySold, totalQty)}
-              format={() => `${qtySold}/${totalQty} sold`} />
+              format={() => `${qtySold}/${totalQty} sold`}
+            />
           </Col>
         </Row>
         <Row gutter={[32, 32]}>
-          <Link style={{ margin: 'auto' }} to={paymentLink + "?qty=" + this.state.quantity}>
-            <Button
-              primary
-              style={{ color: "white", backgroundColor: "#1a1f71" }}
-              disabled={this.checkQuantity()}
-            >
+          <Link style={{ margin: 'auto' }} to={paymentLink + '?qty=' + this.state.quantity}>
+            <Button primary style={{ color: 'white', backgroundColor: '#1a1f71' }} disabled={this.checkQuantity()}>
               Buy Now
-        </Button>
+            </Button>
           </Link>
         </Row>
       </div>
-    )
-  }
+    );
+  };
 
   render() {
     const { name, rating, description, price, totalQty, qtySold, paymentLink } = this.props;
     const { quantity } = this.state;
 
     return (
-      <Card
-        style={{ width: '95%', marginLeft: '5%' }}
-        hoverable
-      >
+      <Card style={{ width: '95%', marginLeft: '5%' }} hoverable>
         <Meta
           title={this.getTitle(name, rating)}
-          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink)} />
+          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink)}
+        />
       </Card>
     );
   }
