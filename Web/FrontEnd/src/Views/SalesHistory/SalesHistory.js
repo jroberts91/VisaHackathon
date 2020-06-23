@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Layout, Tabs, Input, Table, Switch } from 'antd';
 import Column from 'antd/lib/table/Column';
+import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 
@@ -53,9 +54,9 @@ const dataSource = [
 ];
 
 class SalesTable extends React.Component {
-  generateFiters = (type) => {
+  generateFiters = (type, data) => {
     let filterList = new Set();
-    for (let elm of dataSource) {
+    for (let elm of data) {
       filterList.add(elm[type]);
     }
     let filters = [];
@@ -69,7 +70,9 @@ class SalesTable extends React.Component {
   };
 
   render() {
-    const data = [...dataSource];
+    const { orders } = this.props;
+    let data = orders ? orders : [];
+    console.log(orders)
     if (!this.props.statusTab) {
       for (let elm of data) {
         if (elm.status !== this.props.isFulfilled) {
@@ -85,7 +88,7 @@ class SalesTable extends React.Component {
           title="Product"
           dataIndex="product"
           key="product"
-          filters={this.generateFiters('product')}
+          filters={this.generateFiters('product', data)}
           onFilter={(value, record) => record.product.indexOf(value) === 0}
           sorter={(a, b) => a.product.localeCompare(b.product, 'en', { sensitivity: 'base' })}
         />
@@ -109,7 +112,7 @@ class SalesTable extends React.Component {
           title="Paid Date"
           dataIndex="paidDate"
           key="paidDate"
-          filters={this.generateFiters('paidDate')}
+          filters={this.generateFiters('paidDate', data)}
           onFilter={(value, record) => record.paidDate.indexOf(value) === 0}
           sorter={(a, b) => {
             let firstDate = a.paidDate.split('/');
@@ -140,25 +143,40 @@ export default class SalesHistory extends React.Component {
     super(props);
     this.state = {
       merchantId: this.props.match.params.merchantId,
+      orders: []
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    const body = {
+      merchantId: this.state.merchantId,
+      fulfilled: "all"
+    }
+    console.log(body)
+    API
+      .get('api/order/getAll', body)
+      .then((res) => {
+        console.log(res);
+        this.setState({ orders: res.data.orders });
+      })
+      .catch((err) => console.error(err));
+  };
 
   render() {
+    const { orders } = this.state;
     const searchBar = <Search placeholder="input search text" onSearch={(value) => console.log(value)} enterButton />;
 
     return (
       <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto' }}>
         <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
           <TabPane tab="All" key="1">
-            <SalesTable statusTab={true} />
+            <SalesTable statusTab={true} orders={orders} />
           </TabPane>
           <TabPane tab="Not Fulfilled" key="2">
-            <SalesTable statusTab={false} isFulfilled={false} />
+            <SalesTable statusTab={false} orders={orders} isFulfilled={false} />
           </TabPane>
           <TabPane tab="Fulfilled" key="3">
-            <SalesTable statusTab={false} isFulfilled={true} />
+            <SalesTable statusTab={false} orders={orders} isFulfilled={true} />
           </TabPane>
         </Tabs>
       </Content>
