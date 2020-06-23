@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, message, Empty, Radio, Input, Button } from 'antd';
+import { Row, Col, Layout, Typography, message, Empty, Radio, Input, Button, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { baseUrl } from '../../utils/baseUrl';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
@@ -20,14 +22,45 @@ const ButtonContainer = styled.div`
   transform: translate(50%, 0);
 `;
 
+const StyledImage = styled.img`
+  max-width: 60%;
+`;
+
 class LeftProfileSection extends React.Component {
   render() {
-    const { imageUrl, mode } = this.props;
+    const { profileImage, mode, editedProfileImage, setEditedProfileImage, setUploadedFile } = this.props;
+    const handleChangePic = (info) => {
+      setUploadedFile(info.file);
+    };
 
     return (
       <Col>
         <Row span={24} justify="center" style={{ marginBottom: '50px' }}>
-          {imageUrl ? <img src={imageUrl} /> : <Empty description="no profile image" />}
+          {mode === 'view' ? (
+            profileImage ? (
+              <StyledImage src={`${baseUrl}${profileImage}`} />
+            ) : (
+              <Empty description="no profile image" />
+            )
+          ) : editedProfileImage ? (
+            <StyledImage src={`${baseUrl}${editedProfileImage}`} />
+          ) : (
+            <Empty description="no profile image" />
+          )}
+        </Row>
+        <Row span={12} justify="center">
+          {mode === 'edit' && (
+            <Upload
+              showUploadList={false}
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              beforeUpload={() => false}
+              onChange={handleChangePic}
+            >
+              <Button>
+                <UploadOutlined /> Click to Upload
+              </Button>
+            </Upload>
+          )}
         </Row>
       </Col>
     );
@@ -110,6 +143,8 @@ export default class Profile extends React.Component {
       editedPhone: '',
       editedCardNumber: '',
       editedAddress: '',
+      editedProfileImage: '',
+      files: null,
     };
   }
 
@@ -136,6 +171,7 @@ export default class Profile extends React.Component {
             editedAddress: address,
             editedPhone: phone,
             editedCardNumber: cardNumber,
+            editedProfileImage: profileImage,
           });
         } else {
           message.error({
@@ -151,8 +187,17 @@ export default class Profile extends React.Component {
   };
 
   handleUpdateProfile = () => {
-    // TODO: call update api and set the original values as updated values
-    const { editedName, editedDescription, editedEmail, editedAddress, editedPhone, editedCardNumber } = this.state;
+    const {
+      editedName,
+      editedDescription,
+      editedEmail,
+      editedAddress,
+      editedPhone,
+      editedCardNumber,
+      editedProfileImage,
+      files,
+      merchantId,
+    } = this.state;
 
     const body = {
       name: editedName,
@@ -163,10 +208,11 @@ export default class Profile extends React.Component {
       cardNumber: editedCardNumber,
     };
 
+    // submission of text fields
     API.post('/api/merchant/editProfile', body)
       .then((res) => {
         if (res.status === 200) {
-          message.success({ content: 'Update profile successful.', duration: 5 });
+          message.success({ content: 'Profile details updated successful.', duration: 5 });
 
           // update current display values
           this.setState({
@@ -176,17 +222,49 @@ export default class Profile extends React.Component {
             address: editedAddress,
             phone: editedPhone,
             cardNumber: editedCardNumber,
+            profileImage: editedProfileImage,
           });
         } else {
           message.error({ content: 'Error while trying to update profile', duration: 5 });
         }
       })
       .catch((err) => console.error(err));
+
+    // submission of profile image
+    if (files != null) {
+      const formData = new FormData();
+      formData.append('files', files);
+      const config = {
+        header: { 'content-type': 'multipart/form-data' },
+      };
+
+      API.post('/api/merchant/uploadProfileImage', formData, config)
+        .then((res) => {
+          if (res.status === 200) {
+            message.success({ content: `Profile image updated successfully`, duration: 5 });
+            API.get(`/api/merchant/get?id=${merchantId}`).then((res) => {
+              if (res.status === 200) {
+                this.setState({ editedProfileImage: res.data.merchant.profileImage });
+                this.setState({ profileImage: res.data.merchant.profileImage });
+              }
+            });
+          }
+        })
+        .catch((err) => console.error(err));
+    }
   };
 
   render() {
     const { name, email, description, profileImage, phone, cardNumber, address, isMounted, mode } = this.state;
-    const { editedName, editedDescription, editedEmail, editedAddress, editedPhone, editedCardNumber } = this.state;
+    const {
+      editedName,
+      editedDescription,
+      editedEmail,
+      editedAddress,
+      editedPhone,
+      editedCardNumber,
+      editedProfileImage,
+    } = this.state;
     if (!isMounted) {
       return null;
     }
@@ -213,7 +291,14 @@ export default class Profile extends React.Component {
         </ModeContainer>
         <Row align="middle" style={{ height: '100%' }}>
           <Col lg={{ span: 12 }} span={24}>
-            <LeftProfileSection imageUrl={profileImage} mode={mode} />
+            <LeftProfileSection
+              mode={mode}
+              profileImage={profileImage}
+              editedProfileImage={editedProfileImage}
+              setProfileImage={(url) => this.setState({ profileImage: url })}
+              setEditedProfileImage={(url) => this.setState({ editedProfileImage: url })}
+              setUploadedFile={(file) => this.setState({ files: file })}
+            />
           </Col>
           <Col lg={{ span: 12 }} span={24}>
             <RightProfileSection
