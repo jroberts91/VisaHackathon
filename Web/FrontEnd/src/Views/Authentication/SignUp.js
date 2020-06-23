@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Typography, Steps, Upload, message, Alert, Button as AntButton } from 'antd';
+import { Typography, Steps, Upload, Alert, Button as AntButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TextField, Button } from '@material-ui/core';
 import API from '../../utils/baseUrl';
