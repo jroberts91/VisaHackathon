@@ -21,6 +21,7 @@ const StyledIcon = styled(PlusOutlined)`
 `;
 
 class ProductList extends React.Component {
+
   render() {
     const { merchantId, products, isOwnerShop } = this.props;
 
@@ -63,7 +64,7 @@ export default class MerchantShop extends React.Component {
       merchantId: this.props.match.params.merchantId,
       products: [],
       merchantName: '',
-      isOwnerShop: false,
+      isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
     };
   }
 
@@ -86,22 +87,10 @@ export default class MerchantShop extends React.Component {
       .catch((err) => console.error(err));
   };
 
-  getIsOwnerShopFromApi = (merchantId) => {
-    API.get('api/merchant/auth').then((res) => {
-      const { success, _id } = res.data;
-      if (success) {
-        this.setState({
-          isOwnerShop: _id === merchantId,
-        });
-      }
-    });
-  };
-
   componentDidMount = () => {
     const merchantId = this.state.merchantId;
     this.getProductFromApi(merchantId);
     this.getMerchantNameFromApi(merchantId);
-    this.getIsOwnerShopFromApi(merchantId);
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -110,7 +99,10 @@ export default class MerchantShop extends React.Component {
       this.setState({ merchantId: newMerchantId });
       this.getProductFromApi(newMerchantId);
       this.getMerchantNameFromApi(newMerchantId);
-      this.getIsOwnerShopFromApi(newMerchantId);
+    }
+    const nextIsOwnerShop = nextProps.loggedInId === newMerchantId;
+    if (nextIsOwnerShop !== this.state.isOwnerShop) {
+      this.setState({ isOwnerShop: nextIsOwnerShop })
     }
   };
 

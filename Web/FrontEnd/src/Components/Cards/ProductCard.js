@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Card, Rate, Button, message, Modal } from 'antd';
-import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
+import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
@@ -13,17 +13,10 @@ export default class ProductCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: this.props.title,
-      imageUrl: this.props.imageUrl,
-      rating: this.props.rating,
-      productUrl: this.props.productUrl,
-      merchantId: this.props.merchantId,
-      productId: this.props.productId,
-      isOwnerShop: this.props.isOwnerShop
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
 
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(() => {
@@ -51,62 +44,59 @@ export default class ProductCard extends React.Component {
     if (isOwnerShop) {
       return [
         <Button
-          type="primary"
-          style={{ backgroundColor: '#FAAA13' }}
+          style={{ backgroundColor: "#fafafa", border: "0" }}
           onClick={(event) => {
             event.preventDefault();
             this.copyLinkToClipboard(productLink);
           }}
         >
           <LinkOutlined />
-          Copy
         </Button>,
         <Button
-          type="primary"
+          style={{ backgroundColor: "#fafafa", border: "0" }}
           onClick={(event) => {
             event.preventDefault();
             this.showQRCode();
           }}
         >
           <QrcodeOutlined />
-          QR Code
         </Button>,
-        <Row>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Edit</Button>
-          </Col>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Delete</Button>
-          </Col>
-        </Row>,
+        <Button
+          style={{ backgroundColor: "#fafafa", border: "0" }}
+        >
+          <EditOutlined />
+        </Button>,
+        <Button
+          style={{ backgroundColor: "#fafafa", border: "0" }}
+        >
+          <DeleteOutlined />
+        </Button>
       ];
     }
     return [
       <Button
-        type="primary"
+        style={{ backgroundColor: "#fafafa", border: "0" }}
         onClick={(event) => {
           event.preventDefault();
           this.copyLinkToClipboard(productLink);
         }}
       >
         <LinkOutlined />
-        Copy
       </Button>,
       <Button
-        type="primary"
+        style={{ backgroundColor: "#fafafa", border: "0" }}
         onClick={(event) => {
           event.preventDefault();
           this.showQRCode();
         }}
       >
         <QrcodeOutlined />
-        QR Code
-      </Button>,
+      </Button>
     ];
   };
 
   render() {
-    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
+    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.props;
 
     const productLink = `/${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
