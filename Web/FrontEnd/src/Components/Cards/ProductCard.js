@@ -19,25 +19,28 @@ export default class ProductCard extends React.Component {
       productUrl: this.props.productUrl,
       merchantId: this.props.merchantId,
       productId: this.props.productId,
-      isOwnerShop: this.props.isOwnerShop
+      isOwnerShop: this.props.isOwnerShop,
     };
   }
 
   componentDidMount = () => {};
 
   copyLinkToClipboard = (productLink) => {
-    navigator.clipboard.writeText(productLink).then(() => {
-      message.success({
-        content: `Successfully Copied to Clipboard!`,
-        duration: 5,
-      });
-    }, () => {
-      message.error({
-        content: `Error Copying to Clipboard`,
-        duration: 5,
-      });
-    })
-  }
+    navigator.clipboard.writeText(productLink).then(
+      () => {
+        message.success({
+          content: `Successfully Copied to Clipboard!`,
+          duration: 5,
+        });
+      },
+      () => {
+        message.error({
+          content: `Error Copying to Clipboard`,
+          duration: 5,
+        });
+      }
+    );
+  };
 
   showQRCode = () => {
     this.setState({ isShowQR: true });
