@@ -7,12 +7,6 @@ const { Title, Text } = Typography
 const { Meta } = Card;
 
 export default class MerchantDetail extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount = () => { }
-
   getBody = (name, phone, address, rating) => {
 
     return (

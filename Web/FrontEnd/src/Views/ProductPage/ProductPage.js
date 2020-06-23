@@ -66,7 +66,7 @@ export default class ProductPage extends React.Component {
 
   render() {
     const { merchant, product, merchantId, productId } = this.state;
-    const paymentLink = "/" + merchantId + "/product/" + productId + "/payment"
+    const paymentLink = "/" + merchantId + "/product/" + productId
     return (
       <Content style={{ maxWidth: '900px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>

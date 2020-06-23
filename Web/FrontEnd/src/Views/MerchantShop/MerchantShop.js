@@ -1,23 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Card } from 'antd';
-import { PlusOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Row, Col, Layout, Typography, Button } from 'antd';
+import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { defaultTheme } from '../../utils/theme';
 import ProductCard from '../../Components/Cards/ProductCard';
-import Meta from 'antd/lib/card/Meta';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-const StyledIcon = styled(PlusOutlined)`
-  min-height: 220px;
-  height: 100%;
-  font-size: 10em;
-  color: black;
-  background-color: #faaa13;
-  line-height: 1;
-  vertical-align: middle;
+const AddButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
+  border-color: ${defaultTheme.colors.primary};
+  margin-bottom: 0;
 `;
 
 class ProductList extends React.Component {
@@ -27,15 +23,6 @@ class ProductList extends React.Component {
 
     return (
       <Row gutter={[32, 32]}>
-        {isOwnerShop && (
-          <Col key={-1} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-            <Link to={`/${merchantId}/addproduct`}>
-              <Card style={{ width: '100%', minWidth: 250, height: '100%' }} hoverable cover={<StyledIcon />}>
-                <Meta title={'Add New Product'} />
-              </Card>
-            </Link>
-          </Col>
-        )}
         {products.map((product, index) => {
           const { name, images, url, rating, _id } = product;
           return (
@@ -112,10 +99,21 @@ export default class MerchantShop extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: "#828282" }}>
-            <Link to={'/'} style={{ color: "#828282" }}>
-            <HomeOutlined />
-            </Link> / <UserOutlined /> {this.state.merchantName}</Title>
+          <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+            <Title level={4} style={{ color: "#828282" }}>
+              <Link to={'/'} style={{ color: "#828282" }}>
+                <HomeOutlined />
+              </Link> / <UserOutlined /> {this.state.merchantName}</Title>
+          </Col>
+          {
+            isOwnerShop &&
+            <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+              <Link style={{float: 'right'}} to={`/${merchantId}/addproduct`}>
+              <AddButton type='primary'>Add New Product</AddButton>
+              </Link>
+            </Col>
+          }
+
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

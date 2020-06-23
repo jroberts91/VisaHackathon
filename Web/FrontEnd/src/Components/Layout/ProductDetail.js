@@ -1,9 +1,35 @@
 import React from 'react';
-import { Card, Rate, Row, Col, Button, InputNumber, Progress } from 'antd';
+import styled from 'styled-components';
+import { Card, Rate, Row, Col, Button, InputNumber, Progress, Modal, message } from 'antd';
+import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
+import QRCode from 'qrcode.react';
+import { defaultTheme } from '../../utils/theme';
 
 const { Meta } = Card;
+
+const WhiteButton = styled(Button)`
+  background: white;
+  border: 0;
+  font-size: 1.2em;
+`;
+
+const GoldButton = styled(Button)`
+  background: #FAAA13;
+  border-color: #FAAA13;
+  margin-bottom: 0;
+  &:hover { 
+    background: #FDBB0A;
+    border-color: #FDBB0A;
+  }
+`;
+
+const BlueButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
+  border-color: ${defaultTheme.colors.primary};
+  margin-bottom: 0;
+`;
 
 export default class ProductDetail extends React.Component {
   constructor(props) {
@@ -21,6 +47,28 @@ export default class ProductDetail extends React.Component {
     }
     return false;
   }
+
+  copyLinkToClipboard = (productLink) => {
+    navigator.clipboard.writeText(productLink).then(() => {
+      message.success({
+        content: `Successfully Copied to Clipboard!`,
+        duration: 5,
+      });
+    }, () => {
+      message.error({
+        content: `Error Copying to Clipboard`,
+        duration: 5,
+      });
+    })
+  }
+
+  showQRCode = () => {
+    this.setState({ isShowQR: true });
+  };
+
+  hideQRCode = () => {
+    this.setState({ isShowQR: false });
+  };
 
   getQtyPerecent = (qtySold, totalQty) => {
     return (qtySold / totalQty) * 100
@@ -45,12 +93,22 @@ export default class ProductDetail extends React.Component {
 
     return (
       <div>
+        <Modal
+          title="QR Code"
+          visible={this.state.isShowQR}
+          onCancel={this.hideQRCode}
+          centered
+          style={{ textAlign: 'center' }}
+          footer={null}
+        >
+          <QRCode value={paymentLink} size={256} />
+        </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>
             {description || "No Description Provided"}
           </Col>
         </Row>
-        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>
+        <Row style={{ fontSize: '1.2em', color: 'black' }} gutter={[0, { sm: 48, md: 64, lg: 80 }]}>
           ${(price || 0).toFixed(2)}
         </Row>
         <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
@@ -71,15 +129,20 @@ export default class ProductDetail extends React.Component {
           </Col>
         </Row>
         <Row gutter={[32, 32]}>
-          <Link style={{ margin: 'auto' }} to={paymentLink + "?qty=" + this.state.quantity}>
-            <Button
-              primary
-              style={{ color: "white", backgroundColor: "#1a1f71" }}
-              disabled={this.checkQuantity()}
-            >
-              Buy Now
-        </Button>
-          </Link>
+          <Col key={2} span={12} style={{ fontSize: '1.1em', color: '#1A1F71' }}>
+            Share:&nbsp;&nbsp;
+            <WhiteButton onClick={() => this.copyLinkToClipboard(paymentLink)}>
+              <LinkOutlined />
+            </WhiteButton>
+            <WhiteButton onClick={() => this.setState({ isShowQR: true })}>
+              <QrcodeOutlined />
+            </WhiteButton>
+          </Col>
+          <Col key={1} span={12}>
+            <Link style={{ float: 'right', marginRight: '20%' }} to={paymentLink + "/payment?qty=" + this.state.quantity}>
+              <BlueButton type='primary' disabled={this.checkQuantity()}>Buy Now</BlueButton>
+            </Link>
+          </Col>
         </Row>
       </div>
     )

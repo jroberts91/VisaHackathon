@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, message, Modal } from 'antd';
+import { Card, Rate, Button, message, Modal } from 'antd';
 import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
@@ -116,7 +116,7 @@ export default class ProductCard extends React.Component {
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
+            cover={<img style={{height: "200px", objectFit: "cover"}}  alt="example" src={fullImageUrl || MaiYuGe} />}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}
