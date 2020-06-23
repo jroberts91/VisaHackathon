@@ -39,13 +39,13 @@ class RightProfileSection extends React.Component {
     super(props);
   }
   render() {
-    const { name, description, email, address, phoneNumber, cardNumber, mode } = this.props;
+    const { name, description, email, address, phone, cardNumber, mode } = this.props;
     const {
       editedName,
       editedDescription,
       editedEmail,
       editedAddress,
-      editedPhoneNumber,
+      editedPhone,
       editedCardNumber,
       onChangeName,
       onChangeEmail,
@@ -77,9 +77,7 @@ class RightProfileSection extends React.Component {
         </Row>
         <Row span={24} style={{ minHeight: '50px' }}>
           <Col span={8}>Contact Number:</Col>
-          <Col span={16}>
-            {mode === 'view' ? phoneNumber : <Input value={editedPhoneNumber} onChange={onChangePhoneNumber} />}
-          </Col>
+          <Col span={16}>{mode === 'view' ? phone : <Input value={editedPhone} onChange={onChangePhoneNumber} />}</Col>
         </Row>
         <Row span={24} style={{ minHeight: '50px' }}>
           <Col span={8}>Card Number:</Col>
@@ -101,7 +99,7 @@ export default class Profile extends React.Component {
       email: '',
       description: '',
       profileImage: '',
-      phoneNumber: '',
+      phone: '',
       address: '',
       cardNumber: '',
       isMounted: false,
@@ -109,7 +107,7 @@ export default class Profile extends React.Component {
       editedName: '',
       editedEmail: '',
       editedDescription: '',
-      editedPhoneNumber: '',
+      editedPhone: '',
       editedCardNumber: '',
       editedAddress: '',
     };
@@ -119,14 +117,14 @@ export default class Profile extends React.Component {
     API.get(`api/merchant/get?id=${this.state.merchantId}`)
       .then((res) => {
         if (res.status === 200) {
-          const { name, email, description, profileImage, address, phoneNumber, cardNumber } = res.data.merchant;
+          const { name, email, description, profileImage, address, phone, cardNumber } = res.data.merchant;
           this.setState({
             name: name,
             email: email,
             description: description,
             profileImage: profileImage,
             address: address,
-            phoneNumber: phoneNumber,
+            phone: phone,
             cardNumber: cardNumber,
           });
 
@@ -136,7 +134,7 @@ export default class Profile extends React.Component {
             editedEmail: email,
             editedDescription: description,
             editedAddress: address,
-            editedPhoneNumber: phoneNumber,
+            editedPhone: phone,
             editedCardNumber: cardNumber,
           });
         } else {
@@ -154,18 +152,41 @@ export default class Profile extends React.Component {
 
   handleUpdateProfile = () => {
     // TODO: call update api and set the original values as updated values
+    const { editedName, editedDescription, editedEmail, editedAddress, editedPhone, editedCardNumber } = this.state;
+
+    const body = {
+      name: editedName,
+      email: editedEmail,
+      description: editedDescription,
+      address: editedAddress,
+      phone: editedPhone,
+      cardNumber: editedCardNumber,
+    };
+
+    API.post('/api/merchant/editProfile', body)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success({ content: 'Update profile successful.', duration: 5 });
+
+          // update current display values
+          this.setState({
+            name: editedName,
+            email: editedEmail,
+            description: editedDescription,
+            address: editedAddress,
+            phone: editedPhone,
+            cardNumber: editedCardNumber,
+          });
+        } else {
+          message.error({ content: 'Error while trying to update profile', duration: 5 });
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   render() {
-    const { name, email, description, profileImage, phoneNumber, cardNumber, address, isMounted, mode } = this.state;
-    const {
-      editedName,
-      editedDescription,
-      editedEmail,
-      editedAddress,
-      editedPhoneNumber,
-      editedCardNumber,
-    } = this.state;
+    const { name, email, description, profileImage, phone, cardNumber, address, isMounted, mode } = this.state;
+    const { editedName, editedDescription, editedEmail, editedAddress, editedPhone, editedCardNumber } = this.state;
     if (!isMounted) {
       return null;
     }
@@ -201,19 +222,19 @@ export default class Profile extends React.Component {
               email={email}
               address={address}
               cardNumber={cardNumber}
-              phoneNumber={phoneNumber}
+              phone={phone}
               editedName={editedName}
               editedDescription={editedDescription}
               editedEmail={editedEmail}
               editedAddress={editedAddress}
               editedCardNumber={editedCardNumber}
-              editedPhoneNumber={editedPhoneNumber}
+              editedPhone={editedPhone}
               onChangeName={(e) => this.setState({ editedName: e.target.value })}
               onChangeEmail={(e) => this.setState({ editedEmail: e.target.value })}
               onChangeAddress={(e) => this.setState({ editedAddress: e.target.value })}
               onChangeDescription={(e) => this.setState({ editedDescription: e.target.value })}
               onChangeCardNumber={(e) => this.setState({ editedCardNumber: e.target.value })}
-              onChangePhoneNumber={(e) => this.setState({ editedPhoneNumber: e.target.value })}
+              onChangePhoneNumber={(e) => this.setState({ editedPhone: e.target.value })}
               mode={mode}
             />
           </Col>
