@@ -1,56 +1,41 @@
 import React from 'react';
-import { Form, Input, Button, Upload, Row, Col,message } from 'antd';
+import { Form, Input, Button, Upload, Row, Col, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
 
 const { TextArea } = Input;
+const { Dragger } = Upload;
 const validateMessages = {
   required: 'This field is required.',
 };
+var files = [];
 
 export default class AddProduct extends React.Component {
-
   formRef = React.createRef();
   constructor(props) {
     super(props);
     this.state = {
-      merchantId: this.props.match.params.merchantId
-    }
+      merchantId: this.props.match.params.merchantId,
+    };
   }
 
   render() {
-
     const merchantId = this.state.merchantId;
 
     const dragger_props = {
-      name:'file',
-      multiple: true,
-      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       onChange(info) {
-        const { status } = info.file;
-        if (status !== 'uploading') {
-          console.log(info.file, info.fileList);
-        }
-        if (status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully.`);
-        } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`);
-        }
+        files = info.fileList.map((image) => image.originFileObj);
       },
-    }
+    };
 
-    // add in images later
     const handleCreate = (values) => {
-      const { name, price, quantity, description, images } = values.pdt;
-
-      const files = images.fileList.map((image) => image.originFileObj);
-      let formdata = new FormData();
-      formdata.append("files",files);
+      const { name, price, quantity, description } = values.pdt;
 
       const body = {
         name: name,
         description: description,
+        images: files,
         price: price,
         totalQty: quantity,
         merchantId: merchantId,
@@ -58,7 +43,7 @@ export default class AddProduct extends React.Component {
 
       console.log(body);
 
-      API.post('api/product/create', formdata, body)
+      API.post('api/product/create', body)
         .then((res) => {
           this.props.history.push({
             pathname: `/${merchantId}`,
@@ -74,21 +59,16 @@ export default class AddProduct extends React.Component {
         onFinish={handleCreate}
         style={{ width: '95%', maxWidth: '1280px', margin: '0 auto', marginTop: '20vh' }}
       >
-
         <Row align="top">
           <Col lg={{ span: 8 }} span={24}>
-            <Form.Item
-              name={['pdt', 'images']}
-              wrapperCol={{ span: 20 }}
-              style={{ margin: '0 auto' }}
-            >
-              <Upload.Dragger 
-                {...dragger_props}
-              >
+
+            <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }} style={{ margin: '0 auto' }}>
+              <Dragger {...dragger_props}>
                 <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-                <p className="ant-upload-text">Click or drag file to this area to upload your product image</p>
-              </Upload.Dragger>
+                <p className="ant-upload-text">Click or drag file to this area to upload product image</p>
+              </Dragger>
             </Form.Item>
+
           </Col>
 
           <Col lg={{ span: 12 }} span={24}>
