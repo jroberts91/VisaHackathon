@@ -10,6 +10,7 @@ import ProductPage from './ProductPage/ProductPage';
 import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
+import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
 import API from '../utils/baseUrl';
 
@@ -64,11 +65,13 @@ export default class Home extends React.Component {
             isLoggedIn={isLoggedIn}
             handleLogoutClick={this.handleLogoutClick}
             username={username}
+            merchantId={merchantId}
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
             <Route path="/offers" component={OfferPage} />
             <Route path="/:merchantId" exact component={MerchantShop} />
+            <Route path="/profile/:merchantId" render={(props) => <Profile loggedInUserId={merchantId} {...props} />} />
             <Route path="/:merchantId/history" exact component={SalesHistory} />
             <Route path="/:merchantId/product/:productId" exact component={ProductPage} />
             <Route path="/:merchantId/product/:productId/payment" component={Payment} />
