@@ -11,7 +11,7 @@ const { imageUpload } = require('../utils/imageUpload');
 router.post('/create', auth, imageUpload, (req, res) => {
   const product = new Product(req.body);
   let images = [];
-  req.files.map((val, i) => {
+  req.files && req.files.map((val, i) => {
     images.push(val.path);
   });
   product.images = images;
