@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography, Alert } from 'antd';
 import { TextField } from '@material-ui/core';
