@@ -21,7 +21,7 @@ export default class AddProduct extends React.Component {
     super(props);
     this.state = {
       merchantId: this.props.match.params.merchantId,
-      merchantName: ''
+      merchantName: '',
     };
   }
 
@@ -41,9 +41,9 @@ export default class AddProduct extends React.Component {
     let formData = new FormData();
 
     const handleUpload = (info) => {
-      if (info.fileList.length<=4) {
+      if (info.fileList.length <= 4) {
         formData.append('files', info.file);
-      }else{
+      } else {
         info.fileList.pop();
         message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
       }
@@ -58,7 +58,7 @@ export default class AddProduct extends React.Component {
         description: description,
         price: price,
         totalQty: quantity,
-        merchantId: this.state.merchantId
+        merchantId: this.state.merchantId,
       };
 
       for (var key in body) {
@@ -83,8 +83,9 @@ export default class AddProduct extends React.Component {
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
             <Link to={`/${this.state.merchantId}`} style={{ color: '#828282' }}>
-              <ShopOutlined /> My Shop 
-            </Link>{' '} / Add Product
+              <ShopOutlined /> My Shop
+            </Link>{' '}
+            / Add Product
           </Title>
         </Row>
 
@@ -111,11 +112,7 @@ export default class AddProduct extends React.Component {
               </Form.Item>
 
               <Form.Item>
-                <Form.Item
-                  name={['pdt', 'price']}
-                  rules={[{ required: true }]}
-                  style={{ display: 'inline-block'}}
-                >
+                <Form.Item name={['pdt', 'price']} rules={[{ required: true }]} style={{ display: 'inline-block' }}>
                   <InputNumber placeholder="Price" style={{ width: 160 }} />
                 </Form.Item>
 
@@ -140,7 +137,6 @@ export default class AddProduct extends React.Component {
             </Col>
           </Row>
         </Form>
-
       </Content>
     );
   }
