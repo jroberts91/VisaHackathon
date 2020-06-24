@@ -17,6 +17,7 @@ export default class Payment extends React.Component {
     this.state = {
       merchantId: this.props.match.params.merchantId,
       productId: this.props.match.params.productId,
+      isOwnerShop: this.props.match.params.merchantId === this.props.loggedInUserId,
       product: null,
       merchant: null,
       qty: queries.qty,
@@ -45,18 +46,27 @@ export default class Payment extends React.Component {
   };
 
   render() {
-    const { product, qty, merchantId, productId, merchant } = this.state;
+    const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
     if (product == null || merchant == null) {
       // when product or merchant isn't populated yet
       return null;
     }
+
+    let headerName;
+
+    if (isOwnerShop) {
+      headerName = 'My shop';
+    } else {
+      headerName = merchant.name;
+    }
+
     const totalPrice = (product.price * qty).toFixed(2);
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
         <Row align="top" justify="space-between" style={{ margin: '0 0 50px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
             <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined />
+              <HomeOutlined /> {headerName}
             </Link>{' '}
             /
             <Link to={`/${merchantId}`} style={{ color: '#828282' }}>
