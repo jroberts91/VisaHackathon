@@ -21,6 +21,7 @@ export default class Home extends React.Component {
       collapsed: true,
       isLoggedIn: false,
       merchantId: null,
+      isMounted: false,
     };
   }
 
@@ -39,6 +40,7 @@ export default class Home extends React.Component {
         });
       }
       console.log(res);
+      this.setState({ isMounted: true });
     });
   };
 
@@ -52,8 +54,11 @@ export default class Home extends React.Component {
   };
 
   render() {
-    const { collapsed, isLoggedIn, username, merchantId } = this.state;
+    const { collapsed, isLoggedIn, username, merchantId, isMounted } = this.state;
     const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
+    if (!isMounted) {
+      return null; // only return the content when user is finished authenticating
+    }
     return (
       <Layout>
         <SideBar collapsed={collapsed} isLoggedIn={isLoggedIn} merchantId={merchantId} />
