@@ -49,7 +49,7 @@ export default class Home extends React.Component {
           isLoggedIn: false,
         });
         this.props.history.push({
-          pathname: '/signup',
+          pathname: '/',
         });
       }
     });
