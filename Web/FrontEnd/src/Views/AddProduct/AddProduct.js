@@ -79,7 +79,7 @@ export default class AddProduct extends React.Component {
     };
 
     const layout = {
-      labelCol: { span: 8 },
+      labelCol: { span: 6 },
       wrapperCol: { span: 24 },
     };
 
@@ -110,11 +110,9 @@ export default class AddProduct extends React.Component {
             </Col>
 
             <Col lg={{ span: 12 }} span={24}>
+
               <Form {...layout}>
-
-                <h1 style={{ float: 'left' }}> Product Details </h1>
-                <h1 style={{ color: 'red' }}> * </h1><br/>
-
+                <Title level={2}> Product Details </Title>
                 <Form.Item label="Product Name" name={['pdt', 'name']} rules={[{ required: true }]}>
                   <Input style={{ width: '60%' }} placeholder="Visa Herschel Bag" />
                 </Form.Item>
