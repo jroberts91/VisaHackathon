@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
 import LogoNoTagLine from '../../images/LogoNoTagLine.png';
 import Logo from '../../images/Logo.png';
-import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined } from '@ant-design/icons';
+import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined,CompassOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 
@@ -48,6 +48,7 @@ export default class SideBar extends React.Component {
     const salesHistoryLink = `/${this.props.merchantId}/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
+    const merchantLocator = '/merchantLocator'
     if (isLoggedIn) {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
@@ -63,7 +64,11 @@ export default class SideBar extends React.Component {
             Offers
             <Link to={offersLink} />
           </StyledMenuItem>
-          <StyledMenuItem key="4" icon={<ShopOutlined />}>
+          <StyledMenuItem key="4" icon={<CompassOutlined />}>
+            Merchant Locator
+            <Link to={merchantLocator} />
+          </StyledMenuItem>
+          <StyledMenuItem key="5" icon={<ShopOutlined />}>
             My Shop
             <Link to={myShopLink} />
           </StyledMenuItem>
@@ -76,9 +81,13 @@ export default class SideBar extends React.Component {
             Home
             <Link to="/" />
           </StyledMenuItem>
-          <StyledMenuItem key="3" icon={<TagOutlined />}>
+          <StyledMenuItem key="2" icon={<TagOutlined />}>
             Offers
             <Link to={offersLink} />
+          </StyledMenuItem>
+          <StyledMenuItem key="3" icon={<CompassOutlined />}>
+            Merchants Locator
+            <Link to={merchantLocator} />
           </StyledMenuItem>
         </StyledMenu>
       );

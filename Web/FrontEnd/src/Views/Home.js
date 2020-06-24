@@ -11,6 +11,7 @@ import Payment from './Payment/Payment';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
 import OfferPage from './Offers/OfferPage';
+import MerchantLocator from './MerchantLocator/MerchantLocator'
 import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
@@ -67,6 +68,7 @@ export default class Home extends React.Component {
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
+            <Route path="/merchantLocator" component={MerchantLocator}/>
             <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
             <Route path="/:merchantId" exact component={MerchantShop} />
             <Route path="/:merchantId/history" exact component={SalesHistory} />

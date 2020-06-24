@@ -35,7 +35,7 @@ router.get("/list", async (req, res) => {
         return res.status(200).json(data)
     }).catch(function (error) {
         console.log(error);
-        return res.status(400).json({success: false, err})
+        return res.status(400).json({success: false, error})
     });
 });
 
