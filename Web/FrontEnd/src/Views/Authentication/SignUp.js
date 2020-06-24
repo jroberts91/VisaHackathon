@@ -108,6 +108,7 @@ export default class SignUp extends React.Component {
     super(props);
     this.state = {
       differentPasswords: false,
+      uploaded: false,
       email: '',
       password: '',
       confirmPassword: '',
@@ -123,19 +124,16 @@ export default class SignUp extends React.Component {
 
   componentDidMount = () => {};
 
-  /**
-   * Runs when component `signup` mounts
-   * Checks sessionStorage if user is logged in (response.status == 200)
-   * IF response.status !==200, user is routed to './'
-   */
   handleSubmit = () => {
-    const { storeName, storeDescription, email, password, files } = this.state;
+    const { storeName, storeDescription, email, password, files, phoneNumber, address } = this.state;
     const { history } = this.props;
     const body = {
       name: storeName,
       email: email,
       password: password,
       description: storeDescription,
+      phone: phoneNumber,
+      address: address,
     };
 
     let formData = new FormData();
@@ -232,7 +230,7 @@ export default class SignUp extends React.Component {
   handleChangePic = (info) => {
     console.log(info.file);
     this.setState({
-      loading: false,
+      uploaded: true,
       files: info.file,
       imageUrl: info.file.name,
     });
@@ -263,6 +261,7 @@ export default class SignUp extends React.Component {
       current,
       imageUrl,
       differentPasswords,
+      uploaded,
     } = this.state;
 
     const SignUpPageFields = (
@@ -405,7 +404,8 @@ export default class SignUp extends React.Component {
                     storeName.length &&
                     storeDescription.length &&
                     phoneNumber.length &&
-                    address.length
+                    address.length &&
+                    uploaded
                   )
                 }
               >
@@ -440,6 +440,7 @@ export default class SignUp extends React.Component {
                     storeDescription.length &&
                     phoneNumber.length &&
                     address.length &&
+                    uploaded &&
                     cardNumber.length
                   )
                 }
