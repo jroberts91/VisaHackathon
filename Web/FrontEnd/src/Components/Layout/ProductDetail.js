@@ -80,7 +80,7 @@ export default class ProductDetail extends React.Component {
     );
   };
 
-  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId) => {
+  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId, isOwnerShop) => {
     qtySold = qtySold || 0;
     totalQty = totalQty || 0;
 
@@ -109,7 +109,7 @@ export default class ProductDetail extends React.Component {
               value={this.state.quantity}
               max={totalQty - qtySold}
               onChange={(value) => {
-                this.setState({ quantity: value })
+                this.setState({ quantity: value });
               }}
             />
           </Col>
@@ -128,9 +128,11 @@ export default class ProductDetail extends React.Component {
             <WhiteButton onClick={() => this.copyLinkToClipboard(paymentLink)}>
               <LinkOutlined />
             </WhiteButton>
-            <WhiteButton onClick={() => this.setState({ isShowQR: true })}>
-              <QrcodeOutlined />
-            </WhiteButton>
+            {isOwnerShop && (
+              <WhiteButton onClick={() => this.setState({ isShowQR: true })}>
+                <QrcodeOutlined />
+              </WhiteButton>
+            )}
           </Col>
           <Col key={1} span={12}>
             <Link
@@ -148,14 +150,23 @@ export default class ProductDetail extends React.Component {
   };
 
   render() {
-    const { name, rating, description, price, totalQty, qtySold, paymentLink, productId } = this.props;
+    const { name, rating, description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop } = this.props;
     const { quantity } = this.state;
 
     return (
       <Card style={{ width: '95%', marginLeft: '5%' }} hoverable>
         <Meta
           title={this.getTitle(name, rating)}
-          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink, productId)}
+          description={this.getBody(
+            description,
+            price,
+            totalQty,
+            qtySold,
+            quantity,
+            paymentLink,
+            productId,
+            isOwnerShop
+          )}
         />
       </Card>
     );

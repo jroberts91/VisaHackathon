@@ -13,8 +13,8 @@ const StyledDesc = styled.div`
   height: 50px;
   ::-webkit-scrollbar {
     display: none;
-}
--ms-overflow-style: none;
+  }
+  -ms-overflow-style: none;
 `;
 
 class MerchantDescription extends React.Component {

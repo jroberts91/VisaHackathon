@@ -13,6 +13,7 @@ import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
 import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
+import MerchantLocator from './MerchantLocator/MerchantLocator';
 import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
@@ -80,6 +81,7 @@ export default class Home extends React.Component {
           <Switch>
             <Route path="/" exact component={HomeBody} />
             <Route path="/dashboard" exact component={Dashboard} />
+            <Route path="/merchantLocator" component={MerchantLocator} />
             <Route path="/offers" component={OfferPage} />
             <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />
             <Route path="/profile/:merchantId" render={(props) => <Profile loggedInUserId={merchantId} {...props} />} />
