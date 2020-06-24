@@ -1,24 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Card } from 'antd';
-import { PlusOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Row, Col, Layout, Typography } from 'antd';
+import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
-import Meta from 'antd/lib/card/Meta';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
-
-const StyledIcon = styled(PlusOutlined)`
-  min-height: 220px;
-  height: 100%;
-  font-size: 10em;
-  color: black;
-  background-color: #faaa13;
-  line-height: 1;
-  vertical-align: middle;
-`;
 
 class ProductList extends React.Component {
   render() {
@@ -26,15 +13,6 @@ class ProductList extends React.Component {
 
     return (
       <Row gutter={[32, 32]}>
-        {isOwnerShop && (
-          <Col key={-1} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-            <Link to={`/${merchantId}/addproduct`}>
-              <Card style={{ width: '100%', minWidth: 250, height: '100%' }} hoverable cover={<StyledIcon />}>
-                <Meta title={'Add New Product'} />
-              </Card>
-            </Link>
-          </Col>
-        )}
         {products.map((product, index) => {
           const { name, images, url, rating, _id } = product;
           return (
@@ -63,7 +41,7 @@ export default class MerchantShop extends React.Component {
       merchantId: this.props.match.params.merchantId,
       products: [],
       merchantName: '',
-      isOwnerShop: false,
+      isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
     };
   }
 
@@ -86,22 +64,10 @@ export default class MerchantShop extends React.Component {
       .catch((err) => console.error(err));
   };
 
-  getIsOwnerShopFromApi = (merchantId) => {
-    API.get('api/merchant/auth').then((res) => {
-      const { success, _id } = res.data;
-      if (success) {
-        this.setState({
-          isOwnerShop: _id === merchantId,
-        });
-      }
-    });
-  };
-
   componentDidMount = () => {
     const merchantId = this.state.merchantId;
     this.getProductFromApi(merchantId);
     this.getMerchantNameFromApi(merchantId);
-    this.getIsOwnerShopFromApi(merchantId);
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -110,20 +76,30 @@ export default class MerchantShop extends React.Component {
       this.setState({ merchantId: newMerchantId });
       this.getProductFromApi(newMerchantId);
       this.getMerchantNameFromApi(newMerchantId);
-      this.getIsOwnerShopFromApi(newMerchantId);
+    }
+    const nextIsOwnerShop = nextProps.loggedInId === newMerchantId;
+    if (nextIsOwnerShop !== this.state.isOwnerShop) {
+      this.setState({ isOwnerShop: nextIsOwnerShop });
     }
   };
 
   render() {
-    const { merchantId, products, isOwnerShop } = this.state;
+    const { merchantId, products, isOwnerShop, merchantName } = this.state;
+
+    let headerName;
+
+    if (isOwnerShop) {
+      headerName = 'My shop';
+    } else {
+      headerName = merchantName;
+    }
 
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: "#828282" }}>
-            <Link to={'/'} style={{ color: "#828282" }}>
-            <HomeOutlined />
-            </Link> / <UserOutlined /> {this.state.merchantName}</Title>
+          <Title level={4} style={{ color: '#828282' }}>
+            <ShopOutlined /> {headerName}
+          </Title>
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

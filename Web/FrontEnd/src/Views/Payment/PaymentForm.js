@@ -31,9 +31,7 @@ const PayButton = styled(Button)`
 
 export default class PaymentForm extends React.Component {
   formRef = React.createRef();
-  constructor(props) {
-    super(props);
-  }
+
   render() {
     const handlePay = (values) => {
       const { number, cvv } = values.card;

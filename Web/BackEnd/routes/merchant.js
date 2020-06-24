@@ -19,13 +19,21 @@ router.get('/auth', auth, (req, res) => {
   });
 });
 
-router.post('/register', async (req, res) => {
+//?email=${email}
+router.get('/emailExist', async (req, res) => {
+  let email = req.query.email;
+  const merchant = await Merchant.findOne({ email: email });
+  if (merchant) return res.json({ success: false });
+  return res.json({ success: true });
+});
+
+router.post('/register',imageUpload, async (req, res) => {
   //hashing password
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
   req.body.password = hashedPassword;
   const merchant = new Merchant(req.body);
-
+  if (req.files) merchant.profileImage = req.files[0].path;
   //save to mongoDB
   try {
     await merchant.save();
@@ -38,18 +46,20 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   //check if email exist
   const merchant = await Merchant.findOne({ email: req.body.email });
-  if (!merchant)
+  if (!merchant) {
     return res.json({
       success: false,
       message: 'Email is not found',
     });
+  }
   //check for valid password
   const validPass = await bcrypt.compare(req.body.password, merchant.password);
-  if (!validPass)
-    return res.status(400).json({
+  if (!validPass) {
+    return res.json({
       success: false,
       message: 'Password is incorrect',
     });
+  }
 
   //generate authentication token
   await merchant.generateToken((err, merchant) => {
@@ -80,6 +90,7 @@ router.post('/uploadProfileImage', auth, imageUpload, (req, res) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
       success: true,
+      profileImage: req.files[0].path
     });
   });
 });
@@ -121,6 +132,13 @@ router.get('/get', async (req, res) => {
   const merchant = await Merchant.findOne({ _id: merchantId });
   if (!merchant) return res.status(400).json({ success: false });
   return res.status(200).json({ success: true, merchant: merchant });
+});
+
+router.post('/editProfile', auth, (req, res) => {
+  Merchant.findOneAndUpdate({ _id: req.merchant._id },{"$set": req.body} , (err, doc) => {
+    if (err) return res.json({ success: false, err });
+    return res.json({success: true,});
+  });
 });
 
 module.exports = router;
