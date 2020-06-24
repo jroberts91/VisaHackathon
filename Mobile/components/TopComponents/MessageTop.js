@@ -14,7 +14,7 @@ export default class MessageTop extends React.Component {
           name="inbox"
           solid={true}
           type="font-awesome-5"
-          color="white"
+          color="#fff"
           onPress={() => this.props.openMessage('Message')}
         />
       </TouchableOpacity>

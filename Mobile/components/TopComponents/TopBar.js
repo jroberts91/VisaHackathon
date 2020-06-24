@@ -1,12 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
+import { StyleSheet, View, Platform, Image } from 'react-native';
 import { Header } from 'react-native-elements';
 import MessageTop from './MessageTop';
 import { Icon } from 'react-native-elements';
+import Logo from '../../images/LogoNoTagLine.png';
 
 const styles = StyleSheet.create({
   topBar: {
-    backgroundColor: '#80A0AB',
+    backgroundColor: '#1a1f71',
     justifyContent: 'center',
     alignItems: 'center',
     height: Platform.select({
@@ -14,13 +15,17 @@ const styles = StyleSheet.create({
       default: 100,
     }),
   },
+  image: {
+    height: 40,
+    width: 60,
+  },
 });
 
 const LeftComponent = (props) => {
   let iconName, typeName;
   iconName = 'bars';
   typeName = 'font-awesome-5';
-  return <Icon name={iconName} type={typeName} color="white" onPress={props.openDrawer} />;
+  return <Icon name={iconName} type={typeName} color="#fff" onPress={props.openDrawer} />;
 };
 
 export default class TopBar extends React.Component {
@@ -31,7 +36,7 @@ export default class TopBar extends React.Component {
           statusBarProps={{ translucent: true }}
           containerStyle={styles.topBar}
           leftComponent={<LeftComponent openDrawer={this.props.openDrawer} />}
-          centerComponent={{ text: 'Visell', style: { color: '#fff' } }}
+          centerComponent={<Image style={styles.image} source={Logo} />}
           rightComponent={<MessageTop openMessage={this.props.openMessage} />}
         />
       </View>
