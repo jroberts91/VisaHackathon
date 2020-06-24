@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Upload, Row, Col, Layout, Typography } from 'antd';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Upload, Row, Col, Layout, Typography, InputNumber, message } from 'antd';
+import { HomeOutlined, ShopOutlined } from '@ant-design/icons';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
@@ -41,7 +41,12 @@ export default class AddProduct extends React.Component {
     let formData = new FormData();
 
     const handleUpload = (info) => {
-      formData.append('files', info.file);
+      if (info.fileList.length <= 4) {
+        formData.append('files', info.file);
+      } else {
+        info.fileList.pop();
+        message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
+      }
     };
 
     const handleCreate = (values) => {
@@ -62,6 +67,7 @@ export default class AddProduct extends React.Component {
       const config = {
         header: { 'content-type': 'multipart/form-data' },
       };
+
       API.post('api/product/create', formData, config)
         .then((res) => {
           this.props.history.push({
@@ -71,22 +77,28 @@ export default class AddProduct extends React.Component {
         .catch((err) => console.log('error adding product'));
     };
 
+    const layout = {
+      labelCol: { span: 6 },
+      wrapperCol: { span: 24 },
+    };
+
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
-            <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined />
+            <Link to={`/${this.state.merchantId}`} style={{ color: '#828282' }}>
+              <ShopOutlined /> My Shop
             </Link>{' '}
-            / <UserOutlined /> {this.state.merchantName}
+            / Add Product
           </Title>
         </Row>
 
         <Form ref={this.formRef} validateMessages={validateMessages} onFinish={handleCreate}>
           <Row align="top">
+            
             <Col lg={{ span: 12 }} span={24}>
-              <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }} style={{ margin: '0 auto' }}>
-                <Dragger onChange={handleUpload} beforeUpload={() => false}>
+              <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }}>
+                <Dragger multiple={true} onChange={handleUpload} beforeUpload={() => false}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -97,40 +109,31 @@ export default class AddProduct extends React.Component {
             </Col>
 
             <Col lg={{ span: 12 }} span={24}>
-              <h1 style={{ float: 'left' }}> Product Details </h1>
-              <h1 style={{ color: 'red' }}> * </h1>
 
-              <Form.Item name={['pdt', 'name']} rules={[{ required: true }]}>
-                <Input style={{ width: 160 }} placeholder="Product Name" />
-              </Form.Item>
-
-              <Form.Item>
-                <Form.Item
-                  name={['pdt', 'price']}
-                  rules={[{ required: true }]}
-                  style={{ display: 'inline-block', width: 160 }}
-                >
-                  <Input placeholder="Price" />
+              <Form {...layout}>
+                <Title level={2}> Product Details </Title>
+                <Form.Item label="Product Name" name={['pdt', 'name']} rules={[{ required: true }]}>
+                  <Input style={{ width: '60%' }} placeholder="Visa Herschel Bag" />
                 </Form.Item>
 
-                <Form.Item
-                  name={['pdt', 'quantity']}
-                  rules={[{ required: true }]}
-                  style={{ display: 'inline-block', width: 160, margin: '0 20px' }}
-                >
-                  <Input placeholder="Quantity" />
+                <Form.Item label="Price" name={['pdt', 'price']} rules={[{ required: true }]}>
+                  <InputNumber placeholder="179.50" style={{ width: '60%' }} />
                 </Form.Item>
-              </Form.Item>
 
-              <Form.Item name={['pdt', 'description']}>
-                <TextArea placeholder="Description" autoSize={{ minRows: 5, maxRows: 6 }} style={{ width: '100%' }} />
-              </Form.Item>
+                <Form.Item label="Quantity" name={['pdt', 'quantity']} rules={[{ required: true }]}>
+                  <InputNumber placeholder="5" style={{ width: '60%' }} />
+                </Form.Item>
 
-              <Form.Item>
-                <Button type="primary" htmlType="submit">
-                  Create
-                </Button>
-              </Form.Item>
+                <Form.Item label="Description" name={['pdt', 'description']}>
+                  <TextArea placeholder="Visa-exclusive bag. Visa is the best!" autoSize={{ minRows: 5, maxRows: 6 }} style={{ width: '100%' }} />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    Create
+                  </Button>
+                </Form.Item>
+              </Form>
             </Col>
           </Row>
         </Form>

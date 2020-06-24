@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
-import { Layout, Button, Avatar, Typography, Menu, Dropdown } from 'antd';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, DownOutlined } from '@ant-design/icons';
+import { Layout, Button, Avatar, Typography, Menu, Dropdown, message } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined, DownOutlined } from '@ant-design/icons';
+import { baseUrl } from '../../utils/baseUrl';
+import API from '../../utils/baseUrl';
 import { Link } from 'react-router-dom';
 const { Header } = Layout;
 const { Text } = Typography;
@@ -61,10 +63,34 @@ const StyledsUserName = styled(Text)`
 export default class TopBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isLoggedIn: false };
+    this.state = { isLoggedIn: false, merchantId: this.props.merchantId };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    this.handleGetUser();
+  };
+
+  handleGetUser = () => {
+    API.get(`api/merchant/get?id=${this.state.merchantId}`)
+      .then((res) => {
+        if (res.data.success) {
+          const { profileImage } = res.data.merchant;
+          console.log(profileImage, 'This is the profile image');
+          this.setState({
+            profileImage: profileImage,
+          });
+        } else {
+          message.error({
+            content: `Invalid user id of ${this.state.merchantId}`,
+            duration: 5,
+          });
+        }
+        this.setState({ isMounted: true });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   handleLoginClick = () => {
     this.props.history.push({
@@ -79,6 +105,7 @@ export default class TopBar extends React.Component {
   };
 
   render() {
+    const { profileImage } = this.state;
     const { toggleSideDrawer, collapsed, isLoggedIn, username, merchantId, handleLogoutClick } = this.props;
 
     let buttons;
@@ -96,7 +123,7 @@ export default class TopBar extends React.Component {
         <Dropdown overlay={menu} trigger={['click']}>
           <div onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
             <StyledsUserName>{username}</StyledsUserName>
-            <StyledAvatar size="large" icon={<UserOutlined />} />
+            <StyledAvatar src={`${baseUrl}${profileImage}`} />
             <StyledDropDownIcon />
           </div>
         </Dropdown>
