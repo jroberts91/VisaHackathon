@@ -5,7 +5,7 @@ import PaymentForm from './PaymentForm';
 import { Row, Col, Layout, message, Typography } from 'antd';
 import queryString from 'query-string';
 import API, { baseUrl } from '../../utils/baseUrl';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { ShopOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -66,11 +66,7 @@ export default class Payment extends React.Component {
         <Row align="top" justify="space-between" style={{ margin: '0 0 50px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
             <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined /> {headerName}
-            </Link>{' '}
-            /
-            <Link to={`/${merchantId}`} style={{ color: '#828282' }}>
-              <UserOutlined /> {merchant.name}
+              <ShopOutlined /> {headerName}
             </Link>{' '}
             /
             <Link to={`/${merchantId}/product/${productId}`} style={{ color: '#828282' }}>
