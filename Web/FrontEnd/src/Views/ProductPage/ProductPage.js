@@ -16,6 +16,7 @@ class ProductDisplay extends React.Component {
     const merchant = this.props.merchant;
     const paymentLink = this.props.paymentLink;
     const productId = this.props.productId;
+    const isOwnerShop = this.props.isOwnerShop;
     return (
       <div>
         <Row gutter={[32, 64]}>
@@ -32,6 +33,7 @@ class ProductDisplay extends React.Component {
               qtySold={soldQty}
               paymentLink={paymentLink}
               productId={productId}
+              isOwnerShop={isOwnerShop}
             />
           </Col>
         </Row>
@@ -78,7 +80,7 @@ export default class ProductPage extends React.Component {
   render() {
     const { merchant, product, merchantId, productId, isOwnerShop } = this.state;
     const paymentLink = '/' + merchantId + '/product/' + productId + '/payment';
-    
+
     let headerName;
 
     if (isOwnerShop) {
@@ -86,15 +88,24 @@ export default class ProductPage extends React.Component {
     } else {
       headerName = merchant.name;
     }
-    
+
     return (
       <Content style={{ maxWidth: '900px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-        <Title level={4} style={{ color: '#828282' }}>
-              <Link style={{ color: '#828282' }} to={`/${merchantId}`}><ShopOutlined /> {headerName}</Link> / {product.name} 
-            </Title>
+          <Title level={4} style={{ color: '#828282' }}>
+            <Link style={{ color: '#828282' }} to={`/${merchantId}`}>
+              <ShopOutlined /> {headerName}
+            </Link>{' '}
+            / {product.name}
+          </Title>
         </Row>
-        <ProductDisplay product={product} paymentLink={paymentLink} merchant={merchant} productId={productId} />
+        <ProductDisplay
+          product={product}
+          paymentLink={paymentLink}
+          merchant={merchant}
+          productId={productId}
+          isOwnerShop={isOwnerShop}
+        />
       </Content>
     );
   }

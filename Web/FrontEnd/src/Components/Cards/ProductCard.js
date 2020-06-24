@@ -8,7 +8,6 @@ import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
 import QRCode from 'qrcode.react';
 
-
 const { Meta } = Card;
 
 const ImageContainer = styled.div`
@@ -16,8 +15,8 @@ const ImageContainer = styled.div`
 `;
 
 const StyledImage = styled.img`
-  height: 200px; 
-  width: 100%; 
+  height: 200px;
+  width: 100%;
   object-fit: cover;
 `;
 
@@ -27,7 +26,7 @@ const StyledOverlay = styled.div`
   height: 100%;
   width: 100%;
   font-size: 2em;
-  color: #FFF;
+  color: #fff;
   background: rgba(0, 0, 0, 0.5);
   text-align: center;
   line-height: 200px;
@@ -39,7 +38,7 @@ export default class ProductCard extends React.Component {
     this.state = {};
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(
@@ -105,15 +104,6 @@ export default class ProductCard extends React.Component {
       >
         <LinkOutlined />
       </Button>,
-      <Button
-        style={{ backgroundColor: '#fafafa', border: '0' }}
-        onClick={(event) => {
-          event.preventDefault();
-          this.showQRCode();
-        }}
-      >
-        <QrcodeOutlined />
-      </Button>,
     ];
   };
 
@@ -121,13 +111,10 @@ export default class ProductCard extends React.Component {
     return (
       <ImageContainer>
         <StyledImage alt="example" src={fullImageUrl || MaiYuGe} />
-        {
-          isSoldOut &&
-          <StyledOverlay>Sold Out</StyledOverlay>
-        }
+        {isSoldOut && <StyledOverlay>Sold Out</StyledOverlay>}
       </ImageContainer>
     );
-  }
+  };
 
   render() {
     const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
