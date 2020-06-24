@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
 import { Layout, Button, Avatar, Typography, Menu, Dropdown, message } from 'antd';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, DownOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined, DownOutlined } from '@ant-design/icons';
 import { baseUrl } from '../../utils/baseUrl';
 import API from '../../utils/baseUrl';
 import { Link } from 'react-router-dom';
