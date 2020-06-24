@@ -15,8 +15,8 @@ const { Search } = Input;
 
 const orderListContext = React.createContext({
   orders: [],
-  toggleFulfilled: () => { }
-})
+  toggleFulfilled: () => {},
+});
 
 class SalesTable extends React.Component {
   constructor(props) {
@@ -27,7 +27,7 @@ class SalesTable extends React.Component {
     };
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   handleOk = (toggleFulfilled) => {
     this.setState({ isShowConfirmation: false });
@@ -46,7 +46,7 @@ class SalesTable extends React.Component {
     };
     API.post('api/order/fulfill', body)
       .then((res) => {
-        toggleFulfilled(orderId)
+        toggleFulfilled(orderId);
       })
       .catch((err) => console.error(err));
   };
@@ -118,7 +118,7 @@ class SalesTable extends React.Component {
 
     for (let i = 0; i < dataSource.length; i++) {
       if (!('payment' in dataSource[i])) {
-        dataSource[i].payment = {}
+        dataSource[i].payment = {};
       }
     }
 
@@ -169,7 +169,7 @@ class SalesTable extends React.Component {
             dataIndex={['payment', 'dateTime']}
             render={(dateTime) => {
               if (dateTime === undefined) {
-                return ;
+                return;
               }
               return this.formatDate(dateTime);
             }}
@@ -192,7 +192,9 @@ class SalesTable extends React.Component {
                     size="small"
                     checked={text}
                     disabled={text}
-                    onChange={() => { this.setState({ isShowConfirmation: true, orderId: record._id })}}
+                    onChange={() => {
+                      this.setState({ isShowConfirmation: true, orderId: record._id });
+                    }}
                   />
                 );
               }}
@@ -215,14 +217,14 @@ export default class SalesHistory extends React.Component {
         let orders = this.state.orders;
         for (let i = 0; i < orders.length; i++) {
           if (orders[i]._id === orderId) {
-            let newOrders = [...orders]
+            let newOrders = [...orders];
             newOrders[i].isFulfilled = true;
             this.setState({ orders: newOrders });
             return;
           }
         }
-      }
-    }
+      },
+    };
   }
 
   componentDidMount = () => {
@@ -235,7 +237,7 @@ export default class SalesHistory extends React.Component {
         this.setState({ orders: res.data.orders });
       })
       .catch((err) => console.error(err));
-  }
+  };
 
   render() {
     const searchBar = <Search placeholder="input search text" onSearch={(value) => console.log(value)} enterButton />;
@@ -246,7 +248,7 @@ export default class SalesHistory extends React.Component {
           <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
             <Title level={4} style={{ color: '#828282' }}>
               <HistoryOutlined /> Sales History
-          </Title>
+            </Title>
           </Row>
           <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
             <TabPane tab="All" key={1}>
