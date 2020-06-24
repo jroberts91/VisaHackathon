@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Card, Rate, Button, message, Modal } from 'antd';
 import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
@@ -7,7 +8,30 @@ import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
 import QRCode from 'qrcode.react';
 
+
 const { Meta } = Card;
+
+const ImageContainer = styled.div`
+  position: relative;
+`;
+
+const StyledImage = styled.img`
+  height: 200px; 
+  width: 100%; 
+  object-fit: cover;
+`;
+
+const StyledOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 2em;
+  color: #FFF;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: 200px;
+`;
 
 export default class ProductCard extends React.Component {
   constructor(props) {
@@ -15,7 +39,7 @@ export default class ProductCard extends React.Component {
     this.state = {};
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
 
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(
@@ -93,8 +117,20 @@ export default class ProductCard extends React.Component {
     ];
   };
 
+  getCoverImage = (fullImageUrl, isSoldOut) => {
+    return (
+      <ImageContainer>
+        <StyledImage alt="example" src={fullImageUrl || MaiYuGe} />
+        {
+          isSoldOut &&
+          <StyledOverlay>Sold Out</StyledOverlay>
+        }
+      </ImageContainer>
+    );
+  }
+
   render() {
-    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.props;
+    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
 
     const productLink = `/${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
@@ -114,7 +150,7 @@ export default class ProductCard extends React.Component {
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
+            cover={this.getCoverImage(fullImageUrl, isSoldOut)}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}

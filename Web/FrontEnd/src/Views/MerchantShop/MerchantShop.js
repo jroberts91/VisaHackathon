@@ -1,11 +1,20 @@
 import React from 'react';
-import { Row, Col, Layout, Typography } from 'antd';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { Row, Col, Layout, Typography, Button } from 'antd';
+import { defaultTheme } from '../../utils/theme';
 import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
+
+const AddButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
+  border-color: ${defaultTheme.colors.primary};
+  margin-bottom: 0;
+`;
 
 class ProductList extends React.Component {
   render() {
@@ -14,7 +23,7 @@ class ProductList extends React.Component {
     return (
       <Row gutter={[32, 32]}>
         {products.map((product, index) => {
-          const { name, images, url, rating, _id } = product;
+          const { name, images, url, rating, _id, totalQty, soldQty } = product;
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <ProductCard
@@ -25,6 +34,7 @@ class ProductList extends React.Component {
                 productId={_id}
                 merchantId={merchantId}
                 isOwnerShop={isOwnerShop}
+                isSoldOut={totalQty === soldQty}
               />
             </Col>
           );
@@ -97,9 +107,19 @@ export default class MerchantShop extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282' }}>
-            <ShopOutlined /> {headerName}
-          </Title>
+          <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+            <Title level={4} style={{ color: '#828282' }}>
+              <ShopOutlined /> {headerName}
+            </Title>
+          </Col>
+          {
+            isOwnerShop &&
+            <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+              <Link style={{ float: 'right' }} to={`/${merchantId}/addproduct`}>
+                <AddButton type='primary'>Add New Product</AddButton>
+              </Link>
+            </Col>
+          }
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

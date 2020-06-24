@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Layout, Typography } from 'antd';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { ShopOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 import ImageGrid from '../../Components/Grid/ImageGrid';
 import ProductDetail from '../../Components/Layout/ProductDetail';
@@ -12,7 +12,7 @@ const { Title } = Typography;
 
 class ProductDisplay extends React.Component {
   render() {
-    const { images, name, price, rating, description, totalQty, qtySold } = this.props.product;
+    const { images, name, price, rating, description, totalQty, soldQty } = this.props.product;
     const merchant = this.props.merchant;
     const paymentLink = this.props.paymentLink;
 
@@ -29,7 +29,7 @@ class ProductDisplay extends React.Component {
               description={description}
               price={price}
               totalQty={totalQty}
-              qtySold={qtySold}
+              qtySold={soldQty}
               paymentLink={paymentLink}
             />
           </Col>
@@ -55,6 +55,7 @@ export default class ProductPage extends React.Component {
       productId: this.props.match.params.productId,
       product: {},
       merchant: {},
+      isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
     };
   }
 
@@ -74,21 +75,23 @@ export default class ProductPage extends React.Component {
   };
 
   render() {
-    const { merchant, product, merchantId, productId } = this.state;
+    const { merchant, product, merchantId, productId, isOwnerShop } = this.state;
     const paymentLink = '/' + merchantId + '/product/' + productId + '/payment';
+    
+    let headerName;
+
+    if (isOwnerShop) {
+      headerName = 'My shop';
+    } else {
+      headerName = merchant.name;
+    }
+    
     return (
       <Content style={{ maxWidth: '900px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282' }}>
-            <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined />
-            </Link>{' '}
-            /
-            <Link to={`/${merchant._id}`} style={{ color: '#828282' }}>
-              <UserOutlined /> {merchant.name}
-            </Link>{' '}
-            / {product.name}
-          </Title>
+        <Title level={4} style={{ color: '#828282' }}>
+              <Link style={{ color: '#828282' }} to={`/${merchantId}`}><ShopOutlined /> {headerName}</Link> / {product.name} 
+            </Title>
         </Row>
         <ProductDisplay product={product} paymentLink={paymentLink} merchant={merchant} />
       </Content>
