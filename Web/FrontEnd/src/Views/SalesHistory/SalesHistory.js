@@ -7,8 +7,6 @@ import Modal from 'antd/lib/modal/Modal';
 
 const { Title } = Typography;
 
-const { Title } = Typography;
-
 const { Content } = Layout;
 
 const { TabPane } = Tabs;
