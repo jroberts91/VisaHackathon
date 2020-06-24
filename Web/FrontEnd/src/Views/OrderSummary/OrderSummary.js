@@ -31,7 +31,7 @@ export default class OrderSummary extends React.Component {
 
     API.get(`api/order/get?orderId=${this.props.match.params.orderId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           this.setState({ order: res.data.order });
         } else {
           message.error({
