@@ -31,8 +31,8 @@ export default class ProductDetail extends React.Component {
 
   componentDidMount = () => {};
 
-  checkQuantity = () => {
-    if (this.state.quantity === '' || this.state.quantity === null) {
+  checkQuantity = (remainingQty) => {
+    if (this.state.quantity === '' || this.state.quantity === null || remainingQty <= 0) {
       return true;
     }
     return false;
@@ -106,8 +106,11 @@ export default class ProductDetail extends React.Component {
             <InputNumber
               style={{ width: '52px' }}
               min={1}
-              defaultValue={quantity}
-              onChange={(value) => this.setState({ quantity: value })}
+              value={this.state.quantity}
+              max={totalQty - qtySold}
+              onChange={(value) => {
+                this.setState({ quantity: value })
+              }}
             />
           </Col>
           <Col key={1} span={16}>
@@ -134,7 +137,7 @@ export default class ProductDetail extends React.Component {
               style={{ float: 'right', marginRight: '20%' }}
               to={paymentLink + '/payment?qty=' + this.state.quantity}
             >
-              <BlueButton type="primary" disabled={this.checkQuantity()}>
+              <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
                 Buy Now
               </BlueButton>
             </Link>

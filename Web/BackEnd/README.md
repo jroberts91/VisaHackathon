@@ -73,15 +73,15 @@ Request
 {
     "order": {
         "merchantId": "5ee9856ede9f8478c570d1ea",
-        "product": "5eea319b7d826f0be1dfb429",
+        "product": "5ef1a01e1198af414c0d28d4",
+        "address": "def avenue 123",
+        "phoneNumber": 344345,
+        "email": "hello@gmail.com",
         "quantity": 1
     },
     "payment": {
-        "address": "def avenue 123",
         "firstName": "yz1",
         "lastName": "ong",
-        "phoneNumber": 344345,
-        "email": "yz@email.com",
         "postal": "123456",
         "country": "SG"
     }
@@ -125,11 +125,38 @@ Response
 {
     "success": true,
     "order": {
-        "_id": "5eeb8920418d1752286c9647",
-        "paymentId": "5eeb8920418d1752286c9646",
-        "isFulfilled": true,
-        "__v": 0,
-        "dateTimeFulfilled": "2020-06-19T01:48:35.340Z"
+        "_id": "5ef2c4b5bcab945c641cfed5",
+        "merchantId": "5ee9856ede9f8478c570d1ea",
+        "product": {
+            "price": 1.7,
+            "images": [
+                "uploads\\1592893470907_prawns.jpg"
+            ],
+            "soldQty": 3,
+            "_id": "5ef1a01e1198af414c0d28d4",
+            "name": "prawns",
+            "description": "1.7 per kg",
+            "totalQty": 400,
+            "merchantId": "5ee9856ede9f8478c570d1ea",
+            "createdAt": "2020-06-23T06:24:30.911Z",
+            "updatedAt": "2020-06-23T06:24:30.911Z",
+            "__v": 0
+        },
+        "address": "def avenue 123",
+        "phoneNumber": "344345",
+        "email": "ongyanzhi96@gmail.com",
+        "quantity": 1,
+        "payment": {
+            "_id": "5ef2c4b5bcab945c641cfed4",
+            "firstName": "yz1",
+            "lastName": "ong",
+            "postal": "123456",
+            "country": "SG",
+            "dateTime": "2020-06-24T03:12:53.698Z",
+            "__v": 0
+        },
+        "isFulfilled": false,
+        "__v": 0
     }
 }
 ```
@@ -150,28 +177,42 @@ Response
     "success": true,
     "orders": [
         {
-            "_id": "5eef8aeeb6b05d3558610d65",
-            "merchantId": "5ee9856ede9f8478c570d1ea",
-            "product": {
-                "price": 1,
-                "images": [
-                    "uploads\\\\1592406427633_tc3ZDJF.jpg",
-                    "uploads\\\\1592406427661_bhSibUd.jpg"
-                ],
-                "_id": "5eea319b7d826f0be1dfb429",
-                "name": "curry fish",
+            "success": true,
+            "order": {
+                "_id": "5ef2c4b5bcab945c641cfed5",
                 "merchantId": "5ee9856ede9f8478c570d1ea",
-                "url": "5ee9856ede9f8478c570d1ea\\\\product\\\\5eea319b7d826f0be1dfb429",
-                "createdAt": "2020-06-17T15:07:07.748Z",
-                "updatedAt": "2020-06-21T16:30:25.890Z",
+                "product": {
+                    "price": 1.7,
+                    "images": [
+                        "uploads\\1592893470907_prawns.jpg"
+                    ],
+                    "soldQty": 3,
+                    "_id": "5ef1a01e1198af414c0d28d4",
+                    "name": "prawns",
+                    "description": "1.7 per kg",
+                    "totalQty": 400,
+                    "merchantId": "5ee9856ede9f8478c570d1ea",
+                    "createdAt": "2020-06-23T06:24:30.911Z",
+                    "updatedAt": "2020-06-23T06:24:30.911Z",
+                    "__v": 0
+                },
+                "address": "def avenue 123",
+                "phoneNumber": "344345",
+                "email": "ongyanzhi96@gmail.com",
+                "quantity": 1,
+                "payment": {
+                    "_id": "5ef2c4b5bcab945c641cfed4",
+                    "firstName": "yz1",
+                    "lastName": "ong",
+                    "postal": "123456",
+                    "country": "SG",
+                    "dateTime": "2020-06-24T03:12:53.698Z",
+                    "__v": 0
+                },
+                "isFulfilled": false,
                 "__v": 0
-            },
-            "quantity": 3,
-            "paymentId": "5eef8aeeb6b05d3558610d64",
-            "isFulfilled": true,
-            "__v": 0,
-            "dateTimeFulfilled": "2020-06-21T16:30:25.890Z"
-        },
+            }
+        }
     ],
     "postSize": 1
 }

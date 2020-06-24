@@ -13,53 +13,40 @@ const { TabPane } = Tabs;
 
 const { Search } = Input;
 
+const orderListContext = React.createContext({
+  orders: [],
+  toggleFulfilled: () => { }
+})
+
 class SalesTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      merchantId: this.props.merchantId,
-      orders: [],
       isShowConfirmation: false,
       orderId: null,
     };
   }
 
-  componentDidMount = () => {
-    const body = {
-      merchantId: this.state.merchantId,
-      fulfilled: 'all',
-    };
-    API.post('api/order/getAll', body)
-      .then((res) => {
-        this.setState({ orders: res.data.orders });
-      })
-      .catch((err) => console.error(err));
-  };
+  componentDidMount = () => { };
 
-  handleOk = () => {
+  handleOk = (toggleFulfilled) => {
     this.setState({ isShowConfirmation: false });
-    this.changeFulfilledStatus();
+    this.changeFulfilledStatus(toggleFulfilled);
   };
 
   handleCancel = () => {
     this.setState({ isShowConfirmation: false });
   };
 
-  changeFulfilledStatus = () => {
+  changeFulfilledStatus = (toggleFulfilled) => {
+    const { orderId } = this.state;
+
     const body = {
-      orderId: this.state.orderId,
+      orderId: orderId,
     };
     API.post('api/order/fulfill', body)
       .then((res) => {
-        const body = {
-          merchantId: this.state.merchantId,
-          fulfilled: 'all',
-        };
-        API.post('api/order/getAll', body)
-          .then((res) => {
-            this.setState({ orders: res.data.orders });
-          })
-          .catch((err) => console.error(err));
+        toggleFulfilled(orderId)
       })
       .catch((err) => console.error(err));
   };
@@ -83,7 +70,8 @@ class SalesTable extends React.Component {
   generateDateFiter = (data) => {
     let filterSet = new Set();
     for (let elm of data) {
-      let date = elm.product.createdAt;
+      let date = elm.payment.dateTime;
+      if (date === undefined) continue;
       filterSet.add(this.formatDateWithoutTime(date));
     }
     let filters = [];
@@ -98,11 +86,6 @@ class SalesTable extends React.Component {
 
   formatDateWithoutTime = (dateTime) => {
     let date = new Date(dateTime);
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
     return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
   };
 
@@ -119,7 +102,8 @@ class SalesTable extends React.Component {
   };
 
   render() {
-    const { orders } = this.state;
+    const { orders, toggleFulfilled } = this.context;
+
     let data = orders ? orders : [];
     let dataSource = [];
     if (!this.props.statusTab) {
@@ -131,6 +115,13 @@ class SalesTable extends React.Component {
     } else {
       dataSource = data;
     }
+
+    for (let i = 0; i < dataSource.length; i++) {
+      if (!('payment' in dataSource[i])) {
+        dataSource[i].payment = {}
+      }
+    }
+
     const key = this.props.statusTab ? 0 : this.props.isFulfilled ? 2 : 1;
 
     return (
@@ -138,7 +129,7 @@ class SalesTable extends React.Component {
         <Modal
           title="Confirmation"
           visible={this.state.isShowConfirmation}
-          onOk={this.handleOk}
+          onOk={() => this.handleOk(toggleFulfilled)}
           onCancel={this.handleCancel}
           style={{ textAlign: 'center' }}
           okText="Yes"
@@ -170,21 +161,23 @@ class SalesTable extends React.Component {
             key={4}
             title="Address"
             dataIndex="address"
-            key="address"
             sorter={(a, b) => a.address.localeCompare(b.address, 'en', { sensitivity: 'base' })}
           />
           <Column
             key={5}
             title="Paid Date"
-            dataIndex={['product', 'createdAt']}
+            dataIndex={['payment', 'dateTime']}
             render={(dateTime) => {
+              if (dateTime === undefined) {
+                return ;
+              }
               return this.formatDate(dateTime);
             }}
             filters={this.generateDateFiter(data)}
-            onFilter={(value, record) => this.formatDateWithoutTime(record.product.createdAt).indexOf(value) === 0}
+            onFilter={(value, record) => this.formatDateWithoutTime(record.payment.dateTime).indexOf(value) === 0}
             sorter={(a, b) => {
-              let firstDateObj = new Date(a.product.createdAt);
-              let secondDateObj = new Date(b.product.createdAt);
+              let firstDateObj = new Date(a.payment.dateTime);
+              let secondDateObj = new Date(b.payment.dateTime);
               return firstDateObj - secondDateObj;
             }}
           />
@@ -199,7 +192,7 @@ class SalesTable extends React.Component {
                     size="small"
                     checked={text}
                     disabled={text}
-                    onChange={() => this.setState({ isShowConfirmation: true, orderId: record._id })}
+                    onChange={() => { this.setState({ isShowConfirmation: true, orderId: record._id })}}
                   />
                 );
               }}
@@ -211,30 +204,63 @@ class SalesTable extends React.Component {
   }
 }
 
+SalesTable.contextType = orderListContext;
+
 export default class SalesHistory extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      orders: null,
+      toggleFulfilled: (orderId) => {
+        let orders = this.state.orders;
+        for (let i = 0; i < orders.length; i++) {
+          if (orders[i]._id === orderId) {
+            let newOrders = [...orders]
+            newOrders[i].isFulfilled = true;
+            this.setState({ orders: newOrders });
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  componentDidMount = () => {
+    const body = {
+      merchantId: this.props.match.params.merchantId,
+      fulfilled: 'all',
+    };
+    API.post('api/order/getAll', body)
+      .then((res) => {
+        this.setState({ orders: res.data.orders });
+      })
+      .catch((err) => console.error(err));
+  }
+
   render() {
-    const { merchantId } = this.props.match.params;
     const searchBar = <Search placeholder="input search text" onSearch={(value) => console.log(value)} enterButton />;
 
     return (
-      <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto' }}>
-        <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282' }}>
-            <HistoryOutlined /> Sales History
+      <orderListContext.Provider value={this.state}>
+        <Content style={{ width: '95%', maxWidth: '1280px', margin: '0 auto' }}>
+          <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+            <Title level={4} style={{ color: '#828282' }}>
+              <HistoryOutlined /> Sales History
           </Title>
-        </Row>
-        <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
-          <TabPane tab="All" key={1}>
-            <SalesTable statusTab={true} merchantId={merchantId} />
-          </TabPane>
-          <TabPane tab="Not Fulfilled" key={2}>
-            <SalesTable statusTab={false} merchantId={merchantId} isFulfilled={false} />
-          </TabPane>
-          <TabPane tab="Fulfilled" key={3}>
-            <SalesTable statusTab={false} merchantId={merchantId} isFulfilled={true} />
-          </TabPane>
-        </Tabs>
-      </Content>
+          </Row>
+          <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
+            <TabPane tab="All" key={1}>
+              <SalesTable statusTab={true} />
+            </TabPane>
+            <TabPane tab="Not Fulfilled" key={2}>
+              <SalesTable statusTab={false} isFulfilled={false} />
+            </TabPane>
+            <TabPane tab="Fulfilled" key={3}>
+              <SalesTable statusTab={false} isFulfilled={true} />
+            </TabPane>
+          </Tabs>
+        </Content>
+      </orderListContext.Provider>
     );
   }
 }

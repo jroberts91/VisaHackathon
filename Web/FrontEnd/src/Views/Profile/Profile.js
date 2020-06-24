@@ -29,7 +29,7 @@ const StyledImage = styled.img`
 
 class LeftProfileSection extends React.Component {
   render() {
-    const { profileImage, mode, editedProfileImage, setEditedProfileImage, setUploadedFile } = this.props;
+    const { profileImage, mode, editedProfileImage, setUploadedFile } = this.props;
     const handleChangePic = (info) => {
       setUploadedFile(info.file);
       message.info({
@@ -82,9 +82,6 @@ class LeftProfileSection extends React.Component {
 }
 
 class RightProfileSection extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const { name, description, email, address, phone, cardNumber, mode } = this.props;
     const {
@@ -165,7 +162,7 @@ export default class Profile extends React.Component {
   componentDidMount = () => {
     API.get(`api/merchant/get?id=${this.state.merchantId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           const { name, email, description, profileImage, address, phone, cardNumber } = res.data.merchant;
           this.setState({
             name: name,
@@ -210,7 +207,6 @@ export default class Profile extends React.Component {
       editedCardNumber,
       editedProfileImage,
       files,
-      merchantId,
     } = this.state;
 
     const body = {
@@ -225,7 +221,7 @@ export default class Profile extends React.Component {
     // submission of text fields
     API.post('/api/merchant/editProfile', body)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           message.success({ content: 'Profile details updated successful.', duration: 5 });
 
           // update current display values
@@ -254,7 +250,7 @@ export default class Profile extends React.Component {
 
       API.post('/api/merchant/uploadProfileImage', formData, config)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.data.success) {
             message.success({ content: `Profile image updated successfully`, duration: 5 });
             this.setState({ editedProfileImage: res.data.profileImage });
             this.setState({ profileImage: res.data.profileImage });

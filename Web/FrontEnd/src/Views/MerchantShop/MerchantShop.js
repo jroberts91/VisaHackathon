@@ -1,11 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Layout, Typography, Button } from 'antd';
+import { defaultTheme } from '../../utils/theme';
 import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import API from '../../utils/baseUrl';
-import { defaultTheme } from '../../utils/theme';
-import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -23,7 +23,7 @@ class ProductList extends React.Component {
     return (
       <Row gutter={[32, 32]}>
         {products.map((product, index) => {
-          const { name, images, url, rating, _id } = product;
+          const { name, images, url, rating, _id, totalQty, soldQty } = product;
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <ProductCard
@@ -34,6 +34,7 @@ class ProductList extends React.Component {
                 productId={_id}
                 merchantId={merchantId}
                 isOwnerShop={isOwnerShop}
+                isSoldOut={totalQty === soldQty}
               />
             </Col>
           );
@@ -93,23 +94,32 @@ export default class MerchantShop extends React.Component {
   };
 
   render() {
-    const { merchantId, products, isOwnerShop } = this.state;
+    const { merchantId, products, isOwnerShop, merchantName } = this.state;
+
+    let headerName;
+
+    if (isOwnerShop) {
+      headerName = 'My shop';
+    } else {
+      headerName = merchantName;
+    }
 
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Col key={0} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
             <Title level={4} style={{ color: '#828282' }}>
-              <ShopOutlined /> My Shop
+              <ShopOutlined /> {headerName}
             </Title>
           </Col>
-          {isOwnerShop && (
+          {
+            isOwnerShop &&
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <Link style={{ float: 'right' }} to={`/${merchantId}/addproduct`}>
-                <AddButton type="primary">Add New Product</AddButton>
+                <AddButton type='primary'>Add New Product</AddButton>
               </Link>
             </Col>
-          )}
+          }
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>

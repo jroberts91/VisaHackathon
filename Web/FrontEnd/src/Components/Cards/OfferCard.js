@@ -1,10 +1,6 @@
 import React from 'react';
-import { Card, Rate } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-import MaiYuGe from '../../images/maiyuge.jpg';
+import { Card } from 'antd';
 import 'antd/dist/antd.css';
-import { Link } from 'react-router-dom';
-import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
