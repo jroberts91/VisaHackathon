@@ -44,10 +44,14 @@ export default class Home extends React.Component {
 
   handleLogoutClick = () => {
     API.get('api/merchant/logout').then((res) => {
-      console.log(res);
-    });
-    this.setState({
-      isLoggedIn: false,
+      if (res.status === 200) {
+        this.setState({
+          isLoggedIn: false,
+        });
+        this.props.history.push({
+          pathname: '/signup',
+        });
+      }
     });
   };
 
