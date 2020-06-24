@@ -152,7 +152,14 @@ export default class SignUp extends React.Component {
     API.post('api/merchant/register', formData, config).then((res) => {
       const success = res.data.success;
       if (success) {
-        history.push('/');
+        const { email, password } = this.state;
+        const sendObject = { email, password };
+        API.post('api/merchant/login', sendObject).then((res) => {
+          const success = res.data.success;
+          if (success) {
+            history.push('/');
+          }
+        });
       }
       console.log(res.data.loginSuccess);
     });
