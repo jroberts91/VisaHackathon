@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Modal, TouchableHighlight, Image } from 'react-native';
 import API, { baseUrl } from '../../utils/baseUrl';
+import Logo from '../../../images/LogoNoTagLine.png';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -39,6 +40,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
+  image: { width: 50, height: 50 },
 });
 
 export default class ProductModal extends React.Component {
@@ -79,10 +81,10 @@ export default class ProductModal extends React.Component {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>{product.name}</Text>
+              <Image style={styles.image} source={{ uri: `${baseUrl}${product.images[0]}` }} />
               <Text style={styles.modalText}>{product.description}</Text>
               <Text style={styles.modalText}>{product.price}</Text>
               <Text style={styles.modalText}>{`${baseUrl}${imageUrl}`}</Text>
-              <Image source={{ uri: `${baseUrl}${product.images[0]}` }} />
               <TouchableHighlight
                 style={{ ...styles.openButton, backgroundColor: '#00276A' }}
                 onPress={() => {
