@@ -34,7 +34,7 @@ router.post("/direct", async (req, res) => {
         return res.json({success: false});
     }
     // check if there is qty available
-    let newSoldQty = orderBody.quantity + product.soldQty;
+    let newSoldQty = parseInt(orderBody.quantity) + product.soldQty;
     if (newSoldQty > product.totalQty) {
         console.log("product not available");
         return res.json({success: false});
