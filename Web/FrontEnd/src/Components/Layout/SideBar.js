@@ -40,7 +40,7 @@ export default class SideBar extends React.Component {
     this.state = { collapsed: false };
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   render() {
     const { collapsed, isLoggedIn } = this.props;

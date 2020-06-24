@@ -32,10 +32,10 @@ router.get("/list", async (req, res) => {
     axios(config).then(function (response) {
         var data = response.data;
         data.success = true;
-        return res.status(200).json(data)
+        return res.json(data)
     }).catch(function (error) {
         console.log(error);
-        return res.status(400).json({success: false, error})
+        return res.json({success: false, err})
     });
 });
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import LogoTagLine from '../../images/LogoTagLine.png';
-import { Typography, Steps, Upload, message, Alert } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { Typography, Steps, Upload, Alert, Button as AntButton } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import { TextField, Button } from '@material-ui/core';
 import API from '../../utils/baseUrl';
 import 'antd/dist/antd.css';
@@ -73,6 +73,7 @@ const StyledUpload = styled(Upload)`
   position: absolute;
   left: calc(20% + 100px);
   width: 0%;
+  top: 37px;
 `;
 
 const StyledUploadGroup = styled.div`
@@ -102,29 +103,12 @@ const StyledMaterialButtonLeft = styled(Button)`
   }
 `;
 
-function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-}
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
 export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       differentPasswords: false,
+      uploaded: false,
       email: '',
       password: '',
       confirmPassword: '',
@@ -133,26 +117,47 @@ export default class SignUp extends React.Component {
       phoneNumber: '',
       address: '',
       cardNumber: '',
+      files: '',
       current: 0,
     };
   }
 
   componentDidMount = () => {};
 
-  /**
-   * Runs when component `signup` mounts
-   * Checks sessionStorage if user is logged in (response.status == 200)
-   * IF response.status !==200, user is routed to './'
-   */
   handleSubmit = () => {
-    const { storeName, storeDescription, email, password, differentPasswords } = this.state;
+    const { storeName, storeDescription, email, password, files, phoneNumber, address } = this.state;
     const { history } = this.props;
-    const sendObject = { name: storeName, email, password, description: storeDescription };
-    API.post('api/merchant/register', sendObject).then((res) => {
-      console.log(res);
+    const body = {
+      name: storeName,
+      email: email,
+      password: password,
+      description: storeDescription,
+      phone: phoneNumber,
+      address: address,
+    };
+
+    let formData = new FormData();
+    formData.append('files', files);
+
+    for (var key in body) {
+      formData.append(key, body[key]);
+    }
+
+    const config = {
+      header: { 'content-type': 'multipart/form-data' },
+    };
+
+    API.post('api/merchant/register', formData, config).then((res) => {
       const success = res.data.success;
       if (success) {
-        history.push('/');
+        const { email, password } = this.state;
+        const sendObject = { email, password };
+        API.post('api/merchant/login', sendObject).then((res) => {
+          const success = res.data.success;
+          if (success) {
+            history.push('/');
+          }
+        });
       }
       console.log(res.data.loginSuccess);
     });
@@ -177,9 +182,17 @@ export default class SignUp extends React.Component {
   };
 
   handleChangePassword = (event) => {
-    this.setState({
-      password: event.target.value,
-    });
+    if (event.target.value !== this.state.confirmPassword) {
+      this.setState({
+        differentPasswords: true,
+        password: event.target.value,
+      });
+    } else {
+      this.setState({
+        differentPasswords: false,
+        password: event.target.value,
+      });
+    }
   };
 
   handleChangeConfirmPassword = (event) => {
@@ -215,18 +228,12 @@ export default class SignUp extends React.Component {
   };
 
   handleChangePic = (info) => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
-    }
-    if (info.file.status === 'done') {
-      getBase64(info.file.originFileObj, (imageUrl) =>
-        this.setState({
-          imageUrl,
-          loading: false,
-        })
-      );
-    }
+    console.log(info.file);
+    this.setState({
+      uploaded: true,
+      files: info.file,
+      imageUrl: info.file.name,
+    });
   };
 
   onChange = (current) => {
@@ -254,14 +261,8 @@ export default class SignUp extends React.Component {
       current,
       imageUrl,
       differentPasswords,
+      uploaded,
     } = this.state;
-
-    const uploadButton = (
-      <div>
-        {this.state.loading ? <LoadingOutlined /> : <PlusOutlined />}
-        <div className="ant-upload-text">Upload</div>
-      </div>
-    );
 
     const SignUpPageFields = (
       <StyledRightContainer>
@@ -324,7 +325,7 @@ export default class SignUp extends React.Component {
                 variant="contained"
                 color="primary"
                 onClick={this.nextSection}
-                disabled={!(email.length && password.length && confirmPassword.length)}
+                disabled={!(email.length && password.length && confirmPassword.length && !differentPasswords)}
               >
                 Next
               </StyledMaterialButtonRight>
@@ -377,15 +378,15 @@ export default class SignUp extends React.Component {
               <StyledUploadGroup>
                 <StyledText> Picture </StyledText>
                 <StyledUpload
-                  name="avatar"
-                  listType="picture-card"
-                  className="avatar-uploader"
                   showUploadList={false}
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  beforeUpload={beforeUpload}
+                  beforeUpload={() => false}
                   onChange={this.handleChangePic}
                 >
-                  {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                  <AntButton>
+                    <UploadOutlined /> Click to Upload
+                  </AntButton>
+                  <StyledText> {imageUrl} </StyledText>
                 </StyledUpload>
               </StyledUploadGroup>
               <StyledMaterialButtonLeft variant="contained" color="primary" onClick={this.prevSection}>
@@ -403,7 +404,8 @@ export default class SignUp extends React.Component {
                     storeName.length &&
                     storeDescription.length &&
                     phoneNumber.length &&
-                    address.length
+                    address.length &&
+                    uploaded
                   )
                 }
               >
@@ -438,6 +440,7 @@ export default class SignUp extends React.Component {
                     storeDescription.length &&
                     phoneNumber.length &&
                     address.length &&
+                    uploaded &&
                     cardNumber.length
                   )
                 }

@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {Icon} from 'react-native-elements';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   button: {},
@@ -14,7 +14,7 @@ export default class MessageTop extends React.Component {
           name="inbox"
           solid={true}
           type="font-awesome-5"
-          color="white"
+          color="#fff"
           onPress={() => this.props.openMessage('Message')}
         />
       </TouchableOpacity>
