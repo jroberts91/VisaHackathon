@@ -89,7 +89,7 @@ export default class AddProduct extends React.Component {
             <Link to={`/${this.state.merchantId}`} style={{ color: '#828282' }}>
               <ShopOutlined /> My Shop
             </Link>{' '}
-            / Add Product 
+            / Add Product
           </Title>
         </Row>
 
