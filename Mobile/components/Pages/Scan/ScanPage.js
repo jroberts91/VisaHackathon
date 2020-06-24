@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { StyleSheet, Dimensions, View, Text, LayoutAnimation, StatusBar } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import ProductModal from './ProductModal';
+import ProductPage from './ProductPage';
 
 class ScanPage extends Component {
   state = {
     hasCameraPermission: null,
     lastScannedId: null,
     cameraType: BarCodeScanner.Constants.Type.back,
-    isShowProductModal: false,
+    isShowProductPage: false,
   };
 
-  setIsShowProductModal = (visible) => {
-    this.setState({ isShowProductModal: visible });
+  setIsShowProductPage = (visible) => {
+    this.setState({ isShowProductPage: visible });
   };
 
   setClearLastScannedId = () => {
@@ -45,7 +45,7 @@ class ScanPage extends Component {
       // for some reason, if scanning an invalid qr code, displaying it will show the url, but
       // calling this.setState({ lastScannedId: result.data }); will set lastScannedId to null
       this.setState({ lastScannedId: result.data });
-      this.setState({ isShowProductModal: true });
+      this.setState({ isShowProductPage: true });
     }
   };
 
@@ -56,6 +56,13 @@ class ScanPage extends Component {
           <Text>Requesting for camera permission</Text>
         ) : this.state.hasCameraPermission === false ? (
           <Text style={{ color: '#fff' }}>Camera permission is not granted</Text>
+        ) : this.state.isShowProductPage ? (
+          <ProductPage
+            isShowProductPage={this.state.isShowProductPage}
+            setisShowProductPage={this.setIsShowProductPage}
+            setClearLastScannedId={this.setClearLastScannedId}
+            productId={this.state.lastScannedId}
+          />
         ) : (
           <BarCodeScanner
             onBarCodeScanned={this._handleBarCodeRead}
@@ -65,37 +72,17 @@ class ScanPage extends Component {
             }}
           />
         )}
-
-        {this._maybeRenderProduct()}
-
         <StatusBar hidden />
       </View>
     );
   }
-
-  _maybeRenderProduct = () => {
-    if (!this.state.lastScannedId) {
-      return;
-    }
-
-    return (
-      <View>
-        <ProductModal
-          isShowProductModal={this.state.isShowProductModal}
-          setIsShowProductModal={this.setIsShowProductModal}
-          setClearLastScannedId={this.setClearLastScannedId}
-          productId={this.state.lastScannedId}
-        />
-      </View>
-    );
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
 });
 
