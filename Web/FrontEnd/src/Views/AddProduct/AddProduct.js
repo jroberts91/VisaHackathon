@@ -47,7 +47,6 @@ export default class AddProduct extends React.Component {
         info.fileList.pop();
         message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
       }
-      console.log(info.fileList);
     };
 
     const handleCreate = (values) => {
