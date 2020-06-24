@@ -162,7 +162,7 @@ export default class Profile extends React.Component {
   componentDidMount = () => {
     API.get(`api/merchant/get?id=${this.state.merchantId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           const { name, email, description, profileImage, address, phone, cardNumber } = res.data.merchant;
           this.setState({
             name: name,
@@ -221,7 +221,7 @@ export default class Profile extends React.Component {
     // submission of text fields
     API.post('/api/merchant/editProfile', body)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           message.success({ content: 'Profile details updated successful.', duration: 5 });
 
           // update current display values
@@ -250,7 +250,7 @@ export default class Profile extends React.Component {
 
       API.post('/api/merchant/uploadProfileImage', formData, config)
         .then((res) => {
-          if (res.status === 200) {
+          if (res.data.success) {
             message.success({ content: `Profile image updated successfully`, duration: 5 });
             this.setState({ editedProfileImage: res.data.profileImage });
             this.setState({ profileImage: res.data.profileImage });

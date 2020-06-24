@@ -37,7 +37,6 @@ export default class HomeBody extends React.Component {
   componentDidMount = () => {
     API.post('api/merchant/getAll')
       .then((res) => {
-        console.log(res);
         this.setState({ merchants: res.data.merchants });
       })
       .catch((err) => console.error(err));
