@@ -16,6 +16,10 @@ class ScanPage extends Component {
     this.setState({ isShowProductModal: visible });
   };
 
+  setClearLastScannedId = () => {
+    this.setState({ lastScannedId: null });
+  };
+
   componentDidMount() {
     this._requestCameraPermission();
   }
@@ -38,6 +42,8 @@ class ScanPage extends Component {
   _handleBarCodeRead = (result) => {
     if (result.data !== this.state.lastScannedId) {
       LayoutAnimation.spring();
+      // for some reason, if scanning an invalid qr code, displaying it will show the url, but
+      // calling this.setState({ lastScannedId: result.data }); will set lastScannedId to null
       this.setState({ lastScannedId: result.data });
       this.setState({ isShowProductModal: true });
     }
@@ -77,6 +83,7 @@ class ScanPage extends Component {
         <ProductModal
           isShowProductModal={this.state.isShowProductModal}
           setIsShowProductModal={this.setIsShowProductModal}
+          setClearLastScannedId={this.setClearLastScannedId}
           productId={this.state.lastScannedId}
         />
       </View>
