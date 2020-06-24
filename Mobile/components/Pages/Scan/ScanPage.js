@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Dimensions,
-  View,
-  Text,
-  TouchableOpacity,
-  LayoutAnimation,
-  Alert,
-  Linking,
-  StatusBar,
-} from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleSheet, Dimensions, View, Text, LayoutAnimation, StatusBar } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import ProductModal from './ProductModal';
 
 class ScanPage extends Component {
   state = {
     hasCameraPermission: null,
-    lastScannedUrl: null,
+    lastScannedId: null,
     cameraType: BarCodeScanner.Constants.Type.back,
+    isShowProductModal: false,
+  };
+
+  setIsShowProductModal = (visible) => {
+    this.setState({ isShowProductModal: visible });
   };
 
   componentDidMount() {
@@ -41,9 +36,10 @@ class ScanPage extends Component {
   };
 
   _handleBarCodeRead = (result) => {
-    if (result.data !== this.state.lastScannedUrl) {
+    if (result.data !== this.state.lastScannedId) {
       LayoutAnimation.spring();
-      this.setState({ lastScannedUrl: result.data });
+      this.setState({ lastScannedId: result.data });
+      this.setState({ isShowProductModal: true });
     }
   };
 
@@ -64,47 +60,25 @@ class ScanPage extends Component {
           />
         )}
 
-        {this._maybeRenderUrl()}
+        {this._maybeRenderProduct()}
 
         <StatusBar hidden />
       </View>
     );
   }
 
-  _handlePressUrl = () => {
-    Alert.alert(
-      'Open this URL?',
-      this.state.lastScannedUrl,
-      [
-        {
-          text: 'Yes',
-          onPress: () => Linking.openURL(this.state.lastScannedUrl),
-        },
-        { text: 'No', onPress: () => {} },
-      ],
-      { cancellable: false }
-    );
-  };
-
-  _handlePressCancel = () => {
-    this.setState({ lastScannedUrl: null });
-  };
-
-  _maybeRenderUrl = () => {
-    if (!this.state.lastScannedUrl) {
+  _maybeRenderProduct = () => {
+    if (!this.state.lastScannedId) {
       return;
     }
 
     return (
-      <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
-          <Text numberOfLines={1} style={styles.urlText}>
-            {this.state.lastScannedUrl}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.cancelButton} onPress={this._handlePressCancel}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </TouchableOpacity>
+      <View>
+        <ProductModal
+          isShowProductModal={this.state.isShowProductModal}
+          setIsShowProductModal={this.setIsShowProductModal}
+          productId={this.state.lastScannedId}
+        />
       </View>
     );
   };
@@ -115,31 +89,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: 'black',
-  },
-  bottomBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 15,
-    flexDirection: 'row',
-  },
-  url: {
-    flex: 1,
-  },
-  urlText: {
-    color: '#fff',
-    fontSize: 20,
-  },
-  cancelButton: {
-    marginLeft: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cancelButtonText: {
-    color: 'rgba(255,255,255,0.8)',
-    fontSize: 18,
   },
 });
 
