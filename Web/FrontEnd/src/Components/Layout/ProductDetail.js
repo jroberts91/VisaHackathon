@@ -80,7 +80,7 @@ export default class ProductDetail extends React.Component {
     );
   };
 
-  getBody = (description, price, totalQty, qtySold, quantity, paymentLink) => {
+  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId) => {
     qtySold = qtySold || 0;
     totalQty = totalQty || 0;
 
@@ -94,7 +94,7 @@ export default class ProductDetail extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={paymentLink} size={256} />
+          <QRCode value={productId} size={256} />
         </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>{description || 'No Description Provided'}</Col>
@@ -148,14 +148,14 @@ export default class ProductDetail extends React.Component {
   };
 
   render() {
-    const { name, rating, description, price, totalQty, qtySold, paymentLink } = this.props;
+    const { name, rating, description, price, totalQty, qtySold, paymentLink, productId } = this.props;
     const { quantity } = this.state;
 
     return (
       <Card style={{ width: '95%', marginLeft: '5%' }} hoverable>
         <Meta
           title={this.getTitle(name, rating)}
-          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink)}
+          description={this.getBody(description, price, totalQty, qtySold, quantity, paymentLink, productId)}
         />
       </Card>
     );

@@ -33,11 +33,11 @@ export default class MainTabs extends React.Component {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#fff',
-          inactiveTintColor: '#80A0AB',
+          activeTintColor: '#FAA913',
+          inactiveTintColor: '#fff',
           showLabel: false,
           style: {
-            backgroundColor: '#485155',
+            backgroundColor: '#1a1f71',
           },
           labelStyle: {
             fontSize: 12,
