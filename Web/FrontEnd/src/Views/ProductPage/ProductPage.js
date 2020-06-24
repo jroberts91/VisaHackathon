@@ -15,7 +15,7 @@ class ProductDisplay extends React.Component {
     const { images, name, price, rating, description, totalQty, qtySold } = this.props.product;
     const merchant = this.props.merchant;
     const paymentLink = this.props.paymentLink;
-
+    const productId = this.props.productId;
     return (
       <div>
         <Row gutter={[32, 64]}>
@@ -31,6 +31,7 @@ class ProductDisplay extends React.Component {
               totalQty={totalQty}
               qtySold={qtySold}
               paymentLink={paymentLink}
+              productId={productId}
             />
           </Col>
         </Row>
@@ -90,7 +91,7 @@ export default class ProductPage extends React.Component {
             / {product.name}
           </Title>
         </Row>
-        <ProductDisplay product={product} paymentLink={paymentLink} merchant={merchant} />
+        <ProductDisplay product={product} paymentLink={paymentLink} merchant={merchant} productId={productId} />
       </Content>
     );
   }
