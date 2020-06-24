@@ -1,6 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Upload, Row, Col, Layout, Typography } from 'antd';
-import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Upload, Row, Col, Layout, Typography, InputNumber, message } from 'antd';
+import { HomeOutlined, ShopOutlined } from '@ant-design/icons';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
@@ -21,7 +21,7 @@ export default class AddProduct extends React.Component {
     super(props);
     this.state = {
       merchantId: this.props.match.params.merchantId,
-      merchantName: '',
+      merchantName: ''
     };
   }
 
@@ -41,7 +41,13 @@ export default class AddProduct extends React.Component {
     let formData = new FormData();
 
     const handleUpload = (info) => {
-      formData.append('files', info.file);
+      if (info.fileList.length<=4) {
+        formData.append('files', info.file);
+      }else{
+        info.fileList.pop();
+        message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
+      }
+      console.log(info.fileList);
     };
 
     const handleCreate = (values) => {
@@ -52,7 +58,7 @@ export default class AddProduct extends React.Component {
         description: description,
         price: price,
         totalQty: quantity,
-        merchantId: this.state.merchantId,
+        merchantId: this.state.merchantId
       };
 
       for (var key in body) {
@@ -62,6 +68,7 @@ export default class AddProduct extends React.Component {
       const config = {
         header: { 'content-type': 'multipart/form-data' },
       };
+
       API.post('api/product/create', formData, config)
         .then((res) => {
           this.props.history.push({
@@ -75,10 +82,9 @@ export default class AddProduct extends React.Component {
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
-            <Link to={'/'} style={{ color: '#828282' }}>
-              <HomeOutlined />
-            </Link>{' '}
-            / <UserOutlined /> {this.state.merchantName}
+            <Link to={`/${this.state.merchantId}`} style={{ color: '#828282' }}>
+              <ShopOutlined /> My Shop 
+            </Link>{' '} / Add Product
           </Title>
         </Row>
 
@@ -86,7 +92,7 @@ export default class AddProduct extends React.Component {
           <Row align="top">
             <Col lg={{ span: 12 }} span={24}>
               <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }} style={{ margin: '0 auto' }}>
-                <Dragger onChange={handleUpload} beforeUpload={() => false}>
+                <Dragger multiple={true} onChange={handleUpload} beforeUpload={() => false}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -108,17 +114,17 @@ export default class AddProduct extends React.Component {
                 <Form.Item
                   name={['pdt', 'price']}
                   rules={[{ required: true }]}
-                  style={{ display: 'inline-block', width: 160 }}
+                  style={{ display: 'inline-block'}}
                 >
-                  <Input placeholder="Price" />
+                  <InputNumber placeholder="Price" style={{ width: 160 }} />
                 </Form.Item>
 
                 <Form.Item
                   name={['pdt', 'quantity']}
                   rules={[{ required: true }]}
-                  style={{ display: 'inline-block', width: 160, margin: '0 20px' }}
+                  style={{ display: 'inline-block', margin: '0 20px' }}
                 >
-                  <Input placeholder="Quantity" />
+                  <InputNumber placeholder="Quantity" style={{ width: 160 }} />
                 </Form.Item>
               </Form.Item>
 
@@ -134,6 +140,7 @@ export default class AddProduct extends React.Component {
             </Col>
           </Row>
         </Form>
+
       </Content>
     );
   }
