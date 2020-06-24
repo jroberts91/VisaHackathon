@@ -5,6 +5,7 @@ const { Product } = require('../models/Product');
 const { Payment } = require('../models/Payment');
 const { Order } = require('../models/Order');
 const { PullFundsTransaction, PushFundsTransaction } = require('../external/visaDirect');
+const { SendPaymentEmail } = require('../external/smtpService');
 
 //=================================
 //             Payment
@@ -60,13 +61,14 @@ router.post("/direct", async (req, res) => {
 
     await payment.save(async function(err, payment) {
         if (err) return res.json({ success: false, err })
-        order.paymentId = payment._id;
+        order.payment = payment;
         order.isFulfilled = false;
         await order.save(async function(err, order) {
             if (err) return res.json({ success: false, err })
-            return res.json({success: true, orderId: order._id, paymentId: order.paymentId})
-         });
-     });
+            await SendPaymentEmail(order.email);
+            return res.json({success: true, orderId: order._id, paymentId: order.payment._id})
+        });
+    });
 });
 
 module.exports = router;

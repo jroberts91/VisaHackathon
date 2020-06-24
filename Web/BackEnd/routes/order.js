@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Order } = require('../models/Order');
 const { auth } = require('../middleware/auth');
+const { SendFulfillEmail } = require('../external/smtpService');
 
 //=================================
 //            Order
@@ -10,10 +11,12 @@ const { auth } = require('../middleware/auth');
 router.post('/fulfill', auth, async (req, res) => {
   let orderId = req.body.orderId;
   const order = await Order.findOne({ _id: orderId });
+  if (!order) return res.json({ success: false });
   order.isFulfilled = true;
   order.dateTimeFulfilled = Date.now();
-  order.save((err) => {
+  order.save(async (err) => {
     if (err) return res.json({ success: false, err });
+    await SendFulfillEmail(order.email);
     return res.json({ success: true });
   });
 });
