@@ -38,18 +38,15 @@ export default class MerchantCard extends React.Component {
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
     const merchantHref = `/${id}`;
     return (
-      <Card
-        style={{ width: '100%', minWidth: 250 }}
-        cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
-        hoverable
-        actions={[
-          <Link to={merchantHref}>
-            <HomeOutlined key="visit" />
-          </Link>,
-        ]}
-      >
-        <Meta title={title} description={<MerchantDescription description={description} rating={rating || 5} />} />
-      </Card>
+      <Link to={merchantHref}>
+        <Card
+          style={{ width: '100%', minWidth: 250 }}
+          cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
+          hoverable
+        >
+          <Meta title={title} description={<MerchantDescription description={description} rating={rating || 5} />} />
+        </Card>
+      </Link>
     );
   }
 }
