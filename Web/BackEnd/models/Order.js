@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 const { Product } = require('../models/Product');
+const { Payment } = require('../models/Payment');
 
 const orderSchema = mongoose.Schema({
-  paymentId: String,
   merchantId: String,
+  address: String,
+  payment: Payment.schema,
   product: Product.schema,
   quantity: Number,
+  phoneNumber: String,
+  email: String,
   isFulfilled: Boolean,
   dateTimeFulfilled: Date,
 });
