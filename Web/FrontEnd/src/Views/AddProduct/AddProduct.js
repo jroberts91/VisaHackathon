@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, Upload, Row, Col, Layout, Typography, InputNumber, message } from 'antd';
-import { HomeOutlined, ShopOutlined } from '@ant-design/icons';
+import { ShopOutlined } from '@ant-design/icons';
 import { InboxOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
@@ -93,7 +93,7 @@ export default class AddProduct extends React.Component {
           </Title>
         </Row>
 
-        <Form ref={this.formRef} validateMessages={validateMessages} onFinish={handleCreate}>
+        <Form {...layout} ref={this.formRef} validateMessages={validateMessages} onFinish={handleCreate}>
           <Row align="top">
             
             <Col lg={{ span: 12 }} span={24}>
@@ -110,7 +110,6 @@ export default class AddProduct extends React.Component {
 
             <Col lg={{ span: 12 }} span={24}>
 
-              <Form {...layout}>
                 <Title level={2}> Product Details </Title>
                 <Form.Item label="Product Name" name={['pdt', 'name']} rules={[{ required: true }]}>
                   <Input style={{ width: '60%' }} placeholder="Visa Herschel Bag" />
@@ -133,7 +132,6 @@ export default class AddProduct extends React.Component {
                     Create
                   </Button>
                 </Form.Item>
-              </Form>
             </Col>
           </Row>
         </Form>
