@@ -27,7 +27,7 @@ export default class Payment extends React.Component {
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           this.setState({ product: res.data.product });
         } else {
           message.error({
@@ -38,7 +38,7 @@ export default class Payment extends React.Component {
       })
       .catch((err) => console.error(err));
 
-    API.get('api/merchant/get?id=' + this.state.merchantId)
+    API.get(`api/merchant/get?id=${this.state.merchantId}`)
       .then((res) => {
         this.setState({ merchant: res.data.merchant });
       })

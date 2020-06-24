@@ -57,7 +57,7 @@ export default class PaymentForm extends React.Component {
       API.post('api/payment/direct', data)
         .then((res) => {
           console.log(res);
-          if (res.status === 200) {
+          if (res.data.success) {
             const { orderId } = res.data;
             // successful payment, direct user to order summary page
             this.props.history.push({
