@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, Modal, TouchableHighlight, Image } from 'react-
 import { Icon } from 'react-native-elements';
 import API, { baseUrl } from '../../utils/baseUrl';
 import NumericInput from 'react-native-numeric-input';
-import Logo from '../../../images/LogoNoTagLine.png';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -36,6 +35,12 @@ const styles = StyleSheet.create({
     maxWidth: 300,
     minWidth: 300,
     marginBottom: 10,
+  },
+  invalidTitle: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    maxWidth: 300,
+    minWidth: 300,
   },
   productDescription: {
     marginBottom: 15,
@@ -79,7 +84,7 @@ export default class ProductModal extends React.Component {
     }
 
     const { setisShowProductPage, setClearLastScannedId } = this.props;
-    const amountLeft = product.totalQty - product.soldQty;
+    const amountLeft = isValidId ? product.totalQty - product.soldQty : 0;
     return (
       <View style={styles.centeredView}>
         <TouchableHighlight
@@ -118,7 +123,7 @@ export default class ProductModal extends React.Component {
           </>
         ) : (
           // invalid qr code
-          <Text style={styles.productTitle}>Invalid QR Code</Text>
+          <Text style={styles.invalidTitle}>Invalid QR Code</Text>
         )}
       </View>
     );
