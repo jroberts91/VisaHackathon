@@ -2,6 +2,10 @@ import React from 'react';
 import { Layout, Tabs, Input, Table, Switch, Typography, Row } from 'antd';
 import { HistoryOutlined } from '@ant-design/icons';
 import Column from 'antd/lib/table/Column';
+import API from '../../utils/baseUrl';
+import Modal from 'antd/lib/modal/Modal';
+
+const { Title } = Typography;
 
 const { Title } = Typography;
 
@@ -11,57 +15,81 @@ const { TabPane } = Tabs;
 
 const { Search } = Input;
 
-const dataSource = [
-  {
-    key: '1',
-    orderId: 29126,
-    product: 'Male Salmon',
-    qty: 1,
-    totalPrice: 12,
-    address: 'London No. 1 Lake Park',
-    paidDate: '30/01/20',
-    status: true,
-  },
-  {
-    key: '2',
-    orderId: 29125,
-    product: 'Female Cod',
-    qty: 2,
-    totalPrice: 15,
-    address: 'New York No. 1 Lake Park',
-    paidDate: '30/01/20',
-    status: false,
-  },
-  {
-    key: '3',
-    orderId: 29169,
-    product: 'Purple Banana',
-    qty: 3,
-    totalPrice: 22,
-    address: 'Sidney No. 1 Lake Park',
-    paidDate: '31/01/20',
-    status: false,
-  },
-  {
-    key: '4',
-    orderId: 29128,
-    product: 'Female Cod',
-    qty: 4,
-    totalPrice: 58,
-    address: 'New York No. 1 Lake Park',
-    paidDate: '9/02/20',
-    status: false,
-  },
-];
-
 class SalesTable extends React.Component {
-  generateFiters = (type) => {
-    let filterList = new Set();
-    for (let elm of dataSource) {
-      filterList.add(elm[type]);
+  constructor(props) {
+    super(props);
+    this.state = {
+      merchantId: this.props.merchantId,
+      orders: [],
+      isShowConfirmation: false,
+      orderId: null,
+    };
+  }
+
+  componentDidMount = () => {
+    const body = {
+      merchantId: this.state.merchantId,
+      fulfilled: 'all',
+    };
+    API.post('api/order/getAll', body)
+      .then((res) => {
+        this.setState({ orders: res.data.orders });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  handleOk = () => {
+    this.setState({ isShowConfirmation: false });
+    this.changeFulfilledStatus();
+  };
+
+  handleCancel = () => {
+    this.setState({ isShowConfirmation: false });
+  };
+
+  changeFulfilledStatus = () => {
+    const body = {
+      orderId: this.state.orderId,
+    };
+    API.post('api/order/fulfill', body)
+      .then((res) => {
+        const body = {
+          merchantId: this.state.merchantId,
+          fulfilled: 'all',
+        };
+        API.post('api/order/getAll', body)
+          .then((res) => {
+            this.setState({ orders: res.data.orders });
+          })
+          .catch((err) => console.error(err));
+      })
+      .catch((err) => console.error(err));
+  };
+
+  generateNameFilter = (data) => {
+    let filterSet = new Set();
+    for (let elm of data) {
+      filterSet.add(elm.product.name);
     }
     let filters = [];
-    for (let elm of filterList) {
+    for (let elm of filterSet) {
+      filters.push({
+        text: elm,
+        value: elm,
+      });
+    }
+
+    return filters;
+  };
+
+  generateDateFiter = (data) => {
+    let filterSet = new Set();
+    for (let elm of data) {
+      let date = elm.product.createdAt;
+      filterSet.add(this.formatDateWithoutTime(date));
+    }
+    let filters = [];
+    for (let elm of filterSet) {
       filters.push({
         text: elm,
         value: elm,
@@ -70,84 +98,124 @@ class SalesTable extends React.Component {
     return filters;
   };
 
+  formatDateWithoutTime = (dateTime) => {
+    let date = new Date(dateTime);
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+  };
+
+  formatDate = (dateTime) => {
+    let date = new Date(dateTime);
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + '  ' + strTime;
+  };
+
   render() {
-    const data = [...dataSource];
+    const { orders } = this.state;
+    let data = orders ? orders : [];
+    let dataSource = [];
     if (!this.props.statusTab) {
       for (let elm of data) {
-        if (elm.status !== this.props.isFulfilled) {
-          data.splice(data.indexOf(elm), 1);
+        if (elm.isFulfilled === this.props.isFulfilled) {
+          dataSource.push(elm);
         }
       }
+    } else {
+      dataSource = data;
     }
+    const key = this.props.statusTab ? 0 : this.props.isFulfilled ? 2 : 1;
 
     return (
-      <Table dataSource={data}>
-        <Column title="OrderId" dataIndex="orderId" key="orderId" sorter={(a, b) => a.orderId - b.orderId} />
-        <Column
-          title="Product"
-          dataIndex="product"
-          key="product"
-          filters={this.generateFiters('product')}
-          onFilter={(value, record) => record.product.indexOf(value) === 0}
-          sorter={(a, b) => a.product.localeCompare(b.product, 'en', { sensitivity: 'base' })}
-        />
-        <Column title="Qty" dataIndex="qty" key="qty" sorter={(a, b) => a.qty - b.qty} />
-        <Column
-          title="Total Price"
-          dataIndex="totalPrice"
-          key="totalPrice"
-          render={(totalPrice) => {
-            return '$' + totalPrice;
-          }}
-          sorter={(a, b) => a.totalPrice - b.totalPrice}
-        />
-        <Column
-          title="Address"
-          dataIndex="address"
-          key="address"
-          sorter={(a, b) => a.address.localeCompare(b.address, 'en', { sensitivity: 'base' })}
-        />
-        <Column
-          title="Paid Date"
-          dataIndex="paidDate"
-          key="paidDate"
-          filters={this.generateFiters('paidDate')}
-          onFilter={(value, record) => record.paidDate.indexOf(value) === 0}
-          sorter={(a, b) => {
-            let firstDate = a.paidDate.split('/');
-            let firstDateObj = new Date(firstDate[2], firstDate[1] - 1, firstDate[0]);
-
-            let secondDate = b.paidDate.split('/');
-            let secondDateObj = new Date(secondDate[2], secondDate[1] - 1, secondDate[0]);
-            return firstDateObj >= secondDateObj;
-          }}
-        />
-        {this.props.statusTab && (
+      <div>
+        <Modal
+          title="Confirmation"
+          visible={this.state.isShowConfirmation}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+          style={{ textAlign: 'center' }}
+          okText="Yes"
+          cancelText="No"
+        >
+          Are you sure the order is fulfilled?
+        </Modal>
+        <Table key={key} dataSource={dataSource}>
+          <Column key={0} title="OrderId" dataIndex="_id" sorter={(a, b) => a._id - b._id} />
           <Column
-            title="Status"
-            dataIndex="status"
-            key="status"
-            render={(status) => {
-              return <Switch size="small" defaultChecked={status} />;
+            key={1}
+            title="Product"
+            dataIndex={['product', 'name']}
+            filters={this.generateNameFilter(data)}
+            onFilter={(value, record) => record.product.name.indexOf(value) === 0}
+            sorter={(a, b) => a.product.name.localeCompare(b.product.name, 'en', { sensitivity: 'base' })}
+          />
+          <Column key={2} title="Qty" dataIndex="quantity" sorter={(a, b) => a.quantity - b.quantity} />
+          <Column
+            key={3}
+            title="Total Price"
+            dataIndex={['product', 'price']}
+            render={(totalPrice) => {
+              return '$' + totalPrice.toFixed(2);
+            }}
+            sorter={(a, b) => a.product.price - b.product.price}
+          />
+          <Column
+            key={4}
+            title="Address"
+            dataIndex="address"
+            key="address"
+            sorter={(a, b) => a.address.localeCompare(b.address, 'en', { sensitivity: 'base' })}
+          />
+          <Column
+            key={5}
+            title="Paid Date"
+            dataIndex={['product', 'createdAt']}
+            render={(dateTime) => {
+              return this.formatDate(dateTime);
+            }}
+            filters={this.generateDateFiter(data)}
+            onFilter={(value, record) => this.formatDateWithoutTime(record.product.createdAt).indexOf(value) === 0}
+            sorter={(a, b) => {
+              let firstDateObj = new Date(a.product.createdAt);
+              let secondDateObj = new Date(b.product.createdAt);
+              return firstDateObj - secondDateObj;
             }}
           />
-        )}
-      </Table>
+          {this.props.statusTab && (
+            <Column
+              key={6}
+              title="Status"
+              dataIndex="isFulfilled"
+              render={(text, record) => {
+                return (
+                  <Switch
+                    size="small"
+                    checked={text}
+                    disabled={text}
+                    onChange={() => this.setState({ isShowConfirmation: true, orderId: record._id })}
+                  />
+                );
+              }}
+            />
+          )}
+        </Table>
+      </div>
     );
   }
 }
 
 export default class SalesHistory extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      merchantId: this.props.match.params.merchantId,
-    };
-  }
-
-  componentDidMount = () => {};
-
   render() {
+    const { merchantId } = this.props.match.params;
     const searchBar = <Search placeholder="input search text" onSearch={(value) => console.log(value)} enterButton />;
 
     return (
@@ -158,14 +226,14 @@ export default class SalesHistory extends React.Component {
           </Title>
         </Row>
         <Tabs defaultActiveKey="1" tabBarExtraContent={searchBar}>
-          <TabPane tab="All" key="1">
-            <SalesTable statusTab={true} />
+          <TabPane tab="All" key={1}>
+            <SalesTable statusTab={true} merchantId={merchantId} />
           </TabPane>
-          <TabPane tab="Not Fulfilled" key="2">
-            <SalesTable statusTab={false} isFulfilled={false} />
+          <TabPane tab="Not Fulfilled" key={2}>
+            <SalesTable statusTab={false} merchantId={merchantId} isFulfilled={false} />
           </TabPane>
-          <TabPane tab="Fulfilled" key="3">
-            <SalesTable statusTab={false} isFulfilled={true} />
+          <TabPane tab="Fulfilled" key={3}>
+            <SalesTable statusTab={false} merchantId={merchantId} isFulfilled={true} />
           </TabPane>
         </Tabs>
       </Content>

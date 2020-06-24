@@ -1,6 +1,6 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
-import {ADD_USER} from './actions';
+import { ADD_USER } from './actions';
 
 const merge = (prev, next) => Object.assign({}, prev, next);
 
@@ -11,6 +11,6 @@ const userReducer = (state = [], action) => {
   return state;
 };
 
-const reducer = combineReducers({users: userReducer});
+const reducer = combineReducers({ users: userReducer });
 
 export default reducer;
