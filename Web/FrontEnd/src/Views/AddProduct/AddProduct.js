@@ -89,13 +89,12 @@ export default class AddProduct extends React.Component {
             <Link to={`/${this.state.merchantId}`} style={{ color: '#828282' }}>
               <ShopOutlined /> My Shop
             </Link>{' '}
-            / Add Product
+            / Add Product 
           </Title>
         </Row>
 
         <Form {...layout} ref={this.formRef} validateMessages={validateMessages} onFinish={handleCreate}>
           <Row align="top">
-            
             <Col lg={{ span: 12 }} span={24}>
               <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }}>
                 <Dragger multiple={true} onChange={handleUpload} beforeUpload={() => false}>
@@ -109,29 +108,32 @@ export default class AddProduct extends React.Component {
             </Col>
 
             <Col lg={{ span: 12 }} span={24}>
+              <Title level={2}> Product Details </Title>
+              <Form.Item label="Product Name" name={['pdt', 'name']} rules={[{ required: true }]}>
+                <Input style={{ width: '60%' }} placeholder="Visa Herschel Bag" />
+              </Form.Item>
 
-                <Title level={2}> Product Details </Title>
-                <Form.Item label="Product Name" name={['pdt', 'name']} rules={[{ required: true }]}>
-                  <Input style={{ width: '60%' }} placeholder="Visa Herschel Bag" />
-                </Form.Item>
+              <Form.Item label="Price" name={['pdt', 'price']} rules={[{ required: true }]}>
+                <InputNumber placeholder="179.50" style={{ width: '60%' }} />
+              </Form.Item>
 
-                <Form.Item label="Price" name={['pdt', 'price']} rules={[{ required: true }]}>
-                  <InputNumber placeholder="179.50" style={{ width: '60%' }} />
-                </Form.Item>
+              <Form.Item label="Quantity" name={['pdt', 'quantity']} rules={[{ required: true }]}>
+                <InputNumber placeholder="5" style={{ width: '60%' }} />
+              </Form.Item>
 
-                <Form.Item label="Quantity" name={['pdt', 'quantity']} rules={[{ required: true }]}>
-                  <InputNumber placeholder="5" style={{ width: '60%' }} />
-                </Form.Item>
+              <Form.Item label="Description" name={['pdt', 'description']}>
+                <TextArea
+                  placeholder="Visa-exclusive bag. Visa is the best!"
+                  autoSize={{ minRows: 5, maxRows: 6 }}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
 
-                <Form.Item label="Description" name={['pdt', 'description']}>
-                  <TextArea placeholder="Visa-exclusive bag. Visa is the best!" autoSize={{ minRows: 5, maxRows: 6 }} style={{ width: '100%' }} />
-                </Form.Item>
-
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Create
-                  </Button>
-                </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Create
+                </Button>
+              </Form.Item>
             </Col>
           </Row>
         </Form>
