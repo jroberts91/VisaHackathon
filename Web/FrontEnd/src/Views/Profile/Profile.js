@@ -29,7 +29,7 @@ const StyledImage = styled.img`
 
 class LeftProfileSection extends React.Component {
   render() {
-    const { profileImage, mode, editedProfileImage, setEditedProfileImage, setUploadedFile } = this.props;
+    const { profileImage, mode, editedProfileImage, setUploadedFile } = this.props;
     const handleChangePic = (info) => {
       setUploadedFile(info.file);
       message.info({
@@ -82,9 +82,6 @@ class LeftProfileSection extends React.Component {
 }
 
 class RightProfileSection extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     const { name, description, email, address, phone, cardNumber, mode } = this.props;
     const {
@@ -210,7 +207,6 @@ export default class Profile extends React.Component {
       editedCardNumber,
       editedProfileImage,
       files,
-      merchantId,
     } = this.state;
 
     const body = {
