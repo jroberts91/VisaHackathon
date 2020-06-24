@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Card, Rate } from 'antd';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import 'antd/dist/antd.css';
@@ -7,11 +8,20 @@ import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
+const StyledDesc = styled.div`
+  overflow-y: scroll;
+  height: 50px;
+  ::-webkit-scrollbar {
+    display: none;
+}
+-ms-overflow-style: none;
+`;
+
 class MerchantDescription extends React.Component {
   render() {
     return (
       <>
-        <div>{this.props.description}</div>
+        <StyledDesc>{this.props.description}</StyledDesc>
         <Rate value={this.props.rating} disabled />
       </>
     );
@@ -39,7 +49,7 @@ export default class MerchantCard extends React.Component {
     return (
       <Link to={merchantHref}>
         <Card
-          style={{ width: '100%', minWidth: 250 }}
+          style={{ width: '100%', minWidth: 250, height: '100%' }}
           cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
           hoverable
         >
