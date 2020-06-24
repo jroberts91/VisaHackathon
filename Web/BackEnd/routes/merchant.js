@@ -5,6 +5,7 @@ const router = express.Router();
 const { Merchant } = require('../models/Merchant');
 const { auth } = require('../middleware/auth');
 const { imageUpload } = require('../utils/imageUpload');
+const mongoose = require('mongoose');
 
 //=================================
 //             Merchant
@@ -129,9 +130,13 @@ router.post('/getAll', (req, res) => {
 //?id=${merchantId}
 router.get('/get', async (req, res) => {
   let merchantId = req.query.id;
-  const merchant = await Merchant.findOne({ _id: merchantId });
-  if (!merchant) return res.status(400).json({ success: false });
-  return res.status(200).json({ success: true, merchant: merchant });
+  if (mongoose.isValidObjectId(merchantId)) {
+    const merchant = await Merchant.findOne({ _id: merchantId });
+    if (!merchant) return res.status(400).json({ success: false });
+    return res.status(200).json({ success: true, merchant: merchant });
+  }
+  else return res.json({ success: false });
+  
 });
 
 router.post('/editProfile', auth, (req, res) => {
