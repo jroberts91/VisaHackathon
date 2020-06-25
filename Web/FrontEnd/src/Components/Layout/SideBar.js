@@ -86,7 +86,7 @@ export default class SideBar extends React.Component {
 
           <StyledMenuItem key="3" icon={<SearchOutlined />}>
             Maps
-            {/* <Link to="/" /> */}
+            <Link to= {merchantLocator}/>
           </StyledMenuItem>
 
         </StyledMenu>
