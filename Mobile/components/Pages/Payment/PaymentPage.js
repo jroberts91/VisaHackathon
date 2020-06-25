@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements'
 import API, { baseUrl } from '../../utils/baseUrl';
@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     paddingHorizontal: 5
+  },
+  tinyLogo: {
+    height: 36,
+    width: 48
   },
   inputContainer: {
     width: '30%',
@@ -73,10 +77,6 @@ export default class PaymentPage extends React.Component {
 
   componentDidMount() { }
 
-  checkNumber(value) {
-    console.log(value)
-  }
-
   sendPayment() {
 
   }
@@ -89,7 +89,7 @@ export default class PaymentPage extends React.Component {
           inputContainerStyle={styles.cardInput}
           label='Card Number'
           placeholder='0000-0000-0000-0000'
-          onChangeText={value => this.checkNumber(value)}
+          onChangeText={value => this.setState({ cardNumber: value })}
           errorStyle={{ color: 'red' }}
           errorMessage=''
           leftIcon={
@@ -98,6 +98,11 @@ export default class PaymentPage extends React.Component {
               size={24}
             />
           }
+          rightIcon={
+            <Image 
+            style={styles.tinyLogo}  
+            source={require('../../../images/visa-logo.png') } />
+          }
         />
         <View style={styles.cardContainer}>
           <Input
@@ -105,12 +110,14 @@ export default class PaymentPage extends React.Component {
             inputContainerStyle={styles.expiryInput}
             label='Expires'
             placeholder='MM/YY'
+            onChangeText={value => this.setState({ expiryDate: value })}
           />
           <Input
             containerStyle={styles.inputContainer}
             inputContainerStyle={styles.cvvInput}
             label='CVV'
             placeholder='000'
+            onChangeText={value => this.setState({ cvv: value })}
           />
         </View>
         <View style={styles.payButton}>
