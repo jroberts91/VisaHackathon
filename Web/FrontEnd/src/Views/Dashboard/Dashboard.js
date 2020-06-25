@@ -1,7 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 import API from '../../utils/baseUrl';
 import { defaultTheme } from '../../utils/theme';
@@ -10,18 +7,10 @@ import {
   PieChart,
   Pie,
   ResponsiveContainer,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  LineChart,
-  Legend,
-  Cell,
-  BarChart,
-  Bar,
+  Cell
 } from 'recharts';
 import GridLayout from 'react-grid-layout';
+import Linechart from './Linechart'
 
 // note: the following calculations are to overwrite the auto resize of react-grid-layout
 const StyledDiv = styled.div`
@@ -223,25 +212,7 @@ export default class Dashboard extends React.Component {
             </ResponsiveContainer>
           </StyledDiv>
           <StyledDivBottom key="d">
-            <ResponsiveContainer width="90%" height="90%">
-              <BarChart
-                data={salesQuantityData}
-                margin={{
-                  top: 5,
-                  right: 30,
-                  left: 20,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="pv" fill="#8884d8" />
-                <Bar dataKey="uv" fill="#82ca9d" />
-              </BarChart>
-            </ResponsiveContainer>
+            <Linechart id={this.props.loggedInUserId}/>
           </StyledDivBottom>
         </StyledContainer>
       </>

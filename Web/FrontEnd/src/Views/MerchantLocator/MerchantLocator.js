@@ -16,7 +16,7 @@ function MerchantLocator() {
 
   useEffect(() => {
     API.post('api/merchant/getAll').then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         let all = [];
         res.data.merchants.map((merchant) => {
           Geocode.fromAddress(merchant.address).then(
@@ -47,7 +47,7 @@ function MerchantLocator() {
     let body = { lat: Lat, lng: Lng, name: Name };
     API.post('api/merchantLocator/getAll', body)
       .then((res) => {
-        if (res.success == false) console.log('cannot fetch merchant');
+        if (res.success === false) console.log('cannot fetch merchant');
         else {
           let merchants = {};
           merchants = res.data.data.merchantLocatorServiceResponse.response;
@@ -68,7 +68,7 @@ function MerchantLocator() {
     event.preventDefault();
     let body = { searchTerm: Vname };
     API.post('api/merchant/getAll', body).then((res) => {
-      if (res.data.success == true) {
+      if (res.data.success === true) {
         let all = [];
         res.data.merchants.map((merchant) => {
           Geocode.fromAddress(merchant.address).then(
