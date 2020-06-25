@@ -5,7 +5,7 @@ import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
 import LogoNoTagLine from '../../images/LogoNoTagLine.png';
 import Logo from '../../images/Logo.png';
-import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined,CompassOutlined } from '@ant-design/icons';
+import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined, PieChartOutlined, SearchOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout;
 
@@ -52,43 +52,43 @@ export default class SideBar extends React.Component {
     if (isLoggedIn) {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-          <StyledMenuItem key="1" icon={<HomeOutlined />}>
-            Home
-            <Link to="/" />
+
+          <StyledMenuItem key="1" icon={<PieChartOutlined />}>
+            Dashboard
+            {/* <Link to="/" /> */}
           </StyledMenuItem>
-          <StyledMenuItem key="2" icon={<HistoryOutlined />}>
-            Sales History
-            <Link to={salesHistoryLink} />
-          </StyledMenuItem>
-          <StyledMenuItem key="3" icon={<TagOutlined />}>
-            Offers
-            <Link to={offersLink} />
-          </StyledMenuItem>
-          <StyledMenuItem key="4" icon={<CompassOutlined />}>
-            Merchant Locator
-            <Link to={merchantLocator} />
-          </StyledMenuItem>
-          <StyledMenuItem key="5" icon={<ShopOutlined />}>
+
+          <StyledMenuItem key="2" icon={<ShopOutlined />}>
             My Shop
             <Link to={myShopLink} />
           </StyledMenuItem>
+
+          <StyledMenuItem key="3" icon={<HistoryOutlined />}>
+            Sales History
+            <Link to={salesHistoryLink} />
+          </StyledMenuItem>
+          
         </StyledMenu>
       );
     } else {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+
           <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
             <Link to="/" />
           </StyledMenuItem>
+
           <StyledMenuItem key="2" icon={<TagOutlined />}>
             Offers
             <Link to={offersLink} />
           </StyledMenuItem>
-          <StyledMenuItem key="3" icon={<CompassOutlined />}>
-            Merchants Locator
-            <Link to={merchantLocator} />
+
+          <StyledMenuItem key="3" icon={<SearchOutlined />}>
+            Maps
+            <Link to= {merchantLocator}/>
           </StyledMenuItem>
+
         </StyledMenu>
       );
     }
