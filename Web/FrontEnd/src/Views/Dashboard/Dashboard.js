@@ -108,9 +108,10 @@ export default class Dashboard extends React.Component {
   render() {
     // layout is an array of objects, see the demo for more complete usage
     const layout = [
-      { i: 'a', x: 0, y: 0, w: 3, h: 9, static: true },
-      { i: 'b', x: 3, y: 0, w: 9, h: 9, minW: 2, maxW: 4, static: true },
-      { i: 'c', x: 0, y: 9, w: 12, h: 13, static: true },
+      { i: 'a', x: 0, y: 0, w: 4, h: 9, static: true },
+      { i: 'b', x: 4, y: 0, w: 4, h: 9, static: true },
+      { i: 'c', x: 9, y: 0, w: 4, h: 9, static: true },
+      { i: 'd', x: 0, y: 9, w: 12, h: 13, static: true },
     ];
     return (
       <StyledContainer className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
@@ -122,6 +123,13 @@ export default class Dashboard extends React.Component {
           </ResponsiveContainer>
         </StyledDiv>
         <StyledDiv key="b">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie data={data01} dataKey="value" nameKey="name" outerRadius={110} fill="#8884d8" />
+            </PieChart>
+          </ResponsiveContainer>
+        </StyledDiv>
+        <StyledDiv key="c">
           <ResponsiveContainer width="100%" height="97%">
             <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -134,7 +142,7 @@ export default class Dashboard extends React.Component {
             </LineChart>
           </ResponsiveContainer>
         </StyledDiv>
-        <StyledDiv key="c">
+        <StyledDiv key="d">
           <ResponsiveContainer width="100%" height="97%">
             <BarChart
               data={data}
