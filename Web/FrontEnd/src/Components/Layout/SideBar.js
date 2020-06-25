@@ -5,7 +5,14 @@ import 'antd/dist/antd.css';
 import { Layout, Menu } from 'antd';
 import LogoNoTagLine from '../../images/LogoNoTagLine.png';
 import Logo from '../../images/Logo.png';
-import { HomeOutlined, HistoryOutlined, TagOutlined, ShopOutlined, PieChartOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  HomeOutlined,
+  HistoryOutlined,
+  TagOutlined,
+  ShopOutlined,
+  PieChartOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 
 const { Sider } = Layout;
 
@@ -45,17 +52,16 @@ export default class SideBar extends React.Component {
   render() {
     const { collapsed, isLoggedIn } = this.props;
     let buttons;
-    const salesHistoryLink = `/${this.props.merchantId}/history`;
+    const salesHistoryLink = `/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
-    const merchantLocator = '/merchantLocator'
+    const merchantLocator = '/merchantLocator';
     if (isLoggedIn) {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-
           <StyledMenuItem key="1" icon={<PieChartOutlined />}>
             Dashboard
-            {/* <Link to="/" /> */}
+            <Link to="/" />
           </StyledMenuItem>
 
           <StyledMenuItem key="2" icon={<ShopOutlined />}>
@@ -67,13 +73,11 @@ export default class SideBar extends React.Component {
             Sales History
             <Link to={salesHistoryLink} />
           </StyledMenuItem>
-          
         </StyledMenu>
       );
     } else {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-
           <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
             <Link to="/" />
@@ -86,9 +90,8 @@ export default class SideBar extends React.Component {
 
           <StyledMenuItem key="3" icon={<SearchOutlined />}>
             Maps
-            <Link to= {merchantLocator}/>
+            <Link to={merchantLocator} />
           </StyledMenuItem>
-
         </StyledMenu>
       );
     }
