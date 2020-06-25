@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Modal, TouchableHighlight, Image } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements'
 import API, { baseUrl } from '../../utils/baseUrl';
@@ -9,14 +9,19 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center'
   },
   paymentHeader: {
     position: 'absolute',
     top: '10%',
     textAlign: 'center',
-    width: '100%',
+    width: '80%',
     fontSize: 24,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: 'white',
+    borderRadius: 10,
+    backgroundColor: '#1a1f71',
+    paddingVertical: 10
   },
   cardInput: {
     backgroundColor: 'white',
@@ -51,6 +56,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     width: '100%',
     paddingTop: 15
+  },
+  payButton: {
+    width: '90%',
+    display: 'flex',
+    alignItems: 'flex-end'
   }
 });
 
@@ -58,13 +68,17 @@ export default class PaymentPage extends React.Component {
   state = {
     cardNumber: null,
     expiryDate: null,
-    cvv: null
+    cvv: null,
   };
 
   componentDidMount() { }
 
   checkNumber(value) {
     console.log(value)
+  }
+
+  sendPayment() {
+
   }
 
   render() {
@@ -76,8 +90,8 @@ export default class PaymentPage extends React.Component {
           label='Card Number'
           placeholder='0000-0000-0000-0000'
           onChangeText={value => this.checkNumber(value)}
-          errorStyle={{ color: 'red', display: 'none' }}
-          errorMessage='ENTER A VALID ERROR HERE'
+          errorStyle={{ color: 'red' }}
+          errorMessage=''
           leftIcon={
             <Icon
               name='credit-card'
@@ -98,6 +112,14 @@ export default class PaymentPage extends React.Component {
             label='CVV'
             placeholder='000'
           />
+        </View>
+        <View style={styles.payButton}>
+        <Button 
+          raised='true'
+          color='#1a1f71'
+          title="Pay with Visa"
+          onPress={() => this.sendPayment()}
+        />
         </View>
       </View>
     );
