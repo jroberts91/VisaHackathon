@@ -71,25 +71,27 @@ export default class TopBar extends React.Component {
   };
 
   handleGetUser = () => {
-    API.get(`api/merchant/get?id=${this.state.merchantId}`)
-      .then((res) => {
-        if (res.data.success) {
-          const { profileImage } = res.data.merchant;
-          console.log(profileImage, 'This is the profile image');
-          this.setState({
-            profileImage: profileImage,
-          });
-        } else {
-          message.error({
-            content: `Invalid user id of ${this.state.merchantId}`,
-            duration: 5,
-          });
-        }
-        this.setState({ isMounted: true });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    if (this.state.merchantId) {
+      API.get(`api/merchant/get?id=${this.state.merchantId}`)
+        .then((res) => {
+          if (res.data.success) {
+            const { profileImage } = res.data.merchant;
+            console.log(profileImage, 'This is the profile image');
+            this.setState({
+              profileImage: profileImage,
+            });
+          } else {
+            message.error({
+              content: `Invalid user id of ${this.state.merchantId}`,
+              duration: 5,
+            });
+          }
+          this.setState({ isMounted: true });
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   handleLoginClick = () => {
