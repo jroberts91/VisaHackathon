@@ -23,13 +23,28 @@ import {
 } from 'recharts';
 import GridLayout from 'react-grid-layout';
 
+// note: the following calculations are to overwrite the auto resize of react-grid-layout
 const StyledDiv = styled.div`
   background: white;
   padding: 10px;
+  min-width: 32.25%;
+  left: ${(props) => (props.index === 0 ? 0.83333 : props.index === 1 ? 33.9167 : 66.9167)}% !important;
+`;
+
+const StyledDivBottom = styled.div`
+  left: 0.833333% !important;
+  min-width: 98.3333%;
+`;
+
+const StyledBreadCrumbsContainer = styled.div`
+  font-size: 35px;
+  left: 0.833333%;
+  font-weight: bold;
+  padding: 15px;
 `;
 
 const StyledTitleContainer = styled.div`
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
 `;
 
@@ -93,10 +108,10 @@ export default class Dashboard extends React.Component {
   render() {
     // layout is an array of objects, see the demo for more complete usage
     const layout = [
-      { i: 'a', x: 0, y: 0, w: 4, h: 9, minW: 4, static: true },
-      { i: 'b', x: 4, y: 0, w: 4, h: 9, minW: 4, static: true },
-      { i: 'c', x: 8, y: 0, w: 4, h: 9, minW: 4, static: true },
-      { i: 'd', x: 0, y: 9, w: 12, h: 13, minW: 12, static: true },
+      { i: 'a', x: 0, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
+      { i: 'b', x: 4, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
+      { i: 'c', x: 8, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
+      { i: 'd', x: 0, y: 9, w: 12, h: 13, minW: 12, useCSSTransforms: false, static: true },
     ];
     if (!this.state.isMounted) {
       return null;
@@ -129,104 +144,107 @@ export default class Dashboard extends React.Component {
     const colorsArray = Object.values(defaultTheme.pieChartColors);
 
     return (
-      <StyledContainer
-        className="layout"
-        layout={layout}
-        isResizable={false}
-        useCSSTransforms={false}
-        isDraggable={false}
-        cols={12}
-        rowHeight={30}
-        width={1200}
-      >
-        <StyledDiv key="a">
-          <StyledTitleContainer>Total Sales</StyledTitleContainer>
-          <ResponsiveContainer width="90%" height="90%">
-            <StyledTotalSalesContainer>{`$${totalSales.toFixed(2)}`}</StyledTotalSalesContainer>
-          </ResponsiveContainer>
-        </StyledDiv>
-        <StyledDiv key="b">
-          <StyledTitleContainer>Sales Quantity Breakdown</StyledTitleContainer>
-          <ResponsiveContainer width="90%" height="90%">
-            <PieChart>
-              {products.length > 0 ? (
-                <Pie
-                  data={salesQuantityData}
-                  labelLine={false}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  innerRadius={60}
-                  startAngle={0}
-                  endAngle={360}
-                  activeIndex={this.state.activeIndexSalesQuantity}
-                  activeShape={renderActiveShapeSalesQuantity}
-                  onMouseEnter={this.onSalesQuantityPieEnter}
-                >
-                  {salesQuantityData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colorsArray[index]} />
-                  ))}
-                </Pie>
-              ) : (
-                <div>No products sold yet.</div>
-              )}
-            </PieChart>
-          </ResponsiveContainer>
-        </StyledDiv>
-        <StyledDiv key="c">
-          <StyledTitleContainer>Sales Amount Breakdown</StyledTitleContainer>
-          <ResponsiveContainer width="90%" height="90%">
-            <PieChart>
-              {products.length > 0 ? (
-                <Pie
-                  data={salesAmountData}
-                  labelLine={false}
-                  dataKey="value"
-                  nameKey="name"
-                  startAngle={360}
-                  endAngle={0}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  innerRadius={60}
-                  activeIndex={this.state.activeIndexSalesAmount}
-                  activeShape={renderActiveShapeSalesAmount}
-                  onMouseEnter={this.onSalesAmountPieEnter}
-                >
-                  {salesAmountData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colorsArray[index]} />
-                  ))}
-                </Pie>
-              ) : (
-                <div>No products sold yet.</div>
-              )}
-            </PieChart>
-          </ResponsiveContainer>
-        </StyledDiv>
-        <StyledDiv key="d">
-          <ResponsiveContainer width="90%" height="90%">
-            <BarChart
-              data={salesQuantityData}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="pv" fill="#8884d8" />
-              <Bar dataKey="uv" fill="#82ca9d" />
-            </BarChart>
-          </ResponsiveContainer>
-        </StyledDiv>
-      </StyledContainer>
+      <>
+        <StyledBreadCrumbsContainer>Dashboard</StyledBreadCrumbsContainer>
+        <StyledContainer
+          className="layout"
+          layout={layout}
+          isResizable={false}
+          useCSSTransforms={false}
+          isDraggable={false}
+          cols={12}
+          rowHeight={30}
+          width={1200}
+        >
+          <StyledDiv key="a" index={0}>
+            <StyledTitleContainer>Total Sales</StyledTitleContainer>
+            <ResponsiveContainer width="90%" height="90%">
+              <StyledTotalSalesContainer>{`$${totalSales.toFixed(2)}`}</StyledTotalSalesContainer>
+            </ResponsiveContainer>
+          </StyledDiv>
+          <StyledDiv key="b" index={1}>
+            <StyledTitleContainer>Sales Quantity Breakdown</StyledTitleContainer>
+            <ResponsiveContainer width="90%" height="90%">
+              <PieChart>
+                {products.length > 0 ? (
+                  <Pie
+                    data={salesQuantityData}
+                    labelLine={false}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={90}
+                    innerRadius={60}
+                    startAngle={0}
+                    endAngle={360}
+                    activeIndex={this.state.activeIndexSalesQuantity}
+                    activeShape={renderActiveShapeSalesQuantity}
+                    onMouseEnter={this.onSalesQuantityPieEnter}
+                  >
+                    {salesQuantityData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={colorsArray[index]} />
+                    ))}
+                  </Pie>
+                ) : (
+                  <div>No products sold yet.</div>
+                )}
+              </PieChart>
+            </ResponsiveContainer>
+          </StyledDiv>
+          <StyledDiv key="c" index={2}>
+            <StyledTitleContainer>Sales Amount Breakdown</StyledTitleContainer>
+            <ResponsiveContainer width="90%" height="90%">
+              <PieChart>
+                {products.length > 0 ? (
+                  <Pie
+                    data={salesAmountData}
+                    labelLine={false}
+                    dataKey="value"
+                    nameKey="name"
+                    startAngle={360}
+                    endAngle={0}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={90}
+                    innerRadius={60}
+                    activeIndex={this.state.activeIndexSalesAmount}
+                    activeShape={renderActiveShapeSalesAmount}
+                    onMouseEnter={this.onSalesAmountPieEnter}
+                  >
+                    {salesAmountData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={colorsArray[index]} />
+                    ))}
+                  </Pie>
+                ) : (
+                  <div>No products sold yet.</div>
+                )}
+              </PieChart>
+            </ResponsiveContainer>
+          </StyledDiv>
+          <StyledDivBottom key="d">
+            <ResponsiveContainer width="90%" height="90%">
+              <BarChart
+                data={salesQuantityData}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="pv" fill="#8884d8" />
+                <Bar dataKey="uv" fill="#82ca9d" />
+              </BarChart>
+            </ResponsiveContainer>
+          </StyledDivBottom>
+        </StyledContainer>
+      </>
     );
   }
 }
