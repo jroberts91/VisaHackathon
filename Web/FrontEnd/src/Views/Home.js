@@ -59,11 +59,11 @@ export default class Home extends React.Component {
   };
 
   render() {
-    const { collapsed, isLoggedIn, username, merchantId, isMounted } = this.state;
-    const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
-    if (!isMounted) {
+    if (!this.state.isMounted) {
       return null; // only return the content when user is finished authenticating
     }
+    const { collapsed, isLoggedIn, username, merchantId } = this.state;
+    const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
     return (
       <Layout>
         <SideBar collapsed={collapsed} isLoggedIn={isLoggedIn} merchantId={merchantId} />
