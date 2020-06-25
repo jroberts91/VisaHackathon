@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import styled from 'styled-components';
 import API from '../../utils/baseUrl';
 import { defaultTheme } from '../../utils/theme';
+import { renderActiveShapeSalesQuantity, renderActiveShapeSalesAmount } from './pieChartUtils';
 import {
   PieChart,
   Pie,
@@ -53,8 +54,22 @@ export default class Dashboard extends React.Component {
     this.state = {
       products: [],
       isMounted: false,
+      activeIndexSalesAmount: 0,
+      activeIndexSalesQuantity: 0,
     };
   }
+
+  onSalesAmountPieEnter = (data, index) => {
+    this.setState({
+      activeIndexSalesAmount: index,
+    });
+  };
+
+  onSalesQuantityPieEnter = (data, index) => {
+    this.setState({
+      activeIndexSalesQuantity: index,
+    });
+  };
 
   getAllProducts() {
     // get products of this merchant (used for both pie charts)
@@ -78,10 +93,10 @@ export default class Dashboard extends React.Component {
   render() {
     // layout is an array of objects, see the demo for more complete usage
     const layout = [
-      { i: 'a', x: 0, y: 0, w: 4, h: 9, static: true },
-      { i: 'b', x: 4, y: 0, w: 4, h: 9, static: true },
-      { i: 'c', x: 9, y: 0, w: 4, h: 9, static: true },
-      { i: 'd', x: 0, y: 9, w: 12, h: 13, static: true },
+      { i: 'a', x: 0, y: 0, w: 4, h: 9, minW: 4, static: true },
+      { i: 'b', x: 4, y: 0, w: 4, h: 9, minW: 4, static: true },
+      { i: 'c', x: 8, y: 0, w: 4, h: 9, minW: 4, static: true },
+      { i: 'd', x: 0, y: 9, w: 12, h: 13, minW: 12, static: true },
     ];
     if (!this.state.isMounted) {
       return null;
@@ -113,51 +128,45 @@ export default class Dashboard extends React.Component {
     // colors used for the pie charts
     const colorsArray = Object.values(defaultTheme.pieChartColors);
 
-    // function to modify the label within the pie charts
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-      const x = cx + radius * Math.cos(-midAngle * RADIAN);
-      const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-      return (
-        <text
-          style={{ fontWeight: 'bold' }}
-          x={x}
-          y={y}
-          fill="white"
-          textAnchor={x > cx ? 'start' : 'end'}
-          dominantBaseline="central"
-        >
-          {salesAmountData[index].name}
-        </text>
-      );
-    };
     return (
-      <StyledContainer className="layout" layout={layout} cols={12} rowHeight={30} width={1200}>
+      <StyledContainer
+        className="layout"
+        layout={layout}
+        isResizable={false}
+        useCSSTransforms={false}
+        isDraggable={false}
+        cols={12}
+        rowHeight={30}
+        width={1200}
+      >
         <StyledDiv key="a">
           <StyledTitleContainer>Total Sales</StyledTitleContainer>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="90%" height="90%">
             <StyledTotalSalesContainer>{`$${totalSales.toFixed(2)}`}</StyledTotalSalesContainer>
           </ResponsiveContainer>
         </StyledDiv>
         <StyledDiv key="b">
           <StyledTitleContainer>Sales Quantity Breakdown</StyledTitleContainer>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="90%" height="90%">
             <PieChart>
               {products.length > 0 ? (
                 <Pie
                   data={salesQuantityData}
                   labelLine={false}
-                  label={renderCustomizedLabel}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
                   cy="50%"
-                  outerRadius={140}
+                  outerRadius={90}
+                  innerRadius={60}
+                  startAngle={0}
+                  endAngle={360}
+                  activeIndex={this.state.activeIndexSalesQuantity}
+                  activeShape={renderActiveShapeSalesQuantity}
+                  onMouseEnter={this.onSalesQuantityPieEnter}
                 >
                   {salesQuantityData.map((entry, index) => (
-                    <Cell key={`cell-`} fill={colorsArray[index]} />
+                    <Cell key={`cell-${index}`} fill={colorsArray[index]} />
                   ))}
                 </Pie>
               ) : (
@@ -168,21 +177,26 @@ export default class Dashboard extends React.Component {
         </StyledDiv>
         <StyledDiv key="c">
           <StyledTitleContainer>Sales Amount Breakdown</StyledTitleContainer>
-          <ResponsiveContainer width="100%" height="97%">
+          <ResponsiveContainer width="90%" height="90%">
             <PieChart>
               {products.length > 0 ? (
                 <Pie
                   data={salesAmountData}
                   labelLine={false}
-                  label={renderCustomizedLabel}
                   dataKey="value"
                   nameKey="name"
+                  startAngle={360}
+                  endAngle={0}
                   cx="50%"
                   cy="50%"
-                  outerRadius={140}
+                  outerRadius={90}
+                  innerRadius={60}
+                  activeIndex={this.state.activeIndexSalesAmount}
+                  activeShape={renderActiveShapeSalesAmount}
+                  onMouseEnter={this.onSalesAmountPieEnter}
                 >
                   {salesAmountData.map((entry, index) => (
-                    <Cell key={`cell-`} fill={colorsArray[index]} />
+                    <Cell key={`cell-${index}`} fill={colorsArray[index]} />
                   ))}
                 </Pie>
               ) : (
@@ -192,7 +206,7 @@ export default class Dashboard extends React.Component {
           </ResponsiveContainer>
         </StyledDiv>
         <StyledDiv key="d">
-          <ResponsiveContainer width="100%" height="97%">
+          <ResponsiveContainer width="90%" height="90%">
             <BarChart
               data={salesQuantityData}
               margin={{
