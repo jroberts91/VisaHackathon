@@ -84,7 +84,7 @@ export default class ProductPage extends React.Component {
     let headerName;
 
     if (isOwnerShop) {
-      headerName = 'My shop';
+      headerName = 'My Shop';
     } else {
       headerName = merchant.name;
     }

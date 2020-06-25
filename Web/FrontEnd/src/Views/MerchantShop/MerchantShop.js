@@ -99,7 +99,7 @@ export default class MerchantShop extends React.Component {
     let headerName;
 
     if (isOwnerShop) {
-      headerName = 'My shop';
+      headerName = 'My Shop';
     } else {
       headerName = merchantName;
     }

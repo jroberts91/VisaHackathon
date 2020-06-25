@@ -48,6 +48,7 @@ export default class SideBar extends React.Component {
     const salesHistoryLink = `/${this.props.merchantId}/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
+    const merchantLocator = '/merchantLocator'
     if (isLoggedIn) {
       buttons = (
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
