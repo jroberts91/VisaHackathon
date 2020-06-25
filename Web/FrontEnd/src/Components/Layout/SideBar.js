@@ -52,7 +52,7 @@ export default class SideBar extends React.Component {
   render() {
     const { collapsed, isLoggedIn } = this.props;
     let buttons;
-    const salesHistoryLink = `/${this.props.merchantId}/history`;
+    const salesHistoryLink = `/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
     const merchantLocator = '/merchantLocator';
@@ -61,7 +61,7 @@ export default class SideBar extends React.Component {
         <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
           <StyledMenuItem key="1" icon={<PieChartOutlined />}>
             Dashboard
-            {/* <Link to="/" /> */}
+            <Link to="/" />
           </StyledMenuItem>
 
           <StyledMenuItem key="2" icon={<ShopOutlined />}>

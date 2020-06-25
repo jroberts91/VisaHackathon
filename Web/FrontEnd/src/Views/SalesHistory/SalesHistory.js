@@ -229,11 +229,12 @@ export default class SalesHistory extends React.Component {
 
   componentDidMount = () => {
     const body = {
-      merchantId: this.props.match.params.merchantId,
+      merchantId: this.props.merchantId,
       fulfilled: 'all',
     };
     API.post('api/order/getAll', body)
       .then((res) => {
+        console.log(res);
         this.setState({ orders: res.data.orders });
       })
       .catch((err) => console.error(err));

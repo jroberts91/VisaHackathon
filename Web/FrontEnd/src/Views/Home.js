@@ -78,13 +78,23 @@ export default class Home extends React.Component {
             merchantId={merchantId}
           />
           <Switch>
-            <Route path="/" exact component={HomeBody} />
-            <Route path="/dashboard" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
-            <Route path="/merchantLocator" component={MerchantLocator} />
-            <Route path="/offers" component={OfferPage} />
-            <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />
-            <Route path="/profile/:merchantId" render={(props) => <Profile loggedInUserId={merchantId} {...props} />} />
-            <Route path="/:merchantId/history" exact component={SalesHistory} />
+            {isLoggedIn ? (
+              <Route path="/" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
+            ) : (
+              <Route path="/" exact component={HomeBody} />
+            )}
+            {isLoggedIn && (
+              <Route path="/history" exact render={(props) => <SalesHistory merchantId={merchantId} {...props} />} />
+            )}
+            {isLoggedIn && <Route path="/:merchantId/addproduct" component={AddProduct} />}
+            {isLoggedIn && (
+              <Route
+                path="/profile/:merchantId"
+                render={(props) => <Profile loggedInUserId={merchantId} {...props} />}
+              />
+            )}
+            {!isLoggedIn && <Route path="/offers" component={OfferPage} />}
+            {!isLoggedIn && <Route path="/merchantLocator" component={MerchantLocator} />}
             <Route
               path="/:merchantId/product/:productId"
               exact
@@ -95,7 +105,7 @@ export default class Home extends React.Component {
               render={(props) => <Payment loggedInUserId={merchantId} {...props} />}
             />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
-            <Route path="/:merchantId/addproduct" component={AddProduct} />
+            <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />
           </Switch>
         </Layout>
       </Layout>
