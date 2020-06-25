@@ -41,7 +41,6 @@ export default class Home extends React.Component {
           merchantId: _id,
         });
       }
-      console.log(res);
       this.setState({ isMounted: true });
     });
   };
@@ -80,7 +79,7 @@ export default class Home extends React.Component {
           />
           <Switch>
             <Route path="/" exact component={HomeBody} />
-            <Route path="/dashboard" exact component={Dashboard} />
+            <Route path="/dashboard" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
             <Route path="/merchantLocator" component={MerchantLocator} />
             <Route path="/offers" component={OfferPage} />
             <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />
