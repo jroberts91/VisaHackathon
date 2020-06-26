@@ -5,6 +5,7 @@ import { Typography, Steps, Upload, Alert, Button as AntButton } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { TextField, Button } from '@material-ui/core';
 import API from '../../utils/baseUrl';
+import { isStrongPassword as isWeakPasswordPredicate } from '../../utils/passwordValidation';
 import 'antd/dist/antd.css';
 
 const { Step } = Steps;
@@ -83,6 +84,7 @@ const StyledUploadGroup = styled.div`
 `;
 
 const StyledAlerts = styled(Alert)`
+  margin-bottom: 10px;
   width: 60%;
   right: -20%;
 `;
@@ -264,6 +266,8 @@ export default class SignUp extends React.Component {
       uploaded,
     } = this.state;
 
+    const isWeakPassword = isWeakPasswordPredicate(password);
+
     const SignUpPageFields = (
       <StyledRightContainer>
         <FieldsContainer>
@@ -320,7 +324,14 @@ export default class SignUp extends React.Component {
                 size="small"
                 value={confirmPassword}
               />
-              {differentPasswords && <StyledAlerts message="Passwords do not match" type="warning" showIcon />}
+              {!isWeakPassword && (
+                <StyledAlerts
+                  message="Password must be: 8 to 20 characters long, include at least one digit, uppercase and lowercase letter"
+                  type="error"
+                  showIcon
+                />
+              )}
+              {differentPasswords && <StyledAlerts message="Passwords do not match" type="error" showIcon />}
               <StyledMaterialButtonRight
                 variant="contained"
                 color="primary"
