@@ -96,9 +96,9 @@ function MerchantLocator() {
   return (
     <div style={{ height: '100%' }}>
       <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282', marginLeft:"120px" }}>
-            <SearchOutlined/> Maps
-          </Title>
+        <Title level={4} style={{ color: '#828282', marginLeft: '120px' }}>
+          <SearchOutlined /> Maps
+        </Title>
       </Row>
       <Row gutter={16} align="middle">
         <Col span={10} style={{marginLeft:"70px"}}>
