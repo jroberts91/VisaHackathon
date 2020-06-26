@@ -12,7 +12,7 @@ import {
   ShopOutlined,
   PieChartOutlined,
   SearchOutlined,
-  MessageOutlined
+  MessageOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;

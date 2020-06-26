@@ -3,14 +3,9 @@ import styled from 'styled-components';
 import API from '../../utils/baseUrl';
 import { defaultTheme } from '../../utils/theme';
 import { renderActiveShapeSalesQuantity, renderActiveShapeSalesAmount } from './pieChartUtils';
-import {
-  PieChart,
-  Pie,
-  ResponsiveContainer,
-  Cell
-} from 'recharts';
+import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import GridLayout from 'react-grid-layout';
-import Linechart from './Linechart'
+import Linechart from './Linechart';
 
 // note: the following calculations are to overwrite the auto resize of react-grid-layout
 const StyledDiv = styled.div`
@@ -212,7 +207,7 @@ export default class Dashboard extends React.Component {
             </ResponsiveContainer>
           </StyledDiv>
           <StyledDivBottom key="d">
-            <Linechart id={this.props.loggedInUserId}/>
+            <Linechart id={this.props.loggedInUserId} />
           </StyledDivBottom>
         </StyledContainer>
       </>
