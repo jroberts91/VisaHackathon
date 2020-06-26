@@ -64,7 +64,6 @@ export default class AddProduct extends React.Component {
 
               <Form.Item label="Messsage">
                 <TextArea
-                  placeholder="Visa-exclusive bag. Visa is the best!"
                   autoSize={{ minRows: 6, maxRows: 10 }}
                   style={{ width: '100%' }}
                 />
