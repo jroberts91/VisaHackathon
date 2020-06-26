@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
 import { baseUrl } from '../utils/baseUrl';
 
 const styles = StyleSheet.create({

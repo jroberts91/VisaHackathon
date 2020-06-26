@@ -2,7 +2,6 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MainContainer from './MainContainer';
 import { Icon } from 'react-native-elements';
-import TopBar from './TopComponents/TopBar';
 
 const Tab = createBottomTabNavigator();
 
