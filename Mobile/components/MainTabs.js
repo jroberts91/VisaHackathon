@@ -14,7 +14,7 @@ export default class MainTabs extends React.Component {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName, typeName, solid;
 
-            if (route.name === 'Home') {
+            if (route.name === 'Cart') {
               iconName = 'home';
               typeName = 'font-awesome-5';
               solid = focused ? true : false;
@@ -33,11 +33,11 @@ export default class MainTabs extends React.Component {
           },
         })}
         tabBarOptions={{
-          activeTintColor: '#FAA913',
+          activeTintColor: '#1a1f71',
           inactiveTintColor: '#fff',
           showLabel: false,
           style: {
-            backgroundColor: '#1a1f71',
+            backgroundColor: '#FAA913',
           },
           labelStyle: {
             fontSize: 12,
@@ -46,10 +46,10 @@ export default class MainTabs extends React.Component {
         }}
       >
         <Tab.Screen
-          name="Home"
+          name="Cart"
           component={MainContainer}
           initialParams={{
-            pageName: 'Home',
+            pageName: 'Cart',
             openDrawer: this.props.navigation.openDrawer,
             openMessage: this.props.navigation.push,
           }}

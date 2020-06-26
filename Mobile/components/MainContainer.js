@@ -18,7 +18,7 @@ export default class MainContainer extends React.Component {
     return (
       <View style={styles.main}>
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
-        {pageName === 'Home' && <Cart />}
+        {pageName === 'Cart' && <Cart />}
         {pageName === 'Profile' && <ProfilePage personName={'John Does'} />}
         {pageName === 'Scan' && <ScanPage />}
       </View>
