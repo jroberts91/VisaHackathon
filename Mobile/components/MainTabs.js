@@ -18,10 +18,6 @@ export default class MainTabs extends React.Component {
               iconName = 'home';
               typeName = 'font-awesome-5';
               solid = focused ? true : false;
-            } else if (route.name === 'Profile') {
-              iconName = 'user';
-              typeName = 'font-awesome-5';
-              solid = focused ? true : false;
             } else if (route.name === 'Scan') {
               iconName = 'qrcode';
               typeName = 'font-awesome-5';
@@ -54,14 +50,6 @@ export default class MainTabs extends React.Component {
             openMessage: this.props.navigation.push,
           }}
           options={{ tabBarVisible: true }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={MainContainer}
-          initialParams={{
-            pageName: 'Profile',
-            openDrawer: this.props.navigation.openDrawer,
-          }}
         />
         <Tab.Screen
           name="Scan"
