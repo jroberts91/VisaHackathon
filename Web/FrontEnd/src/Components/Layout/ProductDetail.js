@@ -80,7 +80,7 @@ export default class ProductDetail extends React.Component {
     );
   };
 
-  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId, isOwnerShop) => {
+  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId, isOwnerShop, isLoggedIn) => {
     qtySold = qtySold || 0;
     totalQty = totalQty || 0;
 
@@ -134,23 +134,36 @@ export default class ProductDetail extends React.Component {
               </WhiteButton>
             )}
           </Col>
-          <Col key={1} span={12}>
-            <Link
-              style={{ float: 'right', marginRight: '20%' }}
-              to={paymentLink + '/payment?qty=' + this.state.quantity}
-            >
-              <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
-                Buy Now
-              </BlueButton>
-            </Link>
-          </Col>
+          {!isLoggedIn && (
+            <Col key={1} span={12}>
+              <Link
+                style={{ float: 'right', marginRight: '20%' }}
+                to={paymentLink + '/payment?qty=' + this.state.quantity}
+              >
+                <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
+                  Buy Now
+                </BlueButton>
+              </Link>
+            </Col>
+          )}
         </Row>
       </div>
     );
   };
 
   render() {
-    const { name, rating, description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop } = this.props;
+    const {
+      name,
+      rating,
+      description,
+      price,
+      totalQty,
+      qtySold,
+      paymentLink,
+      productId,
+      isOwnerShop,
+      isLoggedIn,
+    } = this.props;
     const { quantity } = this.state;
 
     return (
@@ -165,7 +178,8 @@ export default class ProductDetail extends React.Component {
             quantity,
             paymentLink,
             productId,
-            isOwnerShop
+            isOwnerShop,
+            isLoggedIn
           )}
         />
       </Card>

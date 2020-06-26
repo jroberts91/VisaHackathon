@@ -98,11 +98,11 @@ export default class Home extends React.Component {
             <Route
               path="/:merchantId/product/:productId"
               exact
-              render={(props) => <ProductPage loggedInId={merchantId} {...props} />}
+              render={(props) => <ProductPage loggedInId={merchantId} isLoggedIn={isLoggedIn} {...props} />}
             />
             <Route
               path="/:merchantId/product/:productId/payment"
-              render={(props) => <Payment loggedInUserId={merchantId} {...props} />}
+              render={(props) => <Payment loggedInUserId={merchantId} isLoggedIn={isLoggedIn} {...props} />}
             />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
             <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />

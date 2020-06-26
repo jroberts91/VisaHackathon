@@ -6,9 +6,17 @@ import { Row, Col, Layout, message, Typography } from 'antd';
 import queryString from 'query-string';
 import API, { baseUrl } from '../../utils/baseUrl';
 import { ShopOutlined } from '@ant-design/icons';
-
+import styled from 'styled-components';
 const { Content } = Layout;
 const { Title } = Typography;
+
+const ErrorMessageContainer = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-size: 16px;
+`;
 
 export default class Payment extends React.Component {
   constructor(props) {
@@ -47,9 +55,18 @@ export default class Payment extends React.Component {
 
   render() {
     const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
+    const { isLoggedIn } = this.props;
     if (product == null || merchant == null) {
       // when product or merchant isn't populated yet
       return null;
+    }
+
+    if (isLoggedIn) {
+      return (
+        <ErrorMessageContainer>
+          To make payments, you must be logged out as a normal user instead of a merchant.
+        </ErrorMessageContainer>
+      );
     }
 
     let headerName;
