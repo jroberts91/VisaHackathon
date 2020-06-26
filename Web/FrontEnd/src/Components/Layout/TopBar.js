@@ -18,11 +18,11 @@ const StyledButton = styled(Button)`
   color: black;
 `;
 
-const StyledLoginButton = styled(Button)`
-  right: 130px;
-  top: 15px;
+const StyledText = styled(Text)`
+  right: 80px;
+  top: -1px;
   position: absolute;
-  width: 90px;
+  width: 150px;
 `;
 
 const StyledRegisterButton = styled(Button)`
@@ -133,8 +133,10 @@ export default class TopBar extends React.Component {
     } else {
       buttons = (
         <div>
-          <StyledRegisterButton onClick={this.handleRegisterClick}> Register </StyledRegisterButton>
-          <StyledLoginButton onClick={this.handleLoginClick}> Login </StyledLoginButton>
+          <StyledText> Are you a merchant? </StyledText>
+          <StyledRegisterButton type="link" onClick={this.handleLoginClick}>
+            Login
+          </StyledRegisterButton>
         </div>
       );
     }

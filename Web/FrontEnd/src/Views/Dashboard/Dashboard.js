@@ -1,11 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import API from '../../utils/baseUrl';
+import { Row, Col, Form, Select } from 'antd';
 import { defaultTheme } from '../../utils/theme';
+import { PieChartOutlined } from '@ant-design/icons';
 import { renderActiveShapeSalesQuantity, renderActiveShapeSalesAmount } from './pieChartUtils';
 import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import GridLayout from 'react-grid-layout';
 import Linechart from './Linechart';
+
+const { Option } = Select;
 
 // note: the following calculations are to overwrite the auto resize of react-grid-layout
 const StyledDiv = styled.div`
@@ -18,6 +22,7 @@ const StyledDiv = styled.div`
 const StyledDivBottom = styled.div`
   left: 0.833333% !important;
   min-width: 98.3333%;
+  background: white;
 `;
 
 const StyledBreadCrumbsContainer = styled.div`
@@ -51,7 +56,7 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: [],
+      orders: [],
       isMounted: false,
       activeIndexSalesAmount: 0,
       activeIndexSalesQuantity: 0,
@@ -70,15 +75,15 @@ export default class Dashboard extends React.Component {
     });
   };
 
-  getAllProducts() {
-    // get products of this merchant (used for both pie charts)
+  getAllOrders() {
+    // get orders of this merchant (used for both pie charts)
     const body = {
       merchantId: this.props.loggedInUserId,
     };
-    API.post('api/product/getAll', body)
+    API.post('api/order/getAll', body)
       .then((res) => {
         if (res.data.success) {
-          this.setState({ products: res.data.products });
+          this.setState({ orders: res.data.orders });
         }
         this.setState({ isMounted: true });
       })
@@ -86,7 +91,7 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.getAllProducts();
+    this.getAllOrders();
   }
 
   render() {
@@ -100,36 +105,79 @@ export default class Dashboard extends React.Component {
     if (!this.state.isMounted) {
       return null;
     }
-    const { products } = this.state;
+    const { orders } = this.state;
+    let totalSales = 0; //totalSales
+    const dailyRevenue = []; //linechart
+    const salesAmountData = []; //piechart for sales amount
+    const salesQuantityData = []; //piechart for sales amount
 
-    // used in top middle pie chart
-    const salesQuantityData = products.map((product) => {
-      return {
-        name: product.name,
-        value: product.soldQty,
-      };
-    });
+    let data = {}; //dict to arrange data for line chart
+    let sales = {}; //key=name, val=[qty,amt] dict to arrange data for piecharts
+    for (var i = 13; i >= 0; i--) {
+      //set keys for data, key = date
+      let index = {};
+      let d = new Date(Date.now() - 864e5 * i);
+      index.time = d;
+      index.Revenue = 0;
+      let key = d.getDate() + d.getMonth() * 28;
+      data[key] = index;
+    }
 
-    // used in top right pie chart
-    const salesAmountData = products.map((product) => {
-      const amount = parseInt(product.price) * product.soldQty;
-      return {
-        name: product.name,
-        value: amount,
-      };
-    });
-
-    // used in top left total sales
-    const totalSales = salesAmountData.reduce((acc, productSales) => {
-      return parseInt(productSales.value) + acc;
-    }, 0);
+    if (orders) {
+      let d = new Date(Date.now() - 864e5 * 13); //date 14 days ago
+      orders.map((order) => {
+        let orderDate = new Date(order.payment.dateTime);
+        if (orderDate >= d) {
+          //check for valid order date
+          // set data for line chart
+          let totalPrice = order.quantity * order.product.price;
+          let key = orderDate.getDate() + orderDate.getMonth() * 28;
+          data[key].Revenue += totalPrice;
+          //set data for piecharts and total sales
+          totalSales += totalPrice;
+          let name = order.product.name;
+          if (typeof sales[name] === 'undefined') {
+            sales[name] = [order.quantity, totalPrice];
+          } else {
+            sales[name][0] += order.quantity;
+            sales[name][1] += totalPrice;
+          }
+        }
+      });
+      for (const [key, value] of Object.entries(data)) {
+        value.time = value.time.toLocaleDateString();
+        dailyRevenue.push(value);
+      }
+      for (const [key, value] of Object.entries(sales)) {
+        let a = { name: key, value: value[1] };
+        salesAmountData.push(a);
+        let q = { name: key, value: value[0] };
+        salesQuantityData.push(q);
+      }
+    }
 
     // colors used for the pie charts
     const colorsArray = Object.values(defaultTheme.pieChartColors);
 
     return (
       <>
-        <StyledBreadCrumbsContainer>Dashboard</StyledBreadCrumbsContainer>
+        <StyledBreadCrumbsContainer>
+          <Row>
+            <Col span={12}>
+              <PieChartOutlined style={{ padding: '10px' }} />
+              Dashboard
+            </Col>
+            <Col span={12}>
+              <Form style={{ marginTop: '10px' }} size="large">
+                <Select defaultValue="Bi-Weekly">
+                  <Option value="Bi-Weekly">Bi-Weekly</Option>
+                  <Option value="Monthly">Monthly</Option>
+                  <Option value="Yearly">Yearly</Option>
+                </Select>
+              </Form>
+            </Col>
+          </Row>
+        </StyledBreadCrumbsContainer>
         <StyledContainer
           className="layout"
           layout={layout}
@@ -150,7 +198,7 @@ export default class Dashboard extends React.Component {
             <StyledTitleContainer>Sales Quantity Breakdown</StyledTitleContainer>
             <ResponsiveContainer width="90%" height="90%">
               <PieChart>
-                {products.length > 0 ? (
+                {orders.length > 0 ? (
                   <Pie
                     data={salesQuantityData}
                     labelLine={false}
@@ -180,7 +228,7 @@ export default class Dashboard extends React.Component {
             <StyledTitleContainer>Sales Amount Breakdown</StyledTitleContainer>
             <ResponsiveContainer width="90%" height="90%">
               <PieChart>
-                {products.length > 0 ? (
+                {orders.length > 0 ? (
                   <Pie
                     data={salesAmountData}
                     labelLine={false}
@@ -207,7 +255,8 @@ export default class Dashboard extends React.Component {
             </ResponsiveContainer>
           </StyledDiv>
           <StyledDivBottom key="d">
-            <Linechart id={this.props.loggedInUserId} />
+            <StyledTitleContainer style={{ marginLeft: '10px' }}>Daily Revenue</StyledTitleContainer>
+            <Linechart data={dailyRevenue} />
           </StyledDivBottom>
         </StyledContainer>
       </>

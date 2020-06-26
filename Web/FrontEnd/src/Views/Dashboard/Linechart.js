@@ -6,41 +6,8 @@ function Linechart(props) {
   const [Data, setData] = useState([]);
 
   useEffect(() => {
-    let data = {};
-    for (var i = 13; i >= 0; i--) {
-      let index = {};
-      let d = new Date(Date.now() - 864e5 * i);
-      index.time = d;
-      index.Revenue = 0;
-      let key = d.getDate() + d.getMonth() * 28;
-      data[key] = index;
-    }
-    let body = { merchantId: props.id };
-    API.post('api/order/getAll', body)
-      .then((res) => {
-        let arr = res.data.orders;
-        if (arr) {
-          let d = new Date(Date.now() - 864e5 * 13);
-          arr.map((order) => {
-            let orderDate = new Date(order.payment.dateTime);
-            if (orderDate >= d) {
-              let totalPrice = order.quantity * order.product.price;
-              let key = orderDate.getDate() + orderDate.getMonth() * 28;
-              data[key].Revenue += totalPrice;
-            }
-          });
-          let toBeSetData = [];
-          for (const [key, value] of Object.entries(data)) {
-            value.time = value.time.toLocaleDateString();
-            toBeSetData.push(value);
-          }
-          setData(toBeSetData);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+    setData(props.data);
+  }, [props.data]);
 
   const formatX = (item) => {
     return item.toString();
