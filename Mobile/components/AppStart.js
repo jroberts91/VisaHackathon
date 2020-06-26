@@ -4,8 +4,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainTabs from './MainTabs';
-import { connect } from 'react-redux';
-import { addUser } from '../redux/actions';
 import { fetchUsers } from '../api/api';
 
 const Drawer = createDrawerNavigator();
@@ -33,16 +31,7 @@ function MainHome({ navigation }) {
   );
 }
 
-class AppStart extends React.Component {
-  componentDidMount() {
-    this.getUsers();
-  }
-
-  getUsers = async () => {
-    const results = await fetchUsers();
-    results.map((res) => this.props.addUser(res));
-  };
-
+export default class AppStart extends React.Component {
   render() {
     return (
       <NavigationContainer>
@@ -54,5 +43,3 @@ class AppStart extends React.Component {
     );
   }
 }
-
-export default connect(null, { addUser: addUser })(AppStart);

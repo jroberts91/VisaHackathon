@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import CardBox from '../../Layout/CardBox';
-import { connect } from 'react-redux';
 import API, { baseUrl } from '../../utils/baseUrl';
 
 const styles = StyleSheet.create({
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class Cart extends React.Component {
+export default class Cart extends React.Component {
   constructor(props) {
     super(props);
     this.state = { products: [] };
@@ -106,9 +105,3 @@ class Cart extends React.Component {
     );
   }
 }
-
-const mapStateToProps = (state) => ({
-  users: state.users,
-});
-
-export default connect(mapStateToProps)(Cart);
