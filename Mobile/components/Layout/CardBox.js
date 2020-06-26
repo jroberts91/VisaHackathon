@@ -24,13 +24,17 @@ const styles = StyleSheet.create({
     margin: 10,
     flexDirection: 'row',
   },
+  buttonStyle: {
+    backgroundColor: '#FAA913',
+  },
+  details: { textAlign: 'right' },
 });
 
 const ContentBody = (props) => {
   return (
     <View style={styles.contentBody}>
-      <Text>{props.text}</Text>
-      <Button buttonStyle={styles.buttonStle} title="View Profile" />
+      <Text style={styles.details}>$100</Text>
+      <Button buttonStyle={styles.buttonStyle} title="Delete Item" />
     </View>
   );
 };
