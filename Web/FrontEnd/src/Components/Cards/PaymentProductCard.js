@@ -34,7 +34,7 @@ export default class PaymentProductCard extends React.Component {
     return (
       <Card
         style={{ width: '80%', minWidth: 500, margin: '0 auto' }}
-        cover={<img alt="example" src={imageUrl} />}
+        cover={<img alt="example" src={imageUrl} style={{ maxWidth: 400, maxHeight: 600 }} />}
         hoverable
       >
         <Meta
