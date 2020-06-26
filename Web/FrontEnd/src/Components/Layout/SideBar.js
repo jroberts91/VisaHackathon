@@ -12,6 +12,7 @@ import {
   ShopOutlined,
   PieChartOutlined,
   SearchOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -56,31 +57,38 @@ export default class SideBar extends React.Component {
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
     const merchantLocator = '/merchantLocator';
+    const contactLink = '/contactUs';
 
     const getSelectedMerchantMenuItem = () => {
       const currentPath = window.location.pathname;
-      if (currentPath == '/') {
+      if (currentPath === '/') {
         return '1';
       }
-      if (currentPath == myShopLink) {
+      if (currentPath === myShopLink) {
         return '2';
       }
-      if (currentPath == salesHistoryLink) {
+      if (currentPath === salesHistoryLink) {
         return '3';
+      }
+      if (currentPath === contactLink) {
+        return '4';
       }
     };
 
     const getSelectedBuyerMenuItem = () => {
       const currentPath = window.location.pathname;
       console.log(currentPath);
-      if (currentPath == '/') {
+      if (currentPath === '/') {
         return '1';
       }
-      if (currentPath == offersLink) {
+      if (currentPath === offersLink) {
         return '2';
       }
-      if (currentPath == merchantLocator) {
+      if (currentPath === merchantLocator) {
         return '3';
+      }
+      if (currentPath === contactLink) {
+        return '4';
       }
     };
 
@@ -101,6 +109,11 @@ export default class SideBar extends React.Component {
             Sales History
             <Link to={salesHistoryLink} />
           </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+            Contact Us
+            <Link to={contactLink} />
+          </StyledMenuItem>
         </StyledMenu>
       );
     } else {
@@ -119,6 +132,11 @@ export default class SideBar extends React.Component {
           <StyledMenuItem key="3" icon={<SearchOutlined />}>
             Maps
             <Link to={merchantLocator} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+            Contact Us
+            <Link to={contactLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
