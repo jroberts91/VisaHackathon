@@ -15,7 +15,7 @@ export default class MainTabs extends React.Component {
             let iconName, typeName, solid;
 
             if (route.name === 'Cart') {
-              iconName = 'home';
+              iconName = 'shopping-cart';
               typeName = 'font-awesome-5';
               solid = focused ? true : false;
             } else if (route.name === 'Scan') {
