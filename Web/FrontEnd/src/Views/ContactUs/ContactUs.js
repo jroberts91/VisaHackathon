@@ -12,7 +12,7 @@ const { Option } = Select;
 
 const StyledImage = styled.img`
   position: relative;
-  width: 50%;
+  width: 70%;
   height: 50%;
   margin: 10%;
 `;
