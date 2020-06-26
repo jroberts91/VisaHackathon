@@ -100,7 +100,7 @@ function MerchantLocator() {
             <SearchOutlined/> Maps
           </Title>
       </Row>
-      <Row gutter={16} style={{ height: '100%' }} align="middle">
+      <Row gutter={16} align="middle">
         <Col span={10} style={{marginLeft:"70px"}}>
           <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos}/>
         </Col>
