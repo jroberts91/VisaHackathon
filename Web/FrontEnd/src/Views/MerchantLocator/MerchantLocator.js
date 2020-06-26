@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Map from './Map';
-import { Row, Col, Form, Button, Input, Select, Tooltip } from 'antd';
+import { Row, Col, Form, Button, Input, Select, Tooltip, Typography } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import Geocode from 'react-geocode';
 Geocode.setApiKey('AIzaSyDD_LZoOgt7th9UQVMl2nGbJ3_N-TOvRz4');
 
 const { Option } = Select;
+const { Title } = Typography;
 
 function MerchantLocator() {
   const [Name, setName] = useState('Starbucks');
@@ -93,9 +95,14 @@ function MerchantLocator() {
 
   return (
     <div style={{ height: '100%' }}>
+      <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+          <Title level={4} style={{ color: '#828282', marginLeft:"120px" }}>
+            <SearchOutlined/> Maps
+          </Title>
+      </Row>
       <Row gutter={16} style={{ height: '100%' }} align="middle">
-        <Col span={12}>
-          <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos} />
+        <Col span={10} style={{marginLeft:"70px"}}>
+          <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos}/>
         </Col>
         <Col span={12}>
           <div style={{ margin: '0 auto', maxWidth: '600px' }}>
