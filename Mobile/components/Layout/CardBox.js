@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: 'white',
   },
-  personName: { marginLeft: 10, fontWeight: 'bold' },
+  productName: { marginLeft: 10, fontWeight: 'bold', fontSize: 20 },
+  productDetails: { marginLeft: 10 },
   contentBody: {
     marginLeft: 10,
     marginRight: 10,
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
     margin: 10,
     flexDirection: 'row',
   },
+  rightHeader: {},
   buttonStyle: {
     backgroundColor: '#FAA913',
   },
@@ -43,7 +45,10 @@ const ContentHeader = (props) => {
   return (
     <View style={styles.contentHeader}>
       <Image style={styles.avatar} source={{ uri: props.imageUrl }} />
-      <Text style={styles.personName}> {props.personName} </Text>
+      <View style={styles.rightHeader}>
+        <Text style={styles.productName}> {props.personName} </Text>
+        <Text style={styles.productDetails}> Qty: 5 </Text>
+      </View>
     </View>
   );
 };
