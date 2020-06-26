@@ -1,6 +1,7 @@
 import React from 'react';
 import MerchantCard from '../../Components/Cards/MerchantCard';
 import { Row, Col, Layout, Space, Select, Typography } from 'antd';
+import { HomeOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
@@ -34,10 +35,8 @@ export default class HomeBody extends React.Component {
   }
 
   componentDidMount = () => {
-    API
-      .post('api/merchant/getAll')
+    API.post('api/merchant/getAll')
       .then((res) => {
-        console.log(res);
         this.setState({ merchants: res.data.merchants });
       })
       .catch((err) => console.error(err));
@@ -47,7 +46,9 @@ export default class HomeBody extends React.Component {
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
         <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={2}>Merchants</Title>
+          <Title level={4} style={{ color: '#828282' }}>
+            <HomeOutlined /> Home
+          </Title>
           <Space direction="vertical" size={1}>
             <Text>Sort By</Text>
             <Select defaultValue={this.state.sortBy} size="large" style={{ minWidth: '150px' }}>

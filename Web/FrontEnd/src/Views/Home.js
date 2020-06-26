@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Layout } from 'antd';
 import { Route, Switch } from 'react-router-dom';
 import TopBar from '../Components/Layout/TopBar';
@@ -7,10 +6,14 @@ import SideBar from '../Components/Layout/SideBar';
 import HomeBody from './Body/HomeBody';
 import SalesHistory from './SalesHistory/SalesHistory';
 import MerchantShop from './MerchantShop/MerchantShop';
+import ProductPage from './ProductPage/ProductPage';
 import Payment from './Payment/Payment';
+import Dashboard from './Dashboard/Dashboard';
 import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
+import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
+import MerchantLocator from './MerchantLocator/MerchantLocator';
 import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
@@ -20,6 +23,7 @@ export default class Home extends React.Component {
       collapsed: true,
       isLoggedIn: false,
       merchantId: null,
+      isMounted: false,
     };
   }
 
@@ -37,20 +41,27 @@ export default class Home extends React.Component {
           merchantId: _id,
         });
       }
-      console.log(res);
+      this.setState({ isMounted: true });
     });
   };
 
   handleLogoutClick = () => {
     API.get('api/merchant/logout').then((res) => {
-      console.log(res);
-    });
-    this.setState({
-      isLoggedIn: false,
+      if (res.status === 200) {
+        this.setState({
+          isLoggedIn: false,
+        });
+        this.props.history.push({
+          pathname: '/',
+        });
+      }
     });
   };
 
   render() {
+    if (!this.state.isMounted) {
+      return null; // only return the content when user is finished authenticating
+    }
     const { collapsed, isLoggedIn, username, merchantId } = this.state;
     const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
     return (
@@ -64,15 +75,37 @@ export default class Home extends React.Component {
             isLoggedIn={isLoggedIn}
             handleLogoutClick={this.handleLogoutClick}
             username={username}
+            merchantId={merchantId}
           />
           <Switch>
-            <Route path="/" exact component={HomeBody} />
-            <Route path="/offers" render={() => <OfferPage merchantName={username} />} />
-            <Route path="/:merchantId" exact component={MerchantShop} />
-            <Route path="/:merchantId/history" component={SalesHistory} />
-            <Route path="/:merchantId/product/:productId/payment" component={Payment} />
+            {isLoggedIn ? (
+              <Route path="/" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
+            ) : (
+              <Route path="/" exact component={HomeBody} />
+            )}
+            {isLoggedIn && (
+              <Route path="/history" exact render={(props) => <SalesHistory merchantId={merchantId} {...props} />} />
+            )}
+            {isLoggedIn && <Route path="/:merchantId/addproduct" component={AddProduct} />}
+            {isLoggedIn && (
+              <Route
+                path="/profile/:merchantId"
+                render={(props) => <Profile loggedInUserId={merchantId} {...props} />}
+              />
+            )}
+            {!isLoggedIn && <Route path="/offers" component={OfferPage} />}
+            {!isLoggedIn && <Route path="/merchantLocator" component={MerchantLocator} />}
+            <Route
+              path="/:merchantId/product/:productId"
+              exact
+              render={(props) => <ProductPage loggedInId={merchantId} {...props} />}
+            />
+            <Route
+              path="/:merchantId/product/:productId/payment"
+              render={(props) => <Payment loggedInUserId={merchantId} {...props} />}
+            />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
-            <Route path="/:merchantId/addproduct" component={AddProduct} />
+            <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />
           </Switch>
         </Layout>
       </Layout>

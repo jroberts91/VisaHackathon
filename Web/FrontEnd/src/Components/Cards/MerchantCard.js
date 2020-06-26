@@ -1,6 +1,6 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Card, Rate } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
@@ -8,11 +8,20 @@ import { baseUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
+const StyledDesc = styled.div`
+  overflow-y: scroll;
+  height: 50px;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+`;
+
 class MerchantDescription extends React.Component {
   render() {
     return (
       <>
-        <div>{this.props.description}</div>
+        <StyledDesc>{this.props.description}</StyledDesc>
         <Rate value={this.props.rating} disabled />
       </>
     );
@@ -38,19 +47,15 @@ export default class MerchantCard extends React.Component {
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
     const merchantHref = `/${id}`;
     return (
-      <Card
-        style={{ width: '100%', minWidth: 250 }}
-        cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
-        hoverable
-        actions={[
-          <Link to={merchantHref}>
-            <HomeOutlined key="visit" />
-          </Link>,
-        ]}
-        tabBarExtraContent={<Rate value={rating} />}
-      >
-        <Meta title={title} description={<MerchantDescription description={description} rating={rating} />} />
-      </Card>
+      <Link to={merchantHref}>
+        <Card
+          style={{ width: '100%', minWidth: 250, height: '100%' }}
+          cover={<img style={{ height: '200px', objectFit: 'cover' }} alt="example" src={fullImageUrl || MaiYuGe} />}
+          hoverable
+        >
+          <Meta title={title} description={<MerchantDescription description={description} rating={rating || 5} />} />
+        </Card>
+      </Link>
     );
   }
 }

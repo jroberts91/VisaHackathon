@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import LogoTagLine from '../../images/LogoTagLine.png';
 import { Button, Typography, Alert } from 'antd';
-import { TextField } from '@material-ui/core';
+import { TextField, Button as MaterialButton } from '@material-ui/core';
 import 'antd/dist/antd.css';
 import API from '../../utils/baseUrl';
 
@@ -35,13 +34,15 @@ const Logo = styled.img`
   position: relative;
 `;
 
-const StyledButton = styled(Button)`
-  width: 60%;
-  height: 35px;
-  background-color: #00276a;
-  color: white;
-  border: none;
-  margin-top: 40px;
+const StyledButton = styled(MaterialButton)`
+  && {
+    width: 60%;
+    height: 35px;
+    background-color: #00276a;
+    color: white;
+    border: none;
+    margin-top: 40px;
+  }
 `;
 
 const StyledLinkButton = styled(Button)`
@@ -57,7 +58,7 @@ const StyledTextField = styled(TextField)`
 
 const StyledSignUpFields = styled.div`
   margin-top: 40px;
-  top: 60%;
+  top: 65%;
   position: absolute;
   right: 18%;
   color: #75787b;
@@ -89,12 +90,10 @@ export default class LoginPage extends React.Component {
     const { history } = this.props;
     const sendObject = { email, password };
     API.post('api/merchant/login', sendObject).then((res) => {
-      console.log(res);
       const success = res.data.success;
       if (success) {
         history.push('/');
       } else {
-        console.log('asd');
         this.setState({
           invalidLogin: true,
         });
@@ -148,7 +147,12 @@ export default class LoginPage extends React.Component {
             size="small"
           />
           {invalidLogin && <StyledAlerts message="Invalid Email or Password" type="error" showIcon />}
-          <StyledButton type="primary" disabled={!(email.length && password.length)} onClick={this.handleSubmit}>
+          <StyledButton
+            color="primary"
+            variant="contained"
+            disabled={!(email.length && password.length)}
+            onClick={this.handleSubmit}
+          >
             Login
           </StyledButton>
         </FieldsContainer>

@@ -1,12 +1,14 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message } from 'antd';
+import { Row, Col, Layout, message, Typography } from 'antd';
 import queryString from 'query-string';
 import API, { baseUrl } from '../../utils/baseUrl';
+import { ShopOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
+const { Title } = Typography;
 
 export default class Payment extends React.Component {
   constructor(props) {
@@ -15,7 +17,9 @@ export default class Payment extends React.Component {
     this.state = {
       merchantId: this.props.match.params.merchantId,
       productId: this.props.match.params.productId,
+      isOwnerShop: this.props.match.params.merchantId === this.props.loggedInUserId,
       product: null,
+      merchant: null,
       qty: queries.qty,
     };
   }
@@ -23,7 +27,7 @@ export default class Payment extends React.Component {
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.data.success) {
           this.setState({ product: res.data.product });
         } else {
           message.error({
@@ -33,17 +37,44 @@ export default class Payment extends React.Component {
         }
       })
       .catch((err) => console.error(err));
+
+    API.get(`api/merchant/get?id=${this.state.merchantId}`)
+      .then((res) => {
+        this.setState({ merchant: res.data.merchant });
+      })
+      .catch((err) => console.error(err));
   };
 
   render() {
-    const { product, qty, merchantId, productId } = this.state;
-    if (product == null) {
-      // when product isn't populated yet
+    const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
+    if (product == null || merchant == null) {
+      // when product or merchant isn't populated yet
       return null;
     }
+
+    let headerName;
+
+    if (isOwnerShop) {
+      headerName = 'My Shop';
+    } else {
+      headerName = merchant.name;
+    }
+
     const totalPrice = (product.price * qty).toFixed(2);
     return (
-      <Content style={{ maxWidth: '1280px', margin: '0 auto', marginTop: '20vh' }}>
+      <Content style={{ maxWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
+        <Row align="top" justify="space-between" style={{ margin: '0 0 50px 0' }}>
+          <Title level={4} style={{ color: '#828282' }}>
+            <Link to={'/'} style={{ color: '#828282' }}>
+              <ShopOutlined /> {headerName}
+            </Link>{' '}
+            /
+            <Link to={`/${merchantId}/product/${productId}`} style={{ color: '#828282' }}>
+              {product.name}
+            </Link>{' '}
+            / Payment
+          </Title>
+        </Row>
         <Row align="middle">
           <Col lg={{ span: 12 }} span={24}>
             <PaymentProductCard

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Rate, Button, Alert, Modal } from 'antd';
-import { LinkOutlined, QrcodeOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+import { Card, Rate, Button, message, Modal } from 'antd';
+import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import { baseUrl } from '../../utils/baseUrl';
@@ -9,21 +10,32 @@ import QRCode from 'qrcode.react';
 
 const { Meta } = Card;
 
+const ImageContainer = styled.div`
+  position: relative;
+`;
+
+const StyledImage = styled.img`
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+`;
+
+const StyledOverlay = styled.div`
+  position: absolute;
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 2em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: 200px;
+`;
+
 export default class ProductCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: this.props.title,
-      imageUrl: this.props.imageUrl,
-      rating: this.props.rating,
-      productUrl: this.props.productUrl,
-      merchantId: this.props.merchantId,
-      productId: this.props.productId,
-      isOwnerShop: this.props.isOwnerShop,
-      copySuccess: false,
-      copyFailure: false,
-      isShowQR: false,
-    };
+    this.state = {};
   }
 
   componentDidMount = () => {};
@@ -31,16 +43,15 @@ export default class ProductCard extends React.Component {
   copyLinkToClipboard = (productLink) => {
     navigator.clipboard.writeText(productLink).then(
       () => {
-        console.log('Copied');
-        this.setState({
-          copySuccess: true,
-          copyFailure: false,
+        message.success({
+          content: `Successfully Copied to Clipboard!`,
+          duration: 5,
         });
       },
       () => {
-        this.setState({
-          copySuccess: false,
-          copyFailure: true,
+        message.error({
+          content: `Error Copying to Clipboard`,
+          duration: 5,
         });
       }
     );
@@ -58,62 +69,55 @@ export default class ProductCard extends React.Component {
     if (isOwnerShop) {
       return [
         <Button
-          type="primary"
-          style={{ backgroundColor: '#FAAA13' }}
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.copyLinkToClipboard(productLink);
           }}
         >
           <LinkOutlined />
-          Copy
         </Button>,
         <Button
-          type="primary"
+          style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
             this.showQRCode();
           }}
         >
           <QrcodeOutlined />
-          QR Code
         </Button>,
-        <Row>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Edit</Button>
-          </Col>
-          <Col span={12}>
-            <Button style={{ width: '100%' }}>Delete</Button>
-          </Col>
-        </Row>,
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
+          <EditOutlined />
+        </Button>,
+        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
+          <DeleteOutlined />
+        </Button>,
       ];
     }
     return [
       <Button
-        type="primary"
+        style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
           this.copyLinkToClipboard(productLink);
         }}
       >
         <LinkOutlined />
-        Copy
-      </Button>,
-      <Button
-        type="primary"
-        onClick={(event) => {
-          event.preventDefault();
-          this.showQRCode();
-        }}
-      >
-        <QrcodeOutlined />
-        QR Code
       </Button>,
     ];
   };
 
+  getCoverImage = (fullImageUrl, isSoldOut) => {
+    return (
+      <ImageContainer>
+        <StyledImage alt="example" src={fullImageUrl || MaiYuGe} />
+        {isSoldOut && <StyledOverlay>Sold Out</StyledOverlay>}
+      </ImageContainer>
+    );
+  };
+
   render() {
-    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop } = this.state;
+    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
 
     const productLink = `/${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
@@ -128,21 +132,19 @@ export default class ProductCard extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={productLink} size={256} />
+          <QRCode value={productId} size={256} />
         </Modal>
         <Link to={productLink}>
           <Card
             style={{ width: '100%', minWidth: 250 }}
-            cover={<img alt="example" src={fullImageUrl || MaiYuGe} />}
+            cover={this.getCoverImage(fullImageUrl, isSoldOut)}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
             actions={this.getActionList(productUrl, isOwnerShop)}
           >
-            <Meta title={title} description={<Rate value={this.props.rating} disabled />} />
+            <Meta title={title} description={<Rate value={this.props.rating || 5} disabled />} />
           </Card>
         </Link>
-        {this.state.copySuccess && <Alert message="Copied to Clipboard" type="success" showIcon closable />}
-        {this.state.copyFailure && <Alert message="Error Copying to Clipboard" type="error" showIcon closable />}
       </div>
     );
   }

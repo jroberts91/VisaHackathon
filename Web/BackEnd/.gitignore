@@ -4,3 +4,6 @@
 # cert and key
 /resources/cert.pem
 /resources/key.pem
+
+# env
+.env

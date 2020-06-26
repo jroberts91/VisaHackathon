@@ -35,6 +35,7 @@ app.use('/api/order', require('./routes/order'));
 app.use('/api/merchant', require('./routes/merchant'));
 app.use('/api/product', require('./routes/product'));
 app.use('/api/offers', require('./routes/offers'));
+app.use('/api/merchantLocator', require('./routes/merchantLocator'));
 
 //to retrieve images
 app.use('/uploads', express.static('uploads'));
