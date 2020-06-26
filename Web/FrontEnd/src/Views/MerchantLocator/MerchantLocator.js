@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Map from './Map';
-import { Row, Col, Form, Button, Input,Typography } from 'antd';
+import { Row, Col, Form, Button, Input, Typography } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 import Geocode from 'react-geocode';
@@ -92,13 +92,13 @@ function MerchantLocator() {
   return (
     <div>
       <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282', marginLeft:"120px" }}>
-            <SearchOutlined/> Maps
-          </Title>
+        <Title level={4} style={{ color: '#828282', marginLeft: '120px' }}>
+          <SearchOutlined /> Maps
+        </Title>
       </Row>
       <Row gutter={16}>
-        <Col span={10} style={{marginLeft:"70px"}}>
-          <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos}/>
+        <Col span={10} style={{ marginLeft: '70px' }}>
+          <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos} />
         </Col>
         <Col span={12}>
           <div style={{ padding: '40px' }}>

@@ -1,18 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import API from '../../utils/baseUrl';
-import {Row,Col,Form,Select} from 'antd'
+import { Row, Col, Form, Select } from 'antd';
 import { defaultTheme } from '../../utils/theme';
 import { PieChartOutlined } from '@ant-design/icons';
 import { renderActiveShapeSalesQuantity, renderActiveShapeSalesAmount } from './pieChartUtils';
-import {
-  PieChart,
-  Pie,
-  ResponsiveContainer,
-  Cell
-} from 'recharts';
+import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import GridLayout from 'react-grid-layout';
-import Linechart from './Linechart'
+import Linechart from './Linechart';
 
 const { Option } = Select;
 
@@ -111,52 +106,54 @@ export default class Dashboard extends React.Component {
       return null;
     }
     const { orders } = this.state;
-    let totalSales = 0 //totalSales
-    const dailyRevenue = [] //linechart
-    const salesAmountData = [] //piechart for sales amount
-    const salesQuantityData = [] //piechart for sales amount
+    let totalSales = 0; //totalSales
+    const dailyRevenue = []; //linechart
+    const salesAmountData = []; //piechart for sales amount
+    const salesQuantityData = []; //piechart for sales amount
 
-    let data = {} //dict to arrange data for line chart
-    let sales={} //key=name, val=[qty,amt] dict to arrange data for piecharts
-    for (var i=13;i>=0;i--){ //set keys for data, key = date
-        let index = {}
-        let d = new Date(Date.now() - (864e5)*i)
-        index.time = d
-        index.Revenue = 0
-        let key = d.getDate()+ d.getMonth()*28
-        data[key] = index
+    let data = {}; //dict to arrange data for line chart
+    let sales = {}; //key=name, val=[qty,amt] dict to arrange data for piecharts
+    for (var i = 13; i >= 0; i--) {
+      //set keys for data, key = date
+      let index = {};
+      let d = new Date(Date.now() - 864e5 * i);
+      index.time = d;
+      index.Revenue = 0;
+      let key = d.getDate() + d.getMonth() * 28;
+      data[key] = index;
     }
-    
-    if (orders){
-        let d = new Date(Date.now() - (864e5)*13) //date 14 days ago
-        orders.map(order=>{    
-            let orderDate = new Date(order.payment.dateTime)
-            if (orderDate>=d){ //check for valid order date
-                // set data for line chart
-                let totalPrice = order.quantity * order.product.price;
-                let key = orderDate.getDate() + orderDate.getMonth()*28
-                data[key].Revenue +=totalPrice;
-                //set data for piecharts and total sales
-                totalSales+= totalPrice;
-                let name = order.product.name;
-                if ((typeof sales[name])==='undefined'){
-                    sales[name]=[order.quantity,totalPrice]
-                }else{
-                    sales[name][0]+=order.quantity
-                    sales[name][1]+=totalPrice
-                }
-            }
-        })
-        for (const [key, value] of Object.entries(data)) {
-            value.time = value.time.toLocaleDateString()
-            dailyRevenue.push(value)
+
+    if (orders) {
+      let d = new Date(Date.now() - 864e5 * 13); //date 14 days ago
+      orders.map((order) => {
+        let orderDate = new Date(order.payment.dateTime);
+        if (orderDate >= d) {
+          //check for valid order date
+          // set data for line chart
+          let totalPrice = order.quantity * order.product.price;
+          let key = orderDate.getDate() + orderDate.getMonth() * 28;
+          data[key].Revenue += totalPrice;
+          //set data for piecharts and total sales
+          totalSales += totalPrice;
+          let name = order.product.name;
+          if (typeof sales[name] === 'undefined') {
+            sales[name] = [order.quantity, totalPrice];
+          } else {
+            sales[name][0] += order.quantity;
+            sales[name][1] += totalPrice;
+          }
         }
-        for (const [key, value] of Object.entries(sales)){
-            let a ={name:key,value:value[1]}
-            salesAmountData.push(a)
-            let q = {name:key, value:value[0]}
-            salesQuantityData.push(q)
-        }
+      });
+      for (const [key, value] of Object.entries(data)) {
+        value.time = value.time.toLocaleDateString();
+        dailyRevenue.push(value);
+      }
+      for (const [key, value] of Object.entries(sales)) {
+        let a = { name: key, value: value[1] };
+        salesAmountData.push(a);
+        let q = { name: key, value: value[0] };
+        salesQuantityData.push(q);
+      }
     }
 
     // colors used for the pie charts
@@ -166,15 +163,18 @@ export default class Dashboard extends React.Component {
       <>
         <StyledBreadCrumbsContainer>
           <Row>
-            <Col span={12}><PieChartOutlined style={{padding:"10px"}}/>Dashboard</Col>
             <Col span={12}>
-            <Form style={{marginTop:'10px'}} size='large'>
-              <Select defaultValue="Bi-Weekly">
-              <Option value='Bi-Weekly'>Bi-Weekly</Option>
-              <Option value="Monthly">Monthly</Option>
-              <Option value="Yearly">Yearly</Option>
-              </Select>
-            </Form>
+              <PieChartOutlined style={{ padding: '10px' }} />
+              Dashboard
+            </Col>
+            <Col span={12}>
+              <Form style={{ marginTop: '10px' }} size="large">
+                <Select defaultValue="Bi-Weekly">
+                  <Option value="Bi-Weekly">Bi-Weekly</Option>
+                  <Option value="Monthly">Monthly</Option>
+                  <Option value="Yearly">Yearly</Option>
+                </Select>
+              </Form>
             </Col>
           </Row>
         </StyledBreadCrumbsContainer>
@@ -255,10 +255,8 @@ export default class Dashboard extends React.Component {
             </ResponsiveContainer>
           </StyledDiv>
           <StyledDivBottom key="d">
-            <StyledTitleContainer style={{marginLeft:"10px"}}>Daily Revenue</StyledTitleContainer>
-            <Linechart 
-              data = {dailyRevenue}
-            />
+            <StyledTitleContainer style={{ marginLeft: '10px' }}>Daily Revenue</StyledTitleContainer>
+            <Linechart data={dailyRevenue} />
           </StyledDivBottom>
         </StyledContainer>
       </>

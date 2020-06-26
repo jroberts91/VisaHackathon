@@ -42,7 +42,10 @@ export default class AddProduct extends React.Component {
 
     const handleUpload = (info) => {
       if (info.fileList.length <= 4) {
-        formData.append('files', info.file);
+        formData.delete('files');
+        for (var value of info.fileList){
+          formData.append('files', value.originFileObj);
+        }
       } else {
         info.fileList.pop();
         message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
