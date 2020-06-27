@@ -5,7 +5,7 @@ import { Card, Rate, Button, message, Modal } from 'antd';
 import { LinkOutlined, QrcodeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
-import { baseUrl } from '../../utils/baseUrl';
+import { frontEndUrl, baseUrl } from '../../utils/baseUrl';
 import QRCode from 'qrcode.react';
 
 const { Meta } = Card;
@@ -72,7 +72,7 @@ export default class ProductCard extends React.Component {
           style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
-            this.copyLinkToClipboard(productLink);
+            this.copyLinkToClipboard(frontEndUrl + productLink);
           }}
         >
           <LinkOutlined />
@@ -99,7 +99,7 @@ export default class ProductCard extends React.Component {
         style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
-          this.copyLinkToClipboard(productLink);
+          this.copyLinkToClipboard(frontEndUrl + productLink);
         }}
       >
         <LinkOutlined />
@@ -117,9 +117,9 @@ export default class ProductCard extends React.Component {
   };
 
   render() {
-    const { title, imageUrl, rating, productUrl, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
+    const { title, imageUrl, rating, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
 
-    const productLink = `/${merchantId}/product/${productId}`;
+    const productLink = `${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
 
     return (
@@ -132,7 +132,7 @@ export default class ProductCard extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={productId} size={256} />
+          <QRCode value={frontEndUrl + productLink} size={256} />
         </Modal>
         <Link to={productLink}>
           <Card
@@ -140,7 +140,7 @@ export default class ProductCard extends React.Component {
             cover={this.getCoverImage(fullImageUrl, isSoldOut)}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
-            actions={this.getActionList(productUrl, isOwnerShop)}
+            actions={this.getActionList(productLink, isOwnerShop)}
           >
             <Meta title={title} description={<Rate value={this.props.rating || 5} disabled />} />
           </Card>
