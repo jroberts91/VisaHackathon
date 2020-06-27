@@ -26,22 +26,11 @@ const StyledText = styled(Text)`
 `;
 
 const StyledRegisterButton = styled(Button)`
-  right: 25px;
-  top: 15px;
-  position: absolute;
-  width: 90px;
+  margin-right: 10px;
 `;
 
 const StyledDropDownIcon = styled(DownOutlined)`
-  right: 110px;
-  top: 25px;
-  position: absolute;
-`;
-
-const StyledMenu = styled(Menu)`
-  width: 150px;
-  right: 50px;
-  position: absolute;
+  margin-right: 10px;
 `;
 
 const StyledMenuItem = styled(Menu.Item)`
@@ -49,15 +38,11 @@ const StyledMenuItem = styled(Menu.Item)`
 `;
 
 const StyledAvatar = styled(Avatar)`
-  right: 135px;
-  top: 11px;
-  position: absolute;
+  margin-right: 10px;
 `;
 
 const StyledsUserName = styled(Text)`
-  right: 185px;
-  top: 0;
-  position: absolute;
+  margin-right: 10px;
 `;
 
 export default class TopBar extends React.Component {
@@ -112,18 +97,21 @@ export default class TopBar extends React.Component {
 
     let buttons;
     const menu = (
-      <StyledMenu>
+      <Menu>
         <StyledMenuItem>
           <Link to={`/profile/${merchantId}`}>Profile</Link>
         </StyledMenuItem>
         <StyledMenuItem onClick={handleLogoutClick}>Logout</StyledMenuItem>
-      </StyledMenu>
+      </Menu>
     );
 
     if (isLoggedIn) {
       buttons = (
         <Dropdown overlay={menu} trigger={['click']}>
-          <div onClick={(e) => e.preventDefault()} style={{ cursor: 'pointer' }}>
+          <div
+            onClick={(e) => e.preventDefault()}
+            style={{ cursor: 'pointer', width: 'fit-content', display: 'inline-table', float: 'right' }}
+          >
             <StyledsUserName>{username}</StyledsUserName>
             <StyledAvatar src={`${baseUrl}${profileImage}`} />
             <StyledDropDownIcon />
