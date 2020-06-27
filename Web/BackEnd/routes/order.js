@@ -16,7 +16,7 @@ router.post('/fulfill', auth, async (req, res) => {
   order.dateTimeFulfilled = Date.now();
   order.save(async (err) => {
     if (err) return res.json({ success: false, err });
-    await SendFulfillEmail(order.email);
+    await SendFulfillEmail(order.email, order._id);
     return res.json({ success: true });
   });
 });
