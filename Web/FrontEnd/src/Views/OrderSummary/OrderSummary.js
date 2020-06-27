@@ -17,7 +17,8 @@ export default class OrderSummary extends React.Component {
       order: null,
       // only available when successful payment routes to order summary page
       // added null check to access order summary from email
-      isSuccessfulPaymentJustMade: this.props.location.state != null ? this.props.location.state.isSuccessfulPaymentJustMade || false : false,
+      isSuccessfulPaymentJustMade:
+        this.props.location.state != null ? this.props.location.state.isSuccessfulPaymentJustMade || false : false,
     };
   }
 
