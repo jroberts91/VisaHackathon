@@ -139,7 +139,7 @@ export default class ProductDetail extends React.Component {
             <Col key={1} span={12}>
               <Link
                 style={{ float: 'right', marginRight: '20%' }}
-                to={"/" + paymentLink + '/payment?qty=' + this.state.quantity}
+                to={'/' + paymentLink + '/payment?qty=' + this.state.quantity}
               >
                 <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
                   Buy Now
