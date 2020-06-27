@@ -178,20 +178,17 @@ export default class PaymentForm extends React.Component {
           <Input />
         </Form.Item>
         <Form.Item
-          help={
-            <Tooltip placement="topRight" title="CVV number is the 3 digit number on the back of your Visa card.">
-              <QuestionCircleOutlined />
-            </Tooltip>
-          }
           name={['card', 'cvv']}
           label="CVV number"
           rules={[
             {
               required: true,
+              pattern: new RegExp('/^[0-9]{3,4}$/'),
+              message: 'CVV is the 3/4 digit number on the back of your Visa card.',
             },
           ]}
         >
-          <Input />
+          <Input.Password />
         </Form.Item>
         <Row align="middle" justify="center" style={{ marginLeft: '150px' }}>
           <Col span={12} align="center">

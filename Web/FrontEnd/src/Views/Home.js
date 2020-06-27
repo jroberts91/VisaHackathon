@@ -14,6 +14,7 @@ import AddProduct from './AddProduct/AddProduct';
 import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
 import MerchantLocator from './MerchantLocator/MerchantLocator';
+import ContactUs from './ContactUs/ContactUs';
 import API from '../utils/baseUrl';
 
 export default class Home extends React.Component {
@@ -41,7 +42,6 @@ export default class Home extends React.Component {
           merchantId: _id,
         });
       }
-      console.log(res);
       this.setState({ isMounted: true });
     });
   };
@@ -60,11 +60,11 @@ export default class Home extends React.Component {
   };
 
   render() {
-    const { collapsed, isLoggedIn, username, merchantId, isMounted } = this.state;
-    const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
-    if (!isMounted) {
+    if (!this.state.isMounted) {
       return null; // only return the content when user is finished authenticating
     }
+    const { collapsed, isLoggedIn, username, merchantId } = this.state;
+    const toggleSideDrawer = () => this.setState({ collapsed: !collapsed });
     return (
       <Layout>
         <SideBar collapsed={collapsed} isLoggedIn={isLoggedIn} merchantId={merchantId} />
@@ -80,7 +80,7 @@ export default class Home extends React.Component {
           />
           <Switch>
             {isLoggedIn ? (
-              <Route path="/" exact component={Dashboard} />
+              <Route path="/" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
             ) : (
               <Route path="/" exact component={HomeBody} />
             )}
@@ -96,14 +96,15 @@ export default class Home extends React.Component {
             )}
             {!isLoggedIn && <Route path="/offers" component={OfferPage} />}
             {!isLoggedIn && <Route path="/merchantLocator" component={MerchantLocator} />}
+            {<Route path="/contactUs" component={ContactUs} />}
             <Route
               path="/:merchantId/product/:productId"
               exact
-              render={(props) => <ProductPage loggedInId={merchantId} {...props} />}
+              render={(props) => <ProductPage loggedInId={merchantId} isLoggedIn={isLoggedIn} {...props} />}
             />
             <Route
               path="/:merchantId/product/:productId/payment"
-              render={(props) => <Payment loggedInUserId={merchantId} {...props} />}
+              render={(props) => <Payment loggedInUserId={merchantId} isLoggedIn={isLoggedIn} {...props} />}
             />
             <Route path="/order/:orderId" component={OrderSummary} history={this.props.history} />
             <Route path="/:merchantId" exact render={(props) => <MerchantShop loggedInId={merchantId} {...props} />} />

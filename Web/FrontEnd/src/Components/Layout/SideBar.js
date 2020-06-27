@@ -12,6 +12,7 @@ import {
   ShopOutlined,
   PieChartOutlined,
   SearchOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -56,15 +57,50 @@ export default class SideBar extends React.Component {
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
     const merchantLocator = '/merchantLocator';
+    const contactLink = '/contactUs';
+
+    const getSelectedMerchantMenuItem = () => {
+      const currentPath = window.location.pathname;
+      if (currentPath === '/') {
+        return '1';
+      }
+      if (currentPath === myShopLink) {
+        return '2';
+      }
+      if (currentPath === salesHistoryLink) {
+        return '3';
+      }
+      if (currentPath === contactLink) {
+        return '4';
+      }
+    };
+
+    const getSelectedBuyerMenuItem = () => {
+      const currentPath = window.location.pathname;
+      console.log(currentPath);
+      if (currentPath === '/') {
+        return '1';
+      }
+      if (currentPath === offersLink) {
+        return '2';
+      }
+      if (currentPath === merchantLocator) {
+        return '3';
+      }
+      if (currentPath === contactLink) {
+        return '4';
+      }
+    };
+
     if (isLoggedIn) {
       buttons = (
-        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={[getSelectedMerchantMenuItem()]}>
           <StyledMenuItem key="1" icon={<PieChartOutlined />}>
             Dashboard
             <Link to="/" />
           </StyledMenuItem>
 
-          <StyledMenuItem key="2" icon={<ShopOutlined />}>
+          <StyledMenuItem key="2" icon={<ShopOutlined />} selected={true}>
             My Shop
             <Link to={myShopLink} />
           </StyledMenuItem>
@@ -73,11 +109,16 @@ export default class SideBar extends React.Component {
             Sales History
             <Link to={salesHistoryLink} />
           </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+            Contact Us
+            <Link to={contactLink} />
+          </StyledMenuItem>
         </StyledMenu>
       );
     } else {
       buttons = (
-        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+        <StyledMenu theme="dark" mode="inline" defaultSelectedKeys={[getSelectedBuyerMenuItem()]}>
           <StyledMenuItem key="1" icon={<HomeOutlined />}>
             Home
             <Link to="/" />
@@ -91,6 +132,11 @@ export default class SideBar extends React.Component {
           <StyledMenuItem key="3" icon={<SearchOutlined />}>
             Maps
             <Link to={merchantLocator} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+            Contact Us
+            <Link to={contactLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
