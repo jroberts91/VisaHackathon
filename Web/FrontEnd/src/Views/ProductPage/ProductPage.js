@@ -82,7 +82,7 @@ export default class ProductPage extends React.Component {
   render() {
     const { merchant, product, merchantId, productId, isOwnerShop } = this.state;
     const { isLoggedIn } = this.props;
-    const paymentLink = '/' + merchantId + '/product/' + productId + '/payment';
+    const paymentLink = `${merchantId}/product/${productId}`;
 
     let headerName;
 
