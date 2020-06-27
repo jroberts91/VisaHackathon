@@ -67,7 +67,6 @@ export default class MainTabs extends React.Component {
           }}
           options={{
             tabBarButton: () => null,
-            tabBarVisible: false, // if you don't want to see the tab bar
           }}
         />
       </Tab.Navigator>
