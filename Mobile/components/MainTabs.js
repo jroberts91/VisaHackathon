@@ -58,13 +58,16 @@ export default class MainTabs extends React.Component {
             openDrawer: this.props.navigation.openDrawer,
           }}
         />
-        
         <Tab.Screen
           name="Payment"
           component={MainContainer}
           initialParams={{
             pageName: 'Payment',
             openDrawer: this.props.navigation.openDrawer,
+          }}
+          options={{
+            tabBarButton: () => null,
+            tabBarVisible: false, // if you don't want to see the tab bar
           }}
         />
       </Tab.Navigator>
