@@ -95,7 +95,7 @@ export default class ProductDetail extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={frontEndUrl + paymentLink} size={256} />
+          <QRCode value={`${frontEndUrl}${paymentLink}`} size={256} />
         </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>{description || 'No Description Provided'}</Col>
@@ -126,7 +126,7 @@ export default class ProductDetail extends React.Component {
         <Row gutter={[32, 32]}>
           <Col key={2} span={12} style={{ fontSize: '1.1em', color: '#1A1F71' }}>
             Share:&nbsp;&nbsp;
-            <WhiteButton onClick={() => this.copyLinkToClipboard(frontEndUrl + paymentLink)}>
+            <WhiteButton onClick={() => this.copyLinkToClipboard(`${frontEndUrl}${paymentLink}`)}>
               <LinkOutlined />
             </WhiteButton>
             {isOwnerShop && (
@@ -139,7 +139,7 @@ export default class ProductDetail extends React.Component {
             <Col key={1} span={12}>
               <Link
                 style={{ float: 'right', marginRight: '20%' }}
-                to={'/' + paymentLink + '/payment?qty=' + this.state.quantity}
+                to={`/${paymentLink}/payment?qty=${this.state.quantity}`}
               >
                 <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
                   Buy Now

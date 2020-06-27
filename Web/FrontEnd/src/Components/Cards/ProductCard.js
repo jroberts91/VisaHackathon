@@ -72,7 +72,7 @@ export default class ProductCard extends React.Component {
           style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
-            this.copyLinkToClipboard(frontEndUrl + productLink);
+            this.copyLinkToClipboard(`${frontEndUrl}${productLink}`);
           }}
         >
           <LinkOutlined />
@@ -99,7 +99,7 @@ export default class ProductCard extends React.Component {
         style={{ backgroundColor: '#fafafa', border: '0' }}
         onClick={(event) => {
           event.preventDefault();
-          this.copyLinkToClipboard(frontEndUrl + productLink);
+          this.copyLinkToClipboard(`${frontEndUrl}${productLink}`);
         }}
       >
         <LinkOutlined />
@@ -132,7 +132,7 @@ export default class ProductCard extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={frontEndUrl + productLink} size={256} />
+          <QRCode value={`${frontEndUrl}${productLink}`} size={256} />
         </Modal>
         <Link to={productLink}>
           <Card
