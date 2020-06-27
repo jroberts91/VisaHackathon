@@ -183,7 +183,8 @@ export default class PaymentForm extends React.Component {
           rules={[
             {
               required: true,
-              pattern: new RegExp('/^[0-9]{3,4}$/'),
+              pattern: new RegExp('^[0-9]{3,4}$'),
+      //        pattern: new RegExp('/^[0-9]{3,4}$/'),
               message: 'CVV is the 3/4 digit number on the back of your Visa card.',
             },
           ]}
