@@ -26,6 +26,9 @@ const StyledText = styled(Text)`
 `;
 
 const StyledRegisterButton = styled(Button)`
+  top: 15px;
+  right: 35px;
+  position: absolute;
   margin-right: 10px;
 `;
 
