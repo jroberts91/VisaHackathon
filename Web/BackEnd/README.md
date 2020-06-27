@@ -96,6 +96,28 @@ Response
 }
 ```
 
+- POST '/mobile' makes a payment from mobile, all fields are required
+
+```json
+Request
+
+{
+    "cardNumber": "4000879637857889",
+    "expiryDate": "date",
+    "cvv": "123",
+    "productId": "5ef1a7581198af414c0d28d7",
+    "quantity": 3
+}
+
+Response
+
+{
+    "success": true,
+    "orderId": "5ef5b9aafefd930df0473cea",
+    "paymentId": "5ef5b9aafefd930df0473ce9"
+}
+```
+
 ## api/order
 
 - POST '/fulfill' fulfill and order. Fulfilled order will have no changes.
