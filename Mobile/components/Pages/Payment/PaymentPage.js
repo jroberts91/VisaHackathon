@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Keyboard } from 'react-native';
+import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Input } from 'react-native-elements'
-import API, { baseUrl } from '../../utils/baseUrl';
-import NumericInput from 'react-native-numeric-input';
+import { Input } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -12,8 +11,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   paymentHeader: {
-    position: 'absolute',
-    top: '10%',
+    bottom: '10%',
     textAlign: 'center',
     width: '80%',
     fontSize: 24,
@@ -73,25 +71,95 @@ export default class PaymentPage extends React.Component {
     cardNumber: null,
     expiryDate: null,
     cvv: null,
+    headerVisible: true
   };
 
-  componentDidMount() { }
+  componentDidMount() {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
+  }
+
+  componentWillUnmount() {
+    Keyboard.removeListener('keyboardDidHide', this._keyboardDidHide);
+    Keyboard.removeListener('keyboardDidShow', this._keyboardDidShow);
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({
+      headerVisible: false
+    })
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({
+      headerVisible: true
+    })
+  }
 
   sendPayment() {
 
   }
 
+  attemptPayment() {
+    const { cardNumber, expiryDate, cvv } = this.state;
+    if (cardNumber === null) {
+      this.setState({cardNumber: ''});
+    } 
+    if (expiryDate === null) {
+      this.setState({expiryDate: ''});
+    } 
+    if (cvv === null) {
+      this.setState({cvv: ''});
+    } 
+    if (cardNumber !== '' && cardNumber !== null 
+    && expiryDate !== '' && expiryDate !== null 
+    && cvv !== '' && cvv !== null) {
+      this.captchaForm.show();
+    }
+  }
+
+  onMessage = event => {
+    if (event && event.nativeEvent.data) {
+      if (['cancel', 'error', 'expire'].includes(event.nativeEvent.data)) {
+        this.captchaForm.hide();
+        return;
+      } else {
+        console.log('Verified code from Google', event.nativeEvent.data);
+        setTimeout(() => {
+          this.captchaForm.hide();
+        }, 5000);
+      }
+    }
+  };
+
+  getCardErrorMsg(field) {
+    if (field === "") {
+      return 'This field cannot be left empty';
+    }
+    return ''
+  }
+
   render() {
     return (
       <View style={styles.centeredView}>
-        <Text style={styles.paymentHeader}>Total Amount: $5.00</Text>
+        {
+          this.state.headerVisible &&
+          <Text style={styles.paymentHeader}>Total Amount: $5.00</Text>
+        }
+
         <Input
           inputContainerStyle={styles.cardInput}
           label='Card Number'
           placeholder='0000-0000-0000-0000'
           onChangeText={value => this.setState({ cardNumber: value })}
           errorStyle={{ color: 'red' }}
-          errorMessage=''
+          errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
           leftIcon={
             <Icon
               name='credit-card'
@@ -99,9 +167,9 @@ export default class PaymentPage extends React.Component {
             />
           }
           rightIcon={
-            <Image 
-            style={styles.tinyLogo}  
-            source={require('../../../images/visa-logo.png') } />
+            <Image
+              style={styles.tinyLogo}
+              source={require('../../../images/visa-logo.png')} />
           }
         />
         <View style={styles.cardContainer}>
@@ -111,6 +179,8 @@ export default class PaymentPage extends React.Component {
             label='Expires'
             placeholder='MM/YY'
             onChangeText={value => this.setState({ expiryDate: value })}
+            errorStyle={{ color: 'red' }}
+            errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
           />
           <Input
             containerStyle={styles.inputContainer}
@@ -118,15 +188,24 @@ export default class PaymentPage extends React.Component {
             label='CVV'
             placeholder='000'
             onChangeText={value => this.setState({ cvv: value })}
+            errorStyle={{ color: 'red' }}
+            errorMessage={this.getCardErrorMsg(this.state.cvv)}
           />
         </View>
-        <View style={styles.payButton}>
-        <Button 
-          raised='true'
-          color='#1a1f71'
-          title="Pay with Visa"
-          onPress={() => this.sendPayment()}
+        <ConfirmGoogleCaptcha
+          ref={_ref => this.captchaForm = _ref}
+          siteKey={'6Lc_EqoZAAAAAGAzCKHzo2bEWXIvnMtETb9blmyq'}
+          baseUrl={'exp://192.168.0.188:19000'}
+          languageCode='en'
+          onMessage={this.onMessage}
         />
+        <View style={styles.payButton}>
+          <Button
+            raised='true'
+            color='#1a1f71'
+            title="Pay with Visa"
+            onPress={() => this.attemptPayment()}
+          />
         </View>
       </View>
     );
