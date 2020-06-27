@@ -1,10 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import TopBar from './TopComponents/TopBar';
-import HomePage from './Pages/Home/HomePage';
 import ScanPage from './Pages/Scan/ScanPage';
-import ProfilePage from './Pages/Profile/ProfilePage';
-import PaymentPage from './Pages/Payment/PaymentPage';
+import Cart from './Pages/Cart/Cart';
 
 const styles = StyleSheet.create({
   main: {
@@ -18,8 +16,7 @@ export default class MainContainer extends React.Component {
     return (
       <View style={styles.main}>
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
-        {pageName === 'Home' && <HomePage />}
-        {pageName === 'Profile' && <PaymentPage />}
+        {pageName === 'Cart' && <Cart />}
         {pageName === 'Scan' && <ScanPage />}
         {pageName === 'Payment' && <PaymentPage />}
       </View>

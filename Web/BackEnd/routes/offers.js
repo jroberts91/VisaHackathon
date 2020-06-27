@@ -31,12 +31,47 @@ router.get("/list", async (req, res) => {
     config.params = {max_offers: parseInt(max)};
     axios(config).then(function (response) {
         var data = response.data;
-        data.success = true;
-        return res.json(data)
+        return res.json(minimizeAndReturnOfferResponse(data));
     }).catch(function (error) {
         console.log(error);
         return res.json({success: false, err})
     });
 });
+
+/**
+ * Map offer to required offer paramters.
+ * @param {vmorc resp} data 
+ */
+function minimizeAndReturnOfferResponse(data) {
+    let response = {
+        "success": true,
+        "ReturnedResults": data.ReturnedResults,
+        "TotalFoundResults": data.TotalFoundResults,
+        "Offers": []
+    }
+    var offers = data.Offers;
+    for (var i in offers) {
+        response.Offers.push(
+            {
+                "programName": offers[i].programName,
+                "programId": offers[i].programId,
+                "merchantName": offers[i].merchantList[0].merchant,
+                "merchantId": offers[i].merchantList[0].merchantId,
+                "soldOut": offers[i].soldOut,
+                "offerTitle": offers[i].offerTitle,
+                "validityFromDateTime": offers[i].validityFromDateTime,
+                "validityToDateTime": offers[i].validityToDateTime,
+                "promotionFromDateTime": offers[i].promotionFromDateTime,
+                "promotionToDateTime": offers[i].promotionToDateTime,
+                "imageList": offers[i].imageList,
+                "redemptionUrl": offers[i].redemptionUrl,
+                "redemptionEmail": offers[i].redemptionEmail,
+                "redemptionCode": offers[i].redemptionCode,
+
+            }
+        )
+    }
+    return response;
+}
 
 module.exports = router;

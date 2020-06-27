@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Modal, TouchableHighlight, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import API, { baseUrl } from '../../utils/baseUrl';
 import NumericInput from 'react-native-numeric-input';
