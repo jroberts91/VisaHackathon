@@ -28,7 +28,7 @@ router.get('/emailExist', async (req, res) => {
   return res.json({ success: true });
 });
 
-router.post('/register',imageUpload, async (req, res) => {
+router.post('/register', imageUpload, async (req, res) => {
   //hashing password
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -91,7 +91,7 @@ router.post('/uploadProfileImage', auth, imageUpload, (req, res) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).send({
       success: true,
-      profileImage: req.files[0].path
+      profileImage: req.files[0].path,
     });
   });
 });
@@ -134,15 +134,13 @@ router.get('/get', async (req, res) => {
     const merchant = await Merchant.findOne({ _id: merchantId });
     if (!merchant) return res.status(400).json({ success: false });
     return res.status(200).json({ success: true, merchant: merchant });
-  }
-  else return res.json({ success: false });
-  
+  } else return res.json({ success: false });
 });
 
 router.post('/editProfile', auth, (req, res) => {
-  Merchant.findOneAndUpdate({ _id: req.merchant._id },{"$set": req.body} , (err, doc) => {
+  Merchant.findOneAndUpdate({ _id: req.merchant._id }, { $set: req.body }, (err, doc) => {
     if (err) return res.json({ success: false, err });
-    return res.json({success: true,});
+    return res.json({ success: true });
   });
 });
 
