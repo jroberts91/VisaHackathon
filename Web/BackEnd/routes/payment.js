@@ -12,60 +12,80 @@ const { SendPaymentEmail } = require('../external/smtpService');
 //=================================
 
 router.post('/mobile', async (req, res) => {
-  let productId = req.body.productId;
-  const product = await Product.findOne({ _id: productId });
-  if (!product) return res.json({ success: false });
+  let merchantId = req.body.merchantId;
+  const merchant = await Merchant.findOne({ _id: merchantId });
+  if (!merchant) return res.json({ success: false, msg: 'merchant not found' });
 
-  if (req.body.quantity < 0) {
-    console.log('product qty cannot be zero');
-    return res.json({ success: false });
-  }
-  // check if there is qty available
-  let newSoldQty = parseInt(req.body.quantity) + product.soldQty;
-  if (newSoldQty > product.totalQty) {
-    console.log('product not available');
-    return res.json({ success: false });
-  }
+  var cart = req.body.cart;
+  for (var i in cart) {
+    let productId = cart[i].productId;
+    const product = await Product.findOne({ _id: productId });
+    if (!product) return res.json({ success: false, msg: 'product not found' });
 
-  let paymentJson = {
-    firstName: 'Mobile user',
-    lastName: 'Mobile user',
-    dateTime: Date.now(),
-  };
-  const payment = new Payment(paymentJson);
-  // order is created after payment is saved
+    if (cart[i].quantity < 0) {
+      console.log('product qty cannot be zero');
+      return res.json({ success: false });
+    }
 
-  let orderJson = {
-    merchantId: product.merchantId,
-    product: product,
-    isFulfilled: true,
-    dateTimeFulfilled: Date.now(),
-  };
+    // check product belong to merchant
+    if (product.merchantId != merchantId) {
+      console.log('merchantId does not match under product');
+      return res.json({ success: false });
+    }
+    // check if there is qty available
+    let newSoldQty = parseInt(cart[i].quantity) + product.soldQty;
+    if (newSoldQty > product.totalQty) {
+      console.log('product not available');
+      return res.json({ success: false });
+    }
 
-  const order = new Order(orderJson);
-  try {
-    // pull from consumer
-    await PullFundsTransaction();
-    // push to merchant
-    await PushFundsTransaction();
-    // save only if succesful
-  } catch (err) {
-    console.log(err);
-    return res.json({ success: false, err });
-  }
+    let paymentJson = {
+      firstName: 'Mobile user',
+      lastName: 'Mobile user',
+      dateTime: Date.now(),
+    };
+    const payment = new Payment(paymentJson);
+    // order is created after payment is saved
 
-  // update product qty
-  await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
+    let orderJson = {
+      merchantId: product.merchantId,
+      product: product,
+      isFulfilled: true,
+      dateTimeFulfilled: Date.now(),
+      quantity: parseInt(cart[i].quantity),
+    };
 
-  await payment.save(async function (err, payment) {
-    if (err) return res.json({ success: false, err });
-    order.payment = payment;
-    await order.save(async function (err, order) {
+    const order = new Order(orderJson);
+    try {
+      // pull from consumer
+      await PullFundsTransaction();
+      // push to merchant
+      await PushFundsTransaction();
+      // save only if succesful
+    } catch (err) {
+      console.log(err);
+      return res.json({ success: false, err });
+    }
+
+    // update product qty
+    await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
+
+    await payment.save(async function (err, payment) {
       if (err) return res.json({ success: false, err });
-      return res.json({ success: true, orderId: order._id, paymentId: order.payment._id });
+      order.payment = payment;
+      await order.save(async function (err, order) {
+        if (err) return res.json({ success: false, err });
+      });
     });
-  });
+  }
+  return res.json({ success: true });
 });
+
+async function createOrderAndPayForEach(cart, merchantId) {
+  var resBody = { success: true, orders: [] };
+
+  return resBody;
+}
 
 router.post('/direct', async (req, res) => {
   // validate order info and create payment
