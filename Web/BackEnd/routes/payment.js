@@ -67,8 +67,8 @@ router.post('/mobile', async (req, res) => {
       return res.json({ success: false, err });
     }
 
-  // update product qty
-  await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
+    // update product qty
+    await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
 
     await payment.save(async function (err, payment) {
       if (err) return res.json({ success: false, err });
