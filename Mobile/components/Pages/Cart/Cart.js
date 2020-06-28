@@ -91,9 +91,13 @@ export default class Cart extends React.Component {
   render() {
     const { products } = this.state;
     const { users } = this.props;
-    if (products == null) { // haven't finished loading from local storage
+    if (products == null) {
+      // haven't finished loading from local storage
       return null;
     }
+
+    // TODO: get navigation passed param and display success message
+
     return (
       <View style={styles.main}>
         <FlatList
