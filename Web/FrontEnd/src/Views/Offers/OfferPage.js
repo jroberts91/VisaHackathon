@@ -83,7 +83,7 @@ export default class OfferPage extends React.Component {
               <TagOutlined /> Offers
             </Title>
           </Row>
-          <Title level={4}>Visa Offers</Title>
+          <Title level={4}>Visa</Title>
           <div
             style={{
               paddingBottom: '30px',
@@ -117,7 +117,7 @@ export default class OfferPage extends React.Component {
               })}
             </Carousel>
           </div>
-          <Title level={4}>Visell Offers</Title>
+          <Title level={4}>Visell</Title>
           <div
             style={{
               paddingBottom: '30px',
