@@ -95,7 +95,7 @@ export default class ProductDetail extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={`${frontEndUrl}${paymentLink}`} size={256} />
+          <QRCode value={productId} size={256} />
         </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>{description || 'No Description Provided'}</Col>
