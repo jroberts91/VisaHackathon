@@ -59,7 +59,7 @@ class ScanPage extends Component {
         ) : this.state.isShowProductPage ? (
           <ProductPage
             isShowProductPage={this.state.isShowProductPage}
-            setisShowProductPage={this.setIsShowProductPage}
+            setIsShowProductPage={this.setIsShowProductPage}
             setClearLastScannedId={this.setClearLastScannedId}
             productId={this.state.lastScannedId}
           />

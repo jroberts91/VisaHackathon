@@ -132,7 +132,7 @@ export default class ProductCard extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={`${frontEndUrl}${productLink}`} size={256} />
+          <QRCode value={productId} size={256} />
         </Modal>
         <Link to={productLink}>
           <Card

@@ -21,7 +21,7 @@ export default class MainTabs extends React.Component {
               iconName = 'qrcode';
               typeName = 'font-awesome-5';
               solid = focused ? true : false;
-            } 
+            }
 
             // You can return any component that you like here!
             return <Icon name={iconName} size={size} color={color} solid={solid} type={typeName} />;
@@ -48,7 +48,7 @@ export default class MainTabs extends React.Component {
             openDrawer: this.props.navigation.openDrawer,
             openMessage: this.props.navigation.push,
           }}
-          options={{ tabBarVisible: true }}
+          options={{ tabBarVisible: true, unmountOnBlur: true }}
         />
         <Tab.Screen
           name="Scan"
