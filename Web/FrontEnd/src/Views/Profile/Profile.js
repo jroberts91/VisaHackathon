@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { Row, Col, Layout, Typography, message, Empty, Radio, Input, Button, Upload, Tooltip } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { baseUrl } from '../../utils/baseUrl';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
-const { Text } = Typography;
+const { Text, Title } = Typography;
 const { TextArea } = Input;
 
 const ModeContainer = styled.div`
@@ -261,7 +262,18 @@ export default class Profile extends React.Component {
   };
 
   render() {
-    const { name, email, description, profileImage, phone, cardNumber, address, isMounted, mode } = this.state;
+    const {
+      name,
+      email,
+      description,
+      profileImage,
+      phone,
+      cardNumber,
+      address,
+      isMounted,
+      mode,
+      merchantId,
+    } = this.state;
     const {
       editedName,
       editedDescription,
@@ -286,6 +298,13 @@ export default class Profile extends React.Component {
 
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
+        <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+          <Title level={4} style={{ color: '#828282' }}>
+            <Link style={{ color: '#828282' }} to={`/profile/${merchantId}`}>
+              <UserOutlined /> My Profile
+            </Link>{' '}
+          </Title>
+        </Row>
         <ModeContainer>
           <Text strong style={{ marginRight: '10px' }}>
             Mode:
@@ -295,7 +314,7 @@ export default class Profile extends React.Component {
             <Radio value="edit">Edit</Radio>
           </Radio.Group>
         </ModeContainer>
-        <Row align="middle" style={{ height: '100%' }}>
+        <Row align="middle" style={{ marginTop: '15%' }}>
           <Col lg={{ span: 12 }} span={24}>
             <LeftProfileSection
               mode={mode}

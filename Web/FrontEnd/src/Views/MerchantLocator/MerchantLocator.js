@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Map from './Map';
-import { Row, Col, Form, Button, Input } from 'antd';
+import { Row, Col, Form, Button, Input, Select, Tooltip, Typography } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import Geocode from 'react-geocode';
 Geocode.setApiKey('AIzaSyDD_LZoOgt7th9UQVMl2nGbJ3_N-TOvRz4');
+
+const { Option } = Select;
+const { Title } = Typography;
 
 function MerchantLocator() {
   const [Name, setName] = useState('Starbucks');
@@ -13,11 +18,13 @@ function MerchantLocator() {
   const [VisaMerch, setVisaMerch] = useState([]);
   const [Visell, setVisell] = useState([]);
   const [VisellPos, setVisellPos] = useState([]);
+  const [VisellMerchants, setVisellMerchants] = useState([]);
 
   useEffect(() => {
     API.post('api/merchant/getAll').then((res) => {
       if (res.data.success === true) {
         let all = [];
+        setVisellMerchants(res.data.merchants);
         res.data.merchants.map((merchant) => {
           Geocode.fromAddress(merchant.address).then(
             (response) => {
@@ -38,8 +45,8 @@ function MerchantLocator() {
     setName(event.currentTarget.value);
   };
 
-  const onVnameChange = (event) => {
-    setVname(event.currentTarget.value);
+  const onVnameChange = (value) => {
+    setVname(value);
   };
 
   const onMerchantSubmit = (event) => {
@@ -87,14 +94,26 @@ function MerchantLocator() {
   };
 
   return (
-    <div>
-      <Row gutter={16}>
-        <Col span={12}>
+    <div style={{ height: '100%' }}>
+      <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+        <Title level={4} style={{ color: '#828282', marginLeft: '120px' }}>
+          <SearchOutlined /> Maps
+        </Title>
+      </Row>
+      <Row gutter={16} align="middle">
+        <Col span={10} style={{ marginLeft: '70px' }}>
           <Map setCoord={setCoord} visaMerch={VisaMerch} visell={Visell} visellPos={VisellPos} />
         </Col>
         <Col span={12}>
-          <div style={{ padding: '40px' }}>
-            <h2>Merchant Locator</h2>
+          <div style={{ margin: '0 auto', maxWidth: '600px' }}>
+            <span style={{ fontSize: '25px', color: 'black', fontWeight: 500 }}>Visa Verified Merchant Locator</span>
+            <Tooltip
+              placement="top"
+              title="Search for merchants that are Visa verified!"
+              style={{ marginLeft: '10px' }}
+            >
+              <QuestionCircleOutlined style={{ marginLeft: '10px' }} />
+            </Tooltip>
             <Form onSubmit={onMerchantSubmit} layout={'vertical'} size={'large'}>
               <Form.Item label={<p style={{ fontSize: '20px', marginBottom: '-18px' }}>Merchant Name</p>}>
                 <Input placeholder="merchant name" onChange={onNameChange} value={Name} />
@@ -103,10 +122,26 @@ function MerchantLocator() {
             </Form>
             <br />
             <br />
-            <h2>Visell Locator</h2>
+            <span style={{ fontSize: '25px', color: 'black', fontWeight: 500 }}>Visell Merchant Locator</span>
+            <Tooltip
+              placement="top"
+              title="Search for Visell merchants' physical store locations!"
+              style={{ marginLeft: '10px' }}
+            >
+              <QuestionCircleOutlined style={{ marginLeft: '10px' }} />
+            </Tooltip>
             <Form onSubmit={onVisellSubmit} layout={'vertical'} size={'large'}>
               <Form.Item label={<p style={{ fontSize: '20px', marginBottom: '-18px' }}>Merchant Name</p>}>
-                <Input placeholder="Visell Merchant Name" onChange={onVnameChange} value={Vname} />
+                <Form.Item name={['visellMerchantName']} noStyle>
+                  <Select
+                    placeholder="Check out where some of the Visell merchants are located at"
+                    onChange={onVnameChange}
+                  >
+                    {VisellMerchants.map((merchant) => {
+                      return <Option value={merchant.name}>{merchant.name}</Option>;
+                    })}
+                  </Select>
+                </Form.Item>
               </Form.Item>
               <Button onClick={onVisellSubmit}>Search</Button>
             </Form>

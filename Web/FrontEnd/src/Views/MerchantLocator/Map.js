@@ -114,31 +114,28 @@ function Map(props) {
     setLng(lng);
   };
   return (
-    <div>
-      <div
-        style={{
-          width: '500px',
-          height: '500px',
-          marginLeft: '50px',
-          marginTop: '50px',
-          border: 'solid',
-          borderWidth: 'thin',
-        }}
-      >
-        <WrappedMap
-          googleMapURL={
-            'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDD_LZoOgt7th9UQVMl2nGbJ3_N-TOvRz4'
-          }
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `100%` }} />}
-          mapElement={<div style={{ height: `100%` }} />}
-          coord={{ lat: InitLat, lng: InitLng }}
-          getCP={getCenter}
-          visa={props.visaMerch}
-          visell={props.visell}
-          visellPos={props.visellPos}
-        />
-      </div>
+    <div
+      style={{
+        width: '500px',
+        height: '500px',
+        border: 'solid',
+        borderWidth: 'thin',
+        margin: '0 auto',
+      }}
+    >
+      <WrappedMap
+        googleMapURL={
+          'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyDD_LZoOgt7th9UQVMl2nGbJ3_N-TOvRz4'
+        }
+        loadingElement={<div style={{ height: `100%` }} />}
+        containerElement={<div style={{ height: `100%` }} />}
+        mapElement={<div style={{ height: `100%` }} />}
+        coord={{ lat: InitLat, lng: InitLng }}
+        getCP={getCenter}
+        visa={props.visaMerch}
+        visell={props.visell}
+        visellPos={props.visellPos}
+      />
     </div>
   );
 }

@@ -249,9 +249,48 @@ Request param
 
 max = "5"  
 
-Response
+Response (with max = 1)
 
-TBD
+{
+    "success": true,
+    "ReturnedResults": 1,
+    "TotalFoundResults": 20,
+    "Offers": [
+        {
+            "programName": "VDP Program A",
+            "programId": 100740,
+            "merchantName": "Merchant One 1",
+            "merchantId": 101456,
+            "soldOut": false,
+            "offerTitle": "Special Event! Limited Ticket Opportunity",
+            "validityFromDateTime": "Aug 1, 2016 00:00 GMT",
+            "validityToDateTime": "Aug 1, 2020 00:00 GMT",
+            "promotionFromDateTime": "Jul 1, 2016 00:00 GMT",
+            "promotionToDateTime": "Aug 1, 2020 00:00 GMT",
+            "imageList": [
+                {
+                    "key": 111176,
+                    "imageResolution": "Low",
+                    "description": "",
+                    "fileLocation": "https://www.visa.com/images/merchantoffers/stage/2016-08/1471390034847.offer_image_1170x459.png",
+                    "imageFileSize": "7.0 KB",
+                    "imageFileHeight": "459 px",
+                    "imageFileWidth": "1170 px",
+                    "offerImagePromotionChannels": [
+                        "Online"
+                    ],
+                    "offerImagePromotionChannelIds": [
+                        3
+                    ],
+                    "imageAltTag": ""
+                }
+            ],
+            "redemptionUrl": "",
+            "redemptionEmail": "",
+            "redemptionCode": ""
+        }
+    ]
+}
 
 https://developer.visa.com/capabilities/vmorc/reference#vmorc__offers_data_api__v1__retrieve_offers_by_filter
 ```

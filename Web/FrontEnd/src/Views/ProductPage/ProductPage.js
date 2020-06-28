@@ -17,6 +17,7 @@ class ProductDisplay extends React.Component {
     const paymentLink = this.props.paymentLink;
     const productId = this.props.productId;
     const isOwnerShop = this.props.isOwnerShop;
+    const isLoggedIn = this.props.isLoggedIn;
     return (
       <div>
         <Row gutter={[32, 64]}>
@@ -34,6 +35,7 @@ class ProductDisplay extends React.Component {
               paymentLink={paymentLink}
               productId={productId}
               isOwnerShop={isOwnerShop}
+              isLoggedIn={isLoggedIn}
             />
           </Col>
         </Row>
@@ -79,7 +81,8 @@ export default class ProductPage extends React.Component {
 
   render() {
     const { merchant, product, merchantId, productId, isOwnerShop } = this.state;
-    const paymentLink = '/' + merchantId + '/product/' + productId + '/payment';
+    const { isLoggedIn } = this.props;
+    const paymentLink = `${merchantId}/product/${productId}`;
 
     let headerName;
 
@@ -105,6 +108,7 @@ export default class ProductPage extends React.Component {
           merchant={merchant}
           productId={productId}
           isOwnerShop={isOwnerShop}
+          isLoggedIn={isLoggedIn}
         />
       </Content>
     );
