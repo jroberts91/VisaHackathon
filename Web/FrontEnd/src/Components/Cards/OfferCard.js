@@ -1,8 +1,13 @@
 import React from 'react';
 import { Card } from 'antd';
+import styled from 'styled-components';
 import 'antd/dist/antd.css';
 
 const { Meta } = Card;
+
+const StyledCard = styled(Card)`
+  height: 200px;
+`;
 
 class OfferDescription extends React.Component {
   render() {
@@ -18,9 +23,9 @@ export default class OfferCard extends React.Component {
   render() {
     const { title, description } = this.props;
     return (
-      <Card style={{ width: '100%', minWidth: 250 }} hoverable>
+      <StyledCard hoverable>
         <Meta title={title} description={<OfferDescription description={description} />} />
-      </Card>
+      </StyledCard>
     );
   }
 }

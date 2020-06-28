@@ -17,6 +17,7 @@
     "react-geocode": "^0.2.1",
     "react-google-maps": "^9.4.5",
     "react-grid-layout": "^0.18.3",
+    "react-multi-carousel": "^2.5.5",
     "react-recaptcha": "^2.3.10",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",

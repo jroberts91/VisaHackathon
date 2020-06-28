@@ -4,6 +4,8 @@ import { Row, Col, Layout, Typography, Spin } from 'antd';
 import { TagOutlined } from '@ant-design/icons';
 import OfferCard from '../../Components/Cards/OfferCard';
 import API from '../../utils/baseUrl';
+import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -12,6 +14,29 @@ const StyledSpin = styled(Spin)`
   position: absolute;
   left: 50%;
   top: 50%;
+`;
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 4,
+    slidesToSlide: 1, // optional, default to 1.
+    partialVisibilityGutter: 40,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 2,
+    slidesToSlide: 2, // optional, default to 1.
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+    slidesToSlide: 1, // optional, default to 1.
+  },
+};
+
+const StyledOfferCard = styled.div`
+  padding-right: 10px;
 `;
 
 export default class OfferPage extends React.Component {
@@ -46,17 +71,52 @@ export default class OfferPage extends React.Component {
             <TagOutlined /> Offers
           </Title>
         </Row>
-        <Row gutter={[32, 32]}>
-          {offers.map((product, index) => {
-            const { programName, offerTitle } = product;
-            return (
-              <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-                <OfferCard title={programName} description={offerTitle} />
-              </Col>
-            );
-          })}
-        </Row>
+        <div
+          style={{
+            paddingBottom: '30px',
+            position: 'relative',
+          }}
+        >
+          <Carousel
+            swipeable={false}
+            draggable={false}
+            responsive={responsive}
+            renderDotsOutside
+            showDots
+            ssr={true} // means to render carousel on server-side.
+            infinite={true}
+            keyBoardControl={true}
+            customTransition="all .5"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            removeArrowOnDeviceType={['tablet', 'mobile']}
+            deviceType={this.props.deviceType}
+            dotListClass="custom-dot-list-style"
+            itemClass="carousel-item-padding-40-px"
+          >
+            {offers.map((product, index) => {
+              const { programName, offerTitle, merchantName } = product;
+              return (
+                <StyledOfferCard>
+                  <OfferCard title={merchantName} description={offerTitle} />
+                </StyledOfferCard>
+              );
+            })}
+          </Carousel>
+        </div>
       </Content>
     );
   }
 }
+
+/*
+<Row gutter={[32, 32]}>
+{offers.map((product, index) => {
+  const { programName, offerTitle, merchantName } = product;
+  return (
+    <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+      <OfferCard title={merchantName} description={offerTitle} />
+    </Col>
+  );
+})}
+</Row>*/
