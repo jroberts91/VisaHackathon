@@ -83,7 +83,8 @@ export default class Cart extends React.Component {
     return (
       <View style={styles.footer}>
         <Text style={styles.totalCost}>Total Cost: $500</Text>
-        <Button buttonStyle={styles.buttonStyle} title="Payment" />
+        <Button buttonStyle={styles.buttonStyle} title="Payment"
+        onPress={() => this.props.navigation.navigate("Payment")} />
       </View>
     );
   };
