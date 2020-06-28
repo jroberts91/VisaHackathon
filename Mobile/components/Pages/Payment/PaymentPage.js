@@ -131,6 +131,7 @@ export default class PaymentPage extends React.Component {
         return;
       } else {
         console.log('Verified code from Google', event.nativeEvent.data);
+        // TODO: Redirect to payment API from here
         setTimeout(() => {
           this.captchaForm.hide();
         }, 5000);
