@@ -62,50 +62,91 @@ export default class OfferPage extends React.Component {
 
   render() {
     const { offers, notLoaded } = this.state;
+    let body;
 
-    return (
-      <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
-        {notLoaded && <StyledSpin size="large" />}
-        <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
-          <Title level={4} style={{ color: '#828282' }}>
-            <TagOutlined /> Offers
-          </Title>
-        </Row>
-        <div
-          style={{
-            paddingBottom: '30px',
-            position: 'relative',
-          }}
-        >
-          <Carousel
-            swipeable={false}
-            draggable={false}
-            responsive={responsive}
-            renderDotsOutside
-            showDots
-            ssr={true} // means to render carousel on server-side.
-            infinite={true}
-            keyBoardControl={true}
-            customTransition="all .5"
-            transitionDuration={500}
-            containerClass="carousel-container"
-            removeArrowOnDeviceType={['tablet', 'mobile']}
-            deviceType={this.props.deviceType}
-            dotListClass="custom-dot-list-style"
-            itemClass="carousel-item-padding-40-px"
+    if (notLoaded) {
+      body = <StyledSpin size="large" />;
+    } else {
+      body = (
+        <div>
+          <Row align="top" justify="space-between" style={{ margin: '30px 0 10px 0' }}>
+            <Title level={4} style={{ color: '#828282' }}>
+              <TagOutlined /> Offers
+            </Title>
+          </Row>
+          <Title level={4}>Visa Offers</Title>
+          <div
+            style={{
+              paddingBottom: '30px',
+              position: 'relative',
+            }}
           >
-            {offers.map((product, index) => {
-              const { programName, offerTitle, merchantName } = product;
-              return (
-                <StyledOfferCard>
-                  <OfferCard title={merchantName} description={offerTitle} />
-                </StyledOfferCard>
-              );
-            })}
-          </Carousel>
+            <Carousel
+              swipeable={false}
+              draggable={false}
+              responsive={responsive}
+              renderDotsOutside
+              showDots
+              ssr={true} // means to render carousel on server-side.
+              infinite={true}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={['tablet', 'mobile']}
+              deviceType={this.props.deviceType}
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+            >
+              {offers.map((product, index) => {
+                const { programName, offerTitle, merchantName } = product;
+                return (
+                  <StyledOfferCard>
+                    <OfferCard title={merchantName} description={offerTitle} />
+                  </StyledOfferCard>
+                );
+              })}
+            </Carousel>
+          </div>
+          <Title level={4}>Visell Offers</Title>
+          <div
+            style={{
+              paddingBottom: '30px',
+              position: 'relative',
+            }}
+          >
+            <Carousel
+              swipeable={false}
+              draggable={false}
+              responsive={responsive}
+              renderDotsOutside
+              showDots
+              ssr={true} // means to render carousel on server-side.
+              infinite={true}
+              keyBoardControl={true}
+              customTransition="all .5"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={['tablet', 'mobile']}
+              deviceType={this.props.deviceType}
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+            >
+              {offers.map((product, index) => {
+                const { programName, offerTitle, merchantName } = product;
+                return (
+                  <StyledOfferCard>
+                    <OfferCard title={merchantName} description={offerTitle} />
+                  </StyledOfferCard>
+                );
+              })}
+            </Carousel>
+          </div>
         </div>
-      </Content>
-    );
+      );
+    }
+
+    return <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>{body}</Content>;
   }
 }
 
