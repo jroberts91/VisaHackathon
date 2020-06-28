@@ -74,7 +74,7 @@ export default class PaymentPage extends React.Component {
     cardNumber: null,
     expiryDate: null,
     cvv: null,
-    headerVisible: true,
+    keyboardUp: false,
   };
 
   componentDidMount() {
@@ -97,20 +97,20 @@ export default class PaymentPage extends React.Component {
 
   _keyboardDidShow = () => {
     this.setState({
-      headerVisible: false,
+      keyboardUp: true,
     });
   };
 
   _keyboardDidHide = () => {
     this.setState({
-      headerVisible: true,
+      keyboardUp: false,
     });
   };
 
   sendPayment() {
     const { products, cvv, cardNumber, expiryDate } = this.state;
     const merchantId = products[0].product.merchantId;
-    const formattedCart = products.map((product) => {
+    const formattedCart = products.map((product) => {  
       return {
         quantity: product.qty,
         productId: product.product._id,
@@ -125,8 +125,10 @@ export default class PaymentPage extends React.Component {
     };
     API.post('/api/payment/mobile', body).then((res) => {
       if (res.data.success) {
-        AsyncStorage.clear(); // clear local storage since paid successful
-        this.props.navigation.navigate('Cart', { paymentSuccess: true });
+        // clear local storage since paid successful
+        AsyncStorage.clear()
+          .then(() => 
+          this.props.navigation.navigate('Cart', { paymentSuccess: true })) 
       }
     });
   }
@@ -160,7 +162,6 @@ export default class PaymentPage extends React.Component {
         this.captchaForm.hide();
         return;
       } else {
-        console.log('Verified code from Google', event.nativeEvent.data);
         this.sendPayment();
         setTimeout(() => {
           this.captchaForm.hide();
@@ -187,8 +188,7 @@ export default class PaymentPage extends React.Component {
     }, 0);
     return (
       <View style={styles.centeredView}>
-        {this.state.headerVisible && <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>}
-
+        <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
         <Input
           inputContainerStyle={styles.cardInput}
           label="Card Number"
