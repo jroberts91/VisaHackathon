@@ -42,11 +42,20 @@ const StyledOfferCard = styled.div`
 export default class OfferPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offers: [], notLoaded: true };
+    this.state = { offers: [], merchants: [], notLoaded: true };
   }
 
   componentDidMount = () => {
     this.getOffersFromApi();
+    this.getAllMerchants();
+  };
+
+  getAllMerchants = () => {
+    API.post('api/merchant/getAll')
+      .then((res) => {
+        this.setState({ merchants: res.data.merchants });
+      })
+      .catch((err) => console.error(err));
   };
 
   getOffersFromApi = () => {
@@ -61,7 +70,7 @@ export default class OfferPage extends React.Component {
   };
 
   render() {
-    const { offers, notLoaded } = this.state;
+    const { offers, notLoaded, merchants } = this.state;
     let body;
 
     if (notLoaded) {
@@ -84,13 +93,13 @@ export default class OfferPage extends React.Component {
             <Carousel
               swipeable={false}
               draggable={false}
+              minimumTouchDrag={80}
               responsive={responsive}
               renderDotsOutside
               showDots
               ssr={true} // means to render carousel on server-side.
               infinite={true}
               keyBoardControl={true}
-              customTransition="all .5"
               transitionDuration={500}
               containerClass="carousel-container"
               removeArrowOnDeviceType={['tablet', 'mobile']}
@@ -118,13 +127,13 @@ export default class OfferPage extends React.Component {
             <Carousel
               swipeable={false}
               draggable={false}
+              minimumTouchDrag={80}
               responsive={responsive}
               renderDotsOutside
               showDots
               ssr={true} // means to render carousel on server-side.
               infinite={true}
               keyBoardControl={true}
-              customTransition="all .5"
               transitionDuration={500}
               containerClass="carousel-container"
               removeArrowOnDeviceType={['tablet', 'mobile']}
@@ -132,11 +141,17 @@ export default class OfferPage extends React.Component {
               dotListClass="custom-dot-list-style"
               itemClass="carousel-item-padding-40-px"
             >
-              {offers.map((product, index) => {
-                const { programName, offerTitle, merchantName } = product;
+              {merchants.map((merchant, index) => {
+                const { name, profileImage, description, rating, _id } = merchant;
                 return (
                   <StyledOfferCard>
-                    <OfferCard title={merchantName} description={offerTitle} />
+                    <OfferCard
+                      title={name}
+                      description="Code: 20OFF"
+                      offer="$20 dollars off"
+                      imgUrl={profileImage}
+                      id={_id}
+                    />
                   </StyledOfferCard>
                 );
               })}
@@ -149,15 +164,3 @@ export default class OfferPage extends React.Component {
     return <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>{body}</Content>;
   }
 }
-
-/*
-<Row gutter={[32, 32]}>
-{offers.map((product, index) => {
-  const { programName, offerTitle, merchantName } = product;
-  return (
-    <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
-      <OfferCard title={merchantName} description={offerTitle} />
-    </Col>
-  );
-})}
-</Row>*/
