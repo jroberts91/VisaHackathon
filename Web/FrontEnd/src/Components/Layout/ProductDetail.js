@@ -6,6 +6,7 @@ import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
 import QRCode from 'qrcode.react';
 import { defaultTheme } from '../../utils/theme';
+import { frontEndUrl } from '../../utils/baseUrl';
 
 const { Meta } = Card;
 
@@ -80,7 +81,7 @@ export default class ProductDetail extends React.Component {
     );
   };
 
-  getBody = (description, price, totalQty, qtySold, quantity, paymentLink, productId, isOwnerShop) => {
+  getBody = (description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop, isLoggedIn) => {
     qtySold = qtySold || 0;
     totalQty = totalQty || 0;
 
@@ -94,7 +95,7 @@ export default class ProductDetail extends React.Component {
           style={{ textAlign: 'center' }}
           footer={null}
         >
-          <QRCode value={productId} size={256} />
+          <QRCode value={`${frontEndUrl}${paymentLink}`} size={256} />
         </Modal>
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>{description || 'No Description Provided'}</Col>
@@ -125,7 +126,7 @@ export default class ProductDetail extends React.Component {
         <Row gutter={[32, 32]}>
           <Col key={2} span={12} style={{ fontSize: '1.1em', color: '#1A1F71' }}>
             Share:&nbsp;&nbsp;
-            <WhiteButton onClick={() => this.copyLinkToClipboard(paymentLink)}>
+            <WhiteButton onClick={() => this.copyLinkToClipboard(`${frontEndUrl}${paymentLink}`)}>
               <LinkOutlined />
             </WhiteButton>
             {isOwnerShop && (
@@ -134,24 +135,36 @@ export default class ProductDetail extends React.Component {
               </WhiteButton>
             )}
           </Col>
-          <Col key={1} span={12}>
-            <Link
-              style={{ float: 'right', marginRight: '20%' }}
-              to={paymentLink + '/payment?qty=' + this.state.quantity}
-            >
-              <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
-                Buy Now
-              </BlueButton>
-            </Link>
-          </Col>
+          {!isLoggedIn && (
+            <Col key={1} span={12}>
+              <Link
+                style={{ float: 'right', marginRight: '20%' }}
+                to={`/${paymentLink}/payment?qty=${this.state.quantity}`}
+              >
+                <BlueButton type="primary" disabled={this.checkQuantity(totalQty - qtySold)}>
+                  Buy Now
+                </BlueButton>
+              </Link>
+            </Col>
+          )}
         </Row>
       </div>
     );
   };
 
   render() {
-    const { name, rating, description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop } = this.props;
-    const { quantity } = this.state;
+    const {
+      name,
+      rating,
+      description,
+      price,
+      totalQty,
+      qtySold,
+      paymentLink,
+      productId,
+      isOwnerShop,
+      isLoggedIn,
+    } = this.props;
 
     return (
       <Card style={{ width: '95%', marginLeft: '5%' }} hoverable>
@@ -162,10 +175,10 @@ export default class ProductDetail extends React.Component {
             price,
             totalQty,
             qtySold,
-            quantity,
             paymentLink,
             productId,
-            isOwnerShop
+            isOwnerShop,
+            isLoggedIn
           )}
         />
       </Card>
