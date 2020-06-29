@@ -290,6 +290,7 @@ export default class PaymentPage extends React.Component {
                   index={i}
                   labelHorizontal={true}
                   labelStyle={{ marginRight: 10 }}
+                  onPress={() => {}}
                 />
               </RadioButton>
             ))
