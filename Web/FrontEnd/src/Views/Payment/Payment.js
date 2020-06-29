@@ -2,13 +2,34 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message, Typography } from 'antd';
+import { Row, Col, Layout, message, Typography, Popover, Table, Button } from 'antd';
 import queryString from 'query-string';
+import { defaultTheme } from '../../utils/theme';
 import API, { baseUrl } from '../../utils/baseUrl';
 import { ShopOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 const { Content } = Layout;
 const { Title } = Typography;
+const columns = [
+  {
+    title: 'Offer',
+    dataIndex: 'offerName',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Code',
+    dataIndex: 'code',
+  },
+];
+
+const AddButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
+  border-color: ${defaultTheme.colors.primary};
+  margin-bottom: 0;
+`;
 
 const ErrorMessageContainer = styled.div`
   position: absolute;
@@ -29,8 +50,13 @@ export default class Payment extends React.Component {
       product: null,
       merchant: null,
       qty: queries.qty,
+      offers: [],
     };
   }
+
+  getMerchantOffersFromApi = (merchantId) => {
+    
+  };
 
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
@@ -51,11 +77,20 @@ export default class Payment extends React.Component {
         this.setState({ merchant: res.data.merchant });
       })
       .catch((err) => console.error(err));
+
+    API.get(`api/offers/visell/getByMerchant?merchantId=${this.state.merchantId}`)
+      .then((res) => {
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
+
   };
 
   render() {
-    const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
+    const { product, qty, merchantId, productId, merchant, isOwnerShop, offers } = this.state;
     const { isLoggedIn } = this.props;
+    const content = <Table columns={columns} dataSource={offers} />;
+
     if (product == null || merchant == null) {
       // when product or merchant isn't populated yet
       return null;
@@ -91,6 +126,13 @@ export default class Payment extends React.Component {
             </Link>{' '}
             / Payment
           </Title>
+
+          <Popover content={content}>
+            <AddButton type="primary" style={{ float: 'right' }}>
+              Offers you can use
+            </AddButton>
+          </Popover>
+
         </Row>
         <Row align="middle">
           <Col lg={{ span: 12 }} span={24}>
