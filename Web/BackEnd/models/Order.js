@@ -13,7 +13,7 @@ const orderSchema = mongoose.Schema({
   isFulfilled: Boolean,
   dateTimeFulfilled: Date,
   isRefunded: Boolean,
-  dateTimeRefunded: Date
+  dateTimeRefunded: Date,
 });
 
 const Order = mongoose.model('Order', orderSchema);
