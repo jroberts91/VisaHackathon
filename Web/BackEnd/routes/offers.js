@@ -3,7 +3,9 @@ const https = require('https');
 const axios = require('axios');
 const path = require('path');
 const { Offer } = require('../models/Offer');
-const { imageUpload } = require('../utils/imageUpload');
+const { Merchant } = require('../models/Merchant');
+const { ESRCH } = require('constants');
+
 fs = require('fs');
 
 const router = express.Router();
@@ -25,23 +27,47 @@ var config = {
 //             Offers
 //=================================
 
-router.post('/add', imageUpload, async (req, res) => {
+router.post('/add', async (req, res) => {
+  let merchantId = req.body.merchantId;
+  const merchant = await Merchant.findOne({ _id: merchantId });
+  if (!merchant) return res.json({ success: false, msg: 'merchant not found' });
   const offer = new Offer(req.body);
-  offer.soldOut = false;
-  if (req.files) offer.merchantImage = req.files[0].path;
+  offer.merchantName = merchant.name;
+  offer.unique = req.body.code + merchantId;
   //save to mongoDB
   try {
     await offer.save();
-    res.status(200).json({ success: true });
+    res.json({ success: true });
   } catch (err) {
-    res.status(400).send(err);
+    return res.json({ success: false, err: err });
   }
 });
 
 router.get('/visell/list', async (req, res) => {
   Offer.find().exec((err, offers) => {
     if (err) return res.status(400).json({ success: false, err });
-    res.status(200).json({ success: true, offers, postSize: offers.length });
+    res.json({ success: true, offers, postSize: offers.length });
+  });
+});
+
+//?merchantId=${merchantId}
+router.get('/visell/getByMerchant', async (req, res) => {
+  let merchantId = req.query.merchantId;
+  Offer.find({ merchantId: merchantId }).exec((err, offers) => {
+    if (err) return res.json({ success: false, err });
+    res.json({ success: true, offers, postSize: offers.length });
+  });
+});
+
+//?merchantId=${merchantId}
+//?code=${code}
+router.get('/visell/redeem', async (req, res) => {
+  let merchantId = req.query.merchantId;
+  let code = req.query.code;
+  Offer.find({ merchantId: merchantId, code: code }).exec((err, offers) => {
+    if (err) return res.json({ success: false, err });
+    if (!offers.length) return res.json({ success: false, msg: 'not found' });
+    res.json({ success: true });
   });
 });
 

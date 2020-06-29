@@ -33,8 +33,8 @@ export default class PaymentProductCard extends React.Component {
     const { imageUrl, title, price, qty } = this.state;
     return (
       <Card
-        style={{ width: '80%', minWidth: 500, margin: '0 auto' }}
-        cover={<img alt="example" src={imageUrl} style={{ maxWidth: 400, maxHeight: 600 }} />}
+        style={{ width: '80%', minWidth: 400, margin: '0 auto' }}
+        cover={<img alt="example" src={imageUrl} style={{ maxWidth: 400, maxHeight: 600, objectFit: 'cover' }} />}
         hoverable
       >
         <Meta

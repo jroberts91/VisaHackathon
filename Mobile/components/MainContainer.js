@@ -19,7 +19,7 @@ export default class MainContainer extends React.Component {
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
         {pageName === 'Cart' && <Cart navigation={this.props.navigation} />}
         {pageName === 'Scan' && <ScanPage />}
-        {pageName === 'Payment' && <PaymentPage />}
+        {pageName === 'Payment' && <PaymentPage navigation={this.props.navigation} />}
       </View>
     );
   }

@@ -63,6 +63,11 @@ export default class Cart extends React.Component {
     this.setState({ products: addedProducts });
   };
 
+  removeProduct = (productId) => {
+    const filteredProducts = this.state.products.filter((product) => product.product._id !== productId);
+    this.setState({ products: filteredProducts });
+  };
+
   header = () => {
     return (
       <View style={styles.header}>
@@ -91,15 +96,19 @@ export default class Cart extends React.Component {
   render() {
     const { products } = this.state;
     const { users } = this.props;
-    if (products == null) { // haven't finished loading from local storage
+    if (products == null) {
+      // haven't finished loading from local storage
       return null;
     }
+
+    // TODO: get navigation passed param and display success message
+
     return (
       <View style={styles.main}>
         <FlatList
           style={styles.scroll}
           data={products}
-          renderItem={({ item }) => <CardBox item={item} />}
+          renderItem={({ item }) => <CardBox item={item} removeProduct={this.removeProduct} />}
           ListHeaderComponent={this.header}
           ListFooterComponent={this.footer(products)}
           keyExtractor={(item, index) => index.toString()}

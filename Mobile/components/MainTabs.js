@@ -67,6 +67,7 @@ export default class MainTabs extends React.Component {
           }}
           options={{
             tabBarButton: () => null,
+            unmountOnBlur: true,
           }}
         />
       </Tab.Navigator>

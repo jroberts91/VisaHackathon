@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, Button } from 'react-native';
 import { baseUrl } from '../utils/baseUrl';
+import { AsyncStorage } from 'react-native';
 
 const styles = StyleSheet.create({
   card: {
@@ -38,6 +39,15 @@ const ContentBody = (props) => {
   return (
     <View style={styles.contentBody}>
       <Text style={styles.details}>${props.price}</Text>
+      <Button
+        buttonStyle={styles.buttonStyle}
+        title="Remove"
+        onPress={() => {
+          AsyncStorage.removeItem(props.id).then(() => {
+            props.removeProduct(props.id);
+          });
+        }}
+      />
     </View>
   );
 };
@@ -57,7 +67,7 @@ const ContentHeader = (props) => {
 
 export default class CardBox extends React.Component {
   render() {
-    const { item } = this.props;
+    const { item, removeProduct } = this.props;
     const { product, qty } = item;
     const totalPrice = product.price * qty;
     return (
@@ -68,7 +78,7 @@ export default class CardBox extends React.Component {
           qty={qty}
           price={product.price.toFixed(2)}
         />
-        <ContentBody price={totalPrice.toFixed(2)} />
+        <ContentBody price={totalPrice.toFixed(2)} id={product._id} removeProduct={removeProduct} />
       </View>
     );
   }
