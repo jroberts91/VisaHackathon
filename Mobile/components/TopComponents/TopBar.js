@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Platform, Image } from 'react-native';
 import { Header } from 'react-native-elements';
-import MessageTop from './MessageTop';
 import { Icon } from 'react-native-elements';
 import Logo from '../../images/LogoNoTagLine.png';
 
@@ -37,7 +36,6 @@ export default class TopBar extends React.Component {
           containerStyle={styles.topBar}
           leftComponent={<LeftComponent openDrawer={this.props.openDrawer} />}
           centerComponent={<Image style={styles.image} source={Logo} />}
-          rightComponent={<MessageTop openMessage={this.props.openMessage} />}
         />
       </View>
     );

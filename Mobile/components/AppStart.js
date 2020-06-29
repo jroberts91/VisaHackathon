@@ -34,9 +34,8 @@ export default class AppStart extends React.Component {
   render() {
     return (
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="MainHome">
-          <Drawer.Screen name="MainHome" component={MainHome} />
-          <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+        <Drawer.Navigator initialRouteName="Home">
+          <Drawer.Screen name="Home" component={MainHome} />
         </Drawer.Navigator>
       </NavigationContainer>
     );
