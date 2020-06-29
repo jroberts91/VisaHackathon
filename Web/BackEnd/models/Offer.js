@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 
 const offerSchema = mongoose.Schema({
-  offerId: String,
-  programName: String,
+  offerName: String,
+  code: String,
+  merchantId: String,
   merchantName: String,
-  soldOut: Boolean,
+  description: String,
   offerTitle: String,
-  redemptionUrl: String,
-  merchantImage: String,
+  value: Number,
+  minValue: Number,
+  unique: { type: String, unique: 1}
 });
 
 const Offer = mongoose.model('Offer', offerSchema);
-
 module.exports = { Offer };

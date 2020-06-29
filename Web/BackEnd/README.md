@@ -249,6 +249,80 @@ Response
 
 ## api/offers
 
+- POST '/add' from postman
+
+```json
+Request param
+
+{
+    "offerName": "$2 off",
+    "code": "12346",
+    "merchantId": "5ee9c93609bd325e5075dc12",
+    "description": "$2 off, only applicable for items more than $4",
+    "offerTitle": "$2 off",
+    "value": 2,
+    "minValue": 4
+}
+
+Response
+
+{
+    "success": true
+}
+```
+
+- GET '/visell/getByMerchant' gets all offers with merchantId
+
+```json
+Request param
+
+?merchantId=${merchantId}
+
+Response
+
+{
+    "success": true,
+    "offers": [
+        {
+            "_id": "5ef9707b2031074694d6f487",
+            "offerName": "$1 off",
+            "code": "12345",
+            "merchantId": "5ee9856ede9f8478c570d1ea",
+            "description": "$1 off, only applicable for items more than $2",
+            "offerTitle": "$1 off",
+            "value": 1,
+            "minValue": 2,
+            "merchantName": "kai",
+            "__v": 0
+        }
+    ],
+    "postSize": 1
+}
+```
+
+- GET '/visell/redeem' redeem should be called at payment page
+
+```json
+Request param
+
+?merchantId=${merchantId}
+?code=${code}
+
+Response
+
+{
+    "success": false,
+    "msg": "not found"
+}
+
+or 
+
+{
+    "success": true
+}
+
+```
+
 - GET '/list'Max param shows the max number of orders to be returned(.../get?max=5)
 
 ```json
@@ -274,6 +348,7 @@ Response (with max = 1)
     ],
     "postSize": 1
 }
+```
 
 - GET '/visell/list' return all visell offers
 
