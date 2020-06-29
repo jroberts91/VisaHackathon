@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Layout, Typography, Spin } from 'antd';
+import { Row, Layout, Typography, Spin, Modal, Button } from 'antd';
 import { TagOutlined } from '@ant-design/icons';
 import OfferCard from '../../Components/Cards/OfferCard';
 import API from '../../utils/baseUrl';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
+import { Link } from 'react-router-dom';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -42,12 +43,39 @@ const StyledOfferCard = styled.div`
 export default class OfferPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offers: [], visellOffers: [], notLoaded: true };
+    this.state = { offers: [], visellOffers: [], notLoaded: true, visible: false };
   }
 
   componentDidMount = () => {
     this.getVisellOffersFromApi();
     this.getVisaOffersFromApi();
+  };
+
+  showModal = (product) => {
+    const { merchantName, offerTitle, promotionFromDateTime, promotionToDateTime } = product;
+    console.log(merchantName);
+    console.log(offerTitle);
+    this.setState({
+      visible: true,
+      modalHeader: merchantName,
+      modalOfferTitle: offerTitle,
+      modalStartDate: promotionFromDateTime,
+      modalEndDate: promotionToDateTime,
+    });
+  };
+
+  handleOk = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleCancel = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
   };
 
   getVisellOffersFromApi = () => {
@@ -71,7 +99,7 @@ export default class OfferPage extends React.Component {
   };
 
   render() {
-    const { offers, notLoaded, visellOffers } = this.state;
+    const { offers, notLoaded, visellOffers, modalHeader, modalOfferTitle, modalStartDate, modalEndDate } = this.state;
     let body;
 
     if (notLoaded) {
@@ -153,13 +181,18 @@ export default class OfferPage extends React.Component {
                 const { offerTitle, merchantName } = product;
                 const imgUrl = product.merchantImages[0].fileLocation;
                 return (
-                  <StyledOfferCard>
+                  <StyledOfferCard onClick={() => this.showModal(product)}>
                     <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
                   </StyledOfferCard>
                 );
               })}
             </Carousel>
           </div>
+          <Modal title={modalHeader} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
+            <p>{modalOfferTitle}</p>
+            <p>Start Date: {modalStartDate}</p>
+            <p>End Date: {modalEndDate}</p>
+          </Modal>
         </div>
       );
     }

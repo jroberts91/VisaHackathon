@@ -53,7 +53,7 @@ export default class OfferCard extends React.Component {
 
     const fullImageUrl = imgUrl ? imgUrl : baseUrl + this.state.url;
 
-    const merchantHref = `/${id}`;
+    const merchantHref = id ? `/${id}` : `/offers`;
 
     return (
       <Link to={merchantHref}>
