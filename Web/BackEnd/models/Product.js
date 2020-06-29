@@ -37,6 +37,12 @@ const productSchema = mongoose.Schema(
     totalQty: {
       type: Number,
     },
+    deliveryDays:{
+      type: Number
+    },
+    show:{
+      type: Boolean
+    }
   },
   { timestamps: true }
 );

@@ -120,6 +120,7 @@ class SalesTable extends React.Component {
       if (!('payment' in dataSource[i])) {
         dataSource[i].payment = {};
       }
+      dataSource[i].totalPrice = dataSource[i].product.price * dataSource[i].quantity;
     }
 
     const key = this.props.statusTab ? 0 : this.props.isFulfilled ? 2 : 1;
@@ -151,11 +152,11 @@ class SalesTable extends React.Component {
           <Column
             key={3}
             title="Total Price"
-            dataIndex={['product', 'price']}
+            dataIndex={['totalPrice']}
             render={(totalPrice) => {
               return '$' + totalPrice.toFixed(2);
             }}
-            sorter={(a, b) => a.product.price - b.product.price}
+            sorter={(a, b) => a.totalPrice - b.totalPrice}
           />
           <Column
             key={4}

@@ -43,7 +43,7 @@ export default class AddProduct extends React.Component {
     const handleUpload = (info) => {
       if (info.fileList.length <= 4) {
         formData.delete('files');
-        for (var value of info.fileList){
+        for (var value of info.fileList) {
           formData.append('files', value.originFileObj);
         }
       } else {

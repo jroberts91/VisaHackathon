@@ -12,6 +12,8 @@ const orderSchema = mongoose.Schema({
   email: String,
   isFulfilled: Boolean,
   dateTimeFulfilled: Date,
+  isRefunded: Boolean,
+  dateTimeRefunded: Date,
 });
 
 const Order = mongoose.model('Order', orderSchema);

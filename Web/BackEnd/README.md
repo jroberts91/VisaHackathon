@@ -63,7 +63,27 @@
 - GET '/updateTotalQty' takes in 2 params (.../?id=${productId}&totalQty=${totalQty})
     - returns {success: true, product: product}    
 
+- GET '/deleteProduct' changes show:true to show:false based on productId in the params (.../get?id=${productId})
+    - returns {success: true}
+
 ## api/payment
+
+- POST '/refund' refund the order to the sender (customer)
+
+```json
+Request
+
+{
+    "orderId": "5ef98d0161520d5d98d59133"
+}
+
+Response
+
+{
+    "success": true
+}
+
+```
 
 - POST '/direct' makes a payment by creating an order associated with payment, the backend will call and handle push and pull funds transfer (currently with dummy payload)
 
@@ -93,6 +113,35 @@ Response
     "success": true,
     "orderId": "5ef050a91283634f80882bcc",
     "paymentId": "5ef050a91283634f80882bcb"
+}
+```
+
+- POST '/mobile' makes a payment from mobile, all fields are required
+
+```json
+Request
+
+{
+    "cardNumber": "4000879637857889",
+    "expiryDate": "date",
+    "cvv": "123",
+    "merchantId": "5ee9c93609bd325e5075dc12",
+    "cart": [
+        {
+            "productId": "5ef1a7581198af414c0d28d7",
+            "quantity": 3
+        },
+        {
+            "productId": "5ef3094b395e012a64f2dd94",
+            "quantity": 1
+        }
+    ]
+}
+
+Response
+
+{
+    "success": true
 }
 ```
 
@@ -220,16 +269,153 @@ Response
 
 ## api/offers
 
-- GET '/list' fulfill and order. Fulfilled order will have no changes. Max param shows the max number of orders to be returned(.../get?max=5)
+- POST '/add' from postman
+
+```json
+Request param
+
+{
+    "offerName": "$2 off",
+    "code": "12346",
+    "merchantId": "5ee9c93609bd325e5075dc12",
+    "description": "$2 off, only applicable for items more than $4",
+    "offerTitle": "$2 off",
+    "value": 2,
+    "minValue": 4
+}
+
+Response
+
+{
+    "success": true
+}
+```
+
+- GET '/visell/getByMerchant' gets all offers with merchantId
+
+```json
+Request param
+
+?merchantId=${merchantId}
+
+Response
+
+{
+    "success": true,
+    "offers": [
+        {
+            "_id": "5ef9707b2031074694d6f487",
+            "offerName": "$1 off",
+            "code": "12345",
+            "merchantId": "5ee9856ede9f8478c570d1ea",
+            "description": "$1 off, only applicable for items more than $2",
+            "offerTitle": "$1 off",
+            "value": 1,
+            "minValue": 2,
+            "merchantName": "kai",
+            "__v": 0
+        }
+    ],
+    "postSize": 1
+}
+```
+
+- GET '/visell/redeem' redeem should be called at payment page
+
+```json
+Request param
+
+?merchantId=${merchantId}
+?code=${code}
+
+Response
+
+{
+    "success": false,
+    "msg": "not found"
+}
+
+or 
+
+{
+    "success": true
+}
+
+```
+
+- GET '/list'Max param shows the max number of orders to be returned(.../get?max=5)
 
 ```json
 Request param
 
 max = "5"  
 
-Response
+Response (with max = 1)
 
-TBD
+{
+    "success": true,
+    "offers": [
+        {
+            "_id": "5ef8acf54577ff50a0c81968",
+            "programName": "I MEAN BEST OFFER",
+            "merchantName": "yz",
+            "offerTitle": "50% OFF",
+            "redemptionUrl": "http://localhost:3000/5ee9c93609bd325e5075dc12",
+            "soldOut": false,
+            "merchantImage": "uploads\\1593355509272_1592985442840_yz profile.JPG",
+            "__v": 0
+        }
+    ],
+    "postSize": 1
+}
+```
+
+- GET '/visell/list' return all visell offers
+
+```json
+
+Response 
+
+{
+    "success": true,
+    "ReturnedResults": 1,
+    "TotalFoundResults": 20,
+    "Offers": [
+        {
+            "programName": "VDP Program A",
+            "programId": 100740,
+            "merchantName": "Merchant One 1",
+            "merchantId": 101456,
+            "soldOut": false,
+            "offerTitle": "Special Event! Limited Ticket Opportunity",
+            "validityFromDateTime": "Aug 1, 2016 00:00 GMT",
+            "validityToDateTime": "Aug 1, 2020 00:00 GMT",
+            "promotionFromDateTime": "Jul 1, 2016 00:00 GMT",
+            "promotionToDateTime": "Aug 1, 2020 00:00 GMT",
+            "imageList": [
+                {
+                    "key": 111176,
+                    "imageResolution": "Low",
+                    "description": "",
+                    "fileLocation": "https://www.visa.com/images/merchantoffers/stage/2016-08/1471390034847.offer_image_1170x459.png",
+                    "imageFileSize": "7.0 KB",
+                    "imageFileHeight": "459 px",
+                    "imageFileWidth": "1170 px",
+                    "offerImagePromotionChannels": [
+                        "Online"
+                    ],
+                    "offerImagePromotionChannelIds": [
+                        3
+                    ],
+                    "imageAltTag": ""
+                }
+            ],
+            "redemptionUrl": "",
+            "redemptionEmail": "",
+            "redemptionCode": ""
+        }
+    ]
+}
 
 https://developer.visa.com/capabilities/vmorc/reference#vmorc__offers_data_api__v1__retrieve_offers_by_filter
 ```

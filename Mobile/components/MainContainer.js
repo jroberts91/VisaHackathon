@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import TopBar from './TopComponents/TopBar';
-import HomePage from './Pages/Home/HomePage';
 import ScanPage from './Pages/Scan/ScanPage';
-import ProfilePage from './Pages/Profile/ProfilePage';
+import Cart from './Pages/Cart/Cart';
+import PaymentPage from './Pages/Payment/PaymentPage';
 
 const styles = StyleSheet.create({
   main: {
@@ -17,9 +17,9 @@ export default class MainContainer extends React.Component {
     return (
       <View style={styles.main}>
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
-        {pageName === 'Home' && <HomePage />}
-        {pageName === 'Profile' && <ProfilePage personName={'John Does'} />}
+        {pageName === 'Cart' && <Cart navigation={this.props.navigation} />}
         {pageName === 'Scan' && <ScanPage />}
+        {pageName === 'Payment' && <PaymentPage navigation={this.props.navigation} />}
       </View>
     );
   }

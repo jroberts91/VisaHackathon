@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Dimensions, View, Text, LayoutAnimation, StatusBar } from 'react-native';
+import { StyleSheet, Dimensions, View, Text, LayoutAnimation, StatusBar, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import ProductPage from './ProductPage';
@@ -59,18 +59,12 @@ class ScanPage extends Component {
         ) : this.state.isShowProductPage ? (
           <ProductPage
             isShowProductPage={this.state.isShowProductPage}
-            setisShowProductPage={this.setIsShowProductPage}
+            setIsShowProductPage={this.setIsShowProductPage}
             setClearLastScannedId={this.setClearLastScannedId}
             productId={this.state.lastScannedId}
           />
         ) : (
-          <BarCodeScanner
-            onBarCodeScanned={this._handleBarCodeRead}
-            style={{
-              height: Dimensions.get('window').height,
-              width: Dimensions.get('window').width,
-            }}
-          />
+          <BarCodeScanner onBarCodeScanned={this._handleBarCodeRead} style={styles.barCodeScanner} />
         )}
         <StatusBar hidden />
       </View>
@@ -79,10 +73,9 @@ class ScanPage extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'white',
+  container: { flex: 1 },
+  barCodeScanner: {
+    aspectRatio: 0.56,
   },
 });
 

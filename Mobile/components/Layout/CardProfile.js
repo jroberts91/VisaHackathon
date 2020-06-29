@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   card: {
