@@ -18,6 +18,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    flex: 0.1,
+    height: 15,
+    marginTop: 10,
+    marginLeft: 10,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  breadcrumbs: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  breadcrumbsSelected: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#1a1f71',
+  },
   paymentHeader: {
     bottom: '10%',
     textAlign: 'center',
@@ -270,39 +287,45 @@ export default class PaymentPage extends React.Component {
     ];
 
     return (
-      <View style={styles.centeredView}>
-        <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
-        <RadioForm formHorizontal={true} animation={true} initial={0}>
-          {radioProps.map((obj, i) => (
-            <RadioButton labelHorizontal={true} key={i}>
-              <RadioButtonInput
-                obj={obj}
-                index={i}
-                isSelected={this.state.radioSelection === i}
-                onPress={(value) => this.setState({ radioSelection: value })}
-                buttonInnerColor={'#FAA913'}
-                buttonOuterColor={'#FAA913'}
-                buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
-              />
-              <RadioButtonLabel
-                obj={obj}
-                index={i}
-                labelHorizontal={true}
-                labelStyle={{ marginRight: 10 }}
-                onPress={() => {}}
-              />
-            </RadioButton>
-          ))}
-        </RadioForm>
-        {this.state.radioSelection === 0 && this.getVisaDirectForm()}
-        {this.state.radioSelection === 1 && (
-          <View style={styles.innerView}>
-            <View style={styles.checkoutButton}>
-              <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+      <>
+        <View style={styles.header}>
+          <Text style={styles.breadcrumbs}>{`Cart > `}</Text>
+          <Text style={styles.breadcrumbsSelected}>Payment</Text>
+        </View>
+        <View style={styles.centeredView}>
+          <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
+          <RadioForm formHorizontal={true} animation={true} initial={0}>
+            {radioProps.map((obj, i) => (
+              <RadioButton labelHorizontal={true} key={i}>
+                <RadioButtonInput
+                  obj={obj}
+                  index={i}
+                  isSelected={this.state.radioSelection === i}
+                  onPress={(value) => this.setState({ radioSelection: value })}
+                  buttonInnerColor={'#FAA913'}
+                  buttonOuterColor={'#FAA913'}
+                  buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
+                />
+                <RadioButtonLabel
+                  obj={obj}
+                  index={i}
+                  labelHorizontal={true}
+                  labelStyle={{ marginRight: 10 }}
+                  onPress={() => {}}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+          {this.state.radioSelection === 0 && this.getVisaDirectForm()}
+          {this.state.radioSelection === 1 && (
+            <View style={styles.innerView}>
+              <View style={styles.checkoutButton}>
+                <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+              </View>
             </View>
-          </View>
-        )}
-      </View>
+          )}
+        </View>
+      </>
     );
   }
 }

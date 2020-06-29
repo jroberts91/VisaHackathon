@@ -9,8 +9,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#D6DBDF',
   },
   header: {
+    flex: 0.1,
     height: 45,
     marginTop: 10,
+    marginLeft: 10,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  breadcrumbs: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  breadcrumbsSelected: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#1a1f71',
   },
   footer: {
     flexDirection: 'row',
@@ -76,10 +89,13 @@ export default class Cart extends React.Component {
   header = (date) => {
     const formattedDate = this.formatDate(date);
     return (
-      <View style={styles.header}>
-        <Text style={styles.orderSummary}>Order Summary:</Text>
+      <>
+        <View style={styles.header}>
+          <Text style={styles.breadcrumbs}>{`Cart > Payment > `}</Text>
+          <Text style={styles.breadcrumbsSelected}>Order Summary</Text>
+        </View>
         <Text style={styles.orderDate}>{formattedDate}</Text>
-      </View>
+      </>
     );
   };
 
