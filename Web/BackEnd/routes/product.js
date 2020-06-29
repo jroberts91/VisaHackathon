@@ -29,20 +29,17 @@ router.post('/getAll', (req, res) => {
 
   let findArgs = { merchantId: req.body.merchantId };
   let term = req.body.searchTerm;
-
   for (let key in req.body.filters) {
-    if (req.body.filters[key].length > 0) {
-      if (key === 'price') {
-        findArgs[key] = {
-          $gte: req.body.filters[key][0],
-          $lte: req.body.filters[key][1],
-        };
-      } else {
-        findArgs[key] = req.body.filters[key];
-      }
+    if (key === 'price') {
+      findArgs[key] = {
+        $gte: req.body.filters[key][0],
+        $lte: req.body.filters[key][1],
+      };
+    } else {
+      findArgs[key] = req.body.filters[key];
     }
   }
-
+  console.log(findArgs)
   if (term) {
     Product.find(findArgs)
       .find({ $text: { $search: term } })
@@ -94,5 +91,15 @@ router.get('/updateTotalQty', async (req, res) => {
     return res.status(200).json({ success: true, product: product });
   } else return res.json({ success: false });
 });
+
+//?id=${productId}
+router.get('/deleteProduct', async (req,res)=>{
+  let productId = req.query.id;
+  if (mongoose.isValidObjectId(productId)) {
+    const product = await Product.findOneAndUpdate({ _id: productId }, { show:false });
+    if (!product) return res.json({ success: false });
+    return res.status(200).json({ success: true});
+  } else return res.json({ success: false });
+})
 
 module.exports = router;
