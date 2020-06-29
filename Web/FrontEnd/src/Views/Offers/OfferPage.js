@@ -153,7 +153,7 @@ export default class OfferPage extends React.Component {
                       code={thisCode}
                       description={description}
                       imgUrl={profileImage}
-                      id={visellOffer}
+                      id={merchantId}
                     />
                   </StyledOfferCard>
                 );
