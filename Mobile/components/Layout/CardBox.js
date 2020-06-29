@@ -47,9 +47,9 @@ const ContentHeader = (props) => {
     <View style={styles.contentHeader}>
       <Image style={styles.avatar} source={{ uri: `${baseUrl}${props.imageUrl}` }} />
       <View style={styles.rightHeader}>
-        <Text style={styles.productName}> {props.personName} </Text>
-        <Text style={styles.productDetails}> Qty: 5 </Text>
-        <Text style={styles.productDetails}> Price per item: $40</Text>
+        <Text style={styles.productName}> {props.productName} </Text>
+        <Text style={styles.productDetails}> Qty: {props.qty} </Text>
+        <Text style={styles.productDetails}> Price per item: ${props.price}</Text>
       </View>
     </View>
   );
@@ -58,10 +58,17 @@ const ContentHeader = (props) => {
 export default class CardBox extends React.Component {
   render() {
     const { item } = this.props;
+    const { product, qty } = item;
+    const totalPrice = product.price * qty;
     return (
       <View elevation={2} style={styles.card}>
-        <ContentHeader personName={item.name} imageUrl={item.images[0]} />
-        <ContentBody price={item.price} />
+        <ContentHeader
+          productName={product.name}
+          imageUrl={product.images[0]}
+          qty={qty}
+          price={product.price.toFixed(2)}
+        />
+        <ContentBody price={totalPrice.toFixed(2)} />
       </View>
     );
   }
