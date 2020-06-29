@@ -41,7 +41,6 @@ router.post('/add', async (req, res) => {
   } catch (err) {
     return res.json({ success: false, err: err });
   }
-
 });
 
 router.get('/visell/list', async (req, res) => {
@@ -67,11 +66,10 @@ router.get('/visell/redeem', async (req, res) => {
   let code = req.query.code;
   Offer.find({ merchantId: merchantId, code: code }).exec((err, offers) => {
     if (err) return res.json({ success: false, err });
-    if (!offers.length) return res.json({ success: false, msg: "not found" });
+    if (!offers.length) return res.json({ success: false, msg: 'not found' });
     res.json({ success: true });
   });
 });
-
 
 // current implementation only gets all offers with no filter
 //?max=int

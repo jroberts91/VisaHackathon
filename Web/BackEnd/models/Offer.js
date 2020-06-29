@@ -9,7 +9,7 @@ const offerSchema = mongoose.Schema({
   offerTitle: String,
   value: Number,
   minValue: Number,
-  unique: { type: String, unique: 1}
+  unique: { type: String, unique: 1 },
 });
 
 const Offer = mongoose.model('Offer', offerSchema);
