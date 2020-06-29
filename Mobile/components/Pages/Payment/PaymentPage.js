@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Button, Image, Keyboard } from 'react-native';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
+import { AsyncStorage } from 'react-native';
+import API from '../../utils/baseUrl';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -68,16 +70,25 @@ const styles = StyleSheet.create({
 
 export default class PaymentPage extends React.Component {
   state = {
+    products: null,
     cardNumber: null,
     expiryDate: null,
     cvv: null,
-    headerVisible: true,
+    keyboardUp: false,
   };
 
   componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    this.getAllProductsInCart();
   }
+
+  getAllProductsInCart = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    const result = await AsyncStorage.multiGet(keys);
+    const addedProducts = result.map((req) => JSON.parse(req[1]));
+    this.setState({ products: addedProducts });
+  };
 
   componentWillUnmount() {
     Keyboard.removeListener('keyboardDidHide', this._keyboardDidHide);
@@ -86,17 +97,41 @@ export default class PaymentPage extends React.Component {
 
   _keyboardDidShow = () => {
     this.setState({
-      headerVisible: false,
+      keyboardUp: true,
     });
   };
 
   _keyboardDidHide = () => {
     this.setState({
-      headerVisible: true,
+      keyboardUp: false,
     });
   };
 
-  sendPayment() {}
+  sendPayment() {
+    const { products, cvv, cardNumber, expiryDate } = this.state;
+    const merchantId = products[0].product.merchantId;
+    const formattedCart = products.map((product) => {  
+      return {
+        quantity: product.qty,
+        productId: product.product._id,
+      };
+    });
+    const body = {
+      cart: formattedCart,
+      merchantId: merchantId,
+      cvv: cvv,
+      cardNumber: cardNumber,
+      expiryDate: expiryDate,
+    };
+    API.post('/api/payment/mobile', body).then((res) => {
+      if (res.data.success) {
+        // clear local storage since paid successful
+        AsyncStorage.clear()
+          .then(() => 
+          this.props.navigation.navigate('Cart', { paymentSuccess: true })) 
+      }
+    });
+  }
 
   attemptPayment() {
     const { cardNumber, expiryDate, cvv } = this.state;
@@ -127,7 +162,7 @@ export default class PaymentPage extends React.Component {
         this.captchaForm.hide();
         return;
       } else {
-        console.log('Verified code from Google', event.nativeEvent.data);
+        this.sendPayment();
         setTimeout(() => {
           this.captchaForm.hide();
         }, 5000);
@@ -143,10 +178,17 @@ export default class PaymentPage extends React.Component {
   }
 
   render() {
+    const { products } = this.state;
+    if (products == null) {
+      return null;
+    }
+    const totalPrice = products.reduce((acc, product) => {
+      acc += product.product.price * product.qty;
+      return acc;
+    }, 0);
     return (
       <View style={styles.centeredView}>
-        {this.state.headerVisible && <Text style={styles.paymentHeader}>Total Amount: $5.00</Text>}
-
+        <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
         <Input
           inputContainerStyle={styles.cardInput}
           label="Card Number"
