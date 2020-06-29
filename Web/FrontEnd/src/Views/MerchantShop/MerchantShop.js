@@ -6,6 +6,7 @@ import { defaultTheme } from '../../utils/theme';
 import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import API from '../../utils/baseUrl';
+import { ProductListContext } from '../../utils/merchantShopContext';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -23,7 +24,10 @@ class ProductList extends React.Component {
     return (
       <Row gutter={[32, 32]}>
         {products.map((product, index) => {
-          const { name, images, url, rating, _id, totalQty, soldQty } = product;
+          const { name, images, url, rating, _id, totalQty, soldQty, show } = product;
+          if (show !== undefined && !show) {
+            return null;
+          }
           return (
             <Col key={index} lg={{ span: 8 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <ProductCard
@@ -52,7 +56,7 @@ export default class MerchantShop extends React.Component {
       products: [],
       merchantName: '',
       isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
-    };
+      updateProductList: () => this.getProductFromApi(this.state.merchantId)};
   }
 
   getProductFromApi = (merchantId) => {
@@ -120,7 +124,9 @@ export default class MerchantShop extends React.Component {
             </Col>
           )}
         </Row>
-        <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
+        <ProductListContext.Provider value={this.state}>
+          <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
+        </ProductListContext.Provider>
       </Content>
     );
   }

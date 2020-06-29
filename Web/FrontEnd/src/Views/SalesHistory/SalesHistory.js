@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Tabs, Input, Table, Switch, Typography, Row } from 'antd';
+import { Layout, Tabs, Input, Table, Switch, Typography, Row, Button } from 'antd';
 import { HistoryOutlined } from '@ant-design/icons';
 import Column from 'antd/lib/table/Column';
 import API from '../../utils/baseUrl';
@@ -15,7 +15,8 @@ const { Search } = Input;
 
 const orderListContext = React.createContext({
   orders: [],
-  toggleFulfilled: () => {},
+  toggleFulfilled: () => { },
+  toggleRefund: () => { }
 });
 
 class SalesTable extends React.Component {
@@ -23,19 +24,29 @@ class SalesTable extends React.Component {
     super(props);
     this.state = {
       isShowConfirmation: false,
+      isShowRefundConfirmation: false,
       orderId: null,
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
 
   handleOk = (toggleFulfilled) => {
     this.setState({ isShowConfirmation: false });
     this.changeFulfilledStatus(toggleFulfilled);
   };
 
-  handleCancel = () => {
-    this.setState({ isShowConfirmation: false });
+  handleRefund = (toggleRefund) => {
+    const { orderId } = this.state;
+
+    const body = {
+      orderId: orderId
+    }
+    API.post('api/payment/refund', body).then(res => {
+      console.log(res)
+      this.setState({ isShowRefundConfirmation: false });
+      toggleRefund();
+    })
   };
 
   changeFulfilledStatus = (toggleFulfilled) => {
@@ -102,18 +113,21 @@ class SalesTable extends React.Component {
   };
 
   render() {
-    const { orders, toggleFulfilled } = this.context;
+    const { orders, toggleFulfilled, toggleRefund } = this.context;
 
     let data = orders ? orders : [];
     let dataSource = [];
-    if (!this.props.statusTab) {
-      for (let elm of data) {
+    for (let elm of data) {
+      if (elm.isRefunded) {
+        continue;
+      }
+      if (!this.props.statusTab) {
         if (elm.isFulfilled === this.props.isFulfilled) {
           dataSource.push(elm);
         }
+      } else {
+        dataSource.push(elm);
       }
-    } else {
-      dataSource = data;
     }
 
     for (let i = 0; i < dataSource.length; i++) {
@@ -131,12 +145,23 @@ class SalesTable extends React.Component {
           title="Confirmation"
           visible={this.state.isShowConfirmation}
           onOk={() => this.handleOk(toggleFulfilled)}
-          onCancel={this.handleCancel}
+          onCancel={() => this.setState({ isShowConfirmation: false })}
           style={{ textAlign: 'center' }}
           okText="Yes"
           cancelText="No"
         >
           Are you sure the order is fulfilled?
+        </Modal>
+        <Modal
+          title="Confirmation"
+          visible={this.state.isShowRefundConfirmation}
+          onOk={() => this.handleRefund(toggleRefund)}
+          onCancel={() => this.setState({ isShowRefundConfirmation: false })}
+          style={{ textAlign: 'center' }}
+          okText="Yes"
+          cancelText="No"
+        >
+          Are you sure you want to refund the order?
         </Modal>
         <Table key={key} dataSource={dataSource}>
           <Column key={0} title="OrderId" dataIndex="_id" sorter={(a, b) => a._id - b._id} />
@@ -201,6 +226,19 @@ class SalesTable extends React.Component {
               }}
             />
           )}
+          <Column
+            key={7}
+            title="Refund"
+            dataIndex="isRefunded"
+            render={(text, record) => {
+              return (
+                <Button type='primary' onClick={() =>
+                  this.setState({ isShowRefundConfirmation: true, orderId: record._id })}>
+                  Refund
+                </Button>
+              )
+            }}
+          />
         </Table>
       </div>
     );
@@ -225,6 +263,17 @@ export default class SalesHistory extends React.Component {
           }
         }
       },
+      toggleRefund: () => {
+        const body = {
+          merchantId: this.props.merchantId,
+          fulfilled: 'all',
+        };
+        API.post('api/order/getAll', body)
+          .then((res) => {
+            this.setState({ orders: res.data.orders });
+          })
+          .catch((err) => console.error(err));
+      }
     };
   }
 
@@ -235,7 +284,6 @@ export default class SalesHistory extends React.Component {
     };
     API.post('api/order/getAll', body)
       .then((res) => {
-        console.log(res);
         this.setState({ orders: res.data.orders });
       })
       .catch((err) => console.error(err));

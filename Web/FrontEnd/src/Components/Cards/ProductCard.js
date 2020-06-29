@@ -7,6 +7,8 @@ import 'antd/dist/antd.css';
 import MaiYuGe from '../../images/maiyuge.jpg';
 import { frontEndUrl, baseUrl } from '../../utils/baseUrl';
 import QRCode from 'qrcode.react';
+import API from '../../utils/baseUrl';
+import { ProductListContext } from '../../utils/merchantShopContext';
 
 const { Meta } = Card;
 
@@ -64,8 +66,13 @@ export default class ProductCard extends React.Component {
   hideQRCode = () => {
     this.setState({ isShowQR: false });
   };
+  
+  deleteItem = (productId, updateProductList) => {
+    API.get(`api/product/deleteProduct?id=${productId}`)
+    .then(res => updateProductList())
+  }
 
-  getActionList = (productLink, isOwnerShop) => {
+  getActionList = (productLink, isOwnerShop, productId, updateProductList) => {
     if (isOwnerShop) {
       return [
         <Button
@@ -89,7 +96,13 @@ export default class ProductCard extends React.Component {
         <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
           <EditOutlined />
         </Button>,
-        <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
+        <Button 
+          style={{ backgroundColor: '#fafafa', border: '0' }}
+          onClick={(event) => {
+            event.preventDefault();
+            this.deleteItem(productId, updateProductList);
+          }}
+        >
           <DeleteOutlined />
         </Button>,
       ];
@@ -118,6 +131,7 @@ export default class ProductCard extends React.Component {
 
   render() {
     const { title, imageUrl, rating, productId, merchantId, isOwnerShop, isSoldOut } = this.props;
+    const { updateProductList } = this.context;
 
     const productLink = `${merchantId}/product/${productId}`;
     const fullImageUrl = imageUrl ? baseUrl + imageUrl : undefined;
@@ -140,7 +154,7 @@ export default class ProductCard extends React.Component {
             cover={this.getCoverImage(fullImageUrl, isSoldOut)}
             hoverable
             tabBarExtraContent={<Rate value={rating} />}
-            actions={this.getActionList(productLink, isOwnerShop)}
+            actions={this.getActionList(productLink, isOwnerShop, productId, updateProductList)}
           >
             <Meta title={title} description={<Rate value={this.props.rating || 5} disabled />} />
           </Card>
@@ -149,3 +163,5 @@ export default class ProductCard extends React.Component {
     );
   }
 }
+
+ProductCard.contextType = ProductListContext
