@@ -63,6 +63,11 @@ export default class Cart extends React.Component {
     this.setState({ products: addedProducts });
   };
 
+  removeProduct = (productId) => {
+    const filteredProducts = this.state.products.filter((product) => product.product._id !== productId);
+    this.setState({ products: filteredProducts });
+  };
+
   header = () => {
     return (
       <View style={styles.header}>
@@ -103,7 +108,7 @@ export default class Cart extends React.Component {
         <FlatList
           style={styles.scroll}
           data={products}
-          renderItem={({ item }) => <CardBox item={item} />}
+          renderItem={({ item }) => <CardBox item={item} removeProduct={this.removeProduct} />}
           ListHeaderComponent={this.header}
           ListFooterComponent={this.footer(products)}
           keyExtractor={(item, index) => index.toString()}
