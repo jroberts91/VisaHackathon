@@ -33,6 +33,7 @@ router.post('/add', async (req, res) => {
   if (!merchant) return res.json({ success: false, msg: 'merchant not found' });
   const offer = new Offer(req.body);
   offer.merchantName = merchant.name;
+  offer.quantityUsed = 0;
   offer.unique = req.body.code + merchantId;
   //save to mongoDB
   try {

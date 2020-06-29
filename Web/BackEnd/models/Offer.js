@@ -9,6 +9,8 @@ const offerSchema = mongoose.Schema({
   offerTitle: String,
   value: Number,
   minValue: Number,
+  quantityUsed: Number,
+  quantity: Number,
   unique: { type: String, unique: 1 },
 });
 
