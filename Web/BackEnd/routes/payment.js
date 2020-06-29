@@ -4,12 +4,32 @@ const { Merchant } = require('../models/Merchant');
 const { Product } = require('../models/Product');
 const { Payment } = require('../models/Payment');
 const { Order } = require('../models/Order');
-const { PullFundsTransaction, PushFundsTransaction } = require('../external/visaDirect');
+const { Transaction } = require('../models/Transaction');
+const { PullFundsTransaction, PushFundsTransaction, ReverseFundsTransaction } = require('../external/visaDirect');
 const { SendPaymentEmail } = require('../external/smtpService');
 
 //=================================
 //             Payment
 //=================================
+
+router.post('/refund', async (req, res) => {
+  let orderId = req.body.orderId;
+  const order = await Order.findOne({ _id: orderId });
+  if (!order) return res.json({ success: false, msg: 'order not found' });
+  var payment = order.payment;
+  try {
+    await ReverseFundsTransaction(payment);
+  } catch (err) {
+    console.log(err);
+    return res.json({ success: false, err });
+  }
+  order.isRefunded = true;
+  order.dateTimeRefunded = Date.now();
+  order.save(async (err) => {
+    if (err) return res.json({ success: false, err });
+    return res.json({ success: true });
+  });
+});
 
 router.post('/mobile', async (req, res) => {
   let merchantId = req.body.merchantId;
@@ -51,6 +71,7 @@ router.post('/mobile', async (req, res) => {
       merchantId: product.merchantId,
       product: product,
       isFulfilled: true,
+      isRefunded: false,
       dateTimeFulfilled: Date.now(),
       quantity: parseInt(cart[i].quantity),
     };
@@ -80,12 +101,6 @@ router.post('/mobile', async (req, res) => {
   }
   return res.json({ success: true });
 });
-
-async function createOrderAndPayForEach(cart, merchantId) {
-  var resBody = { success: true, orders: [] };
-
-  return resBody;
-}
 
 router.post('/direct', async (req, res) => {
   // validate order info and create payment
@@ -139,6 +154,7 @@ router.post('/direct', async (req, res) => {
     if (err) return res.json({ success: false, err });
     order.payment = payment;
     order.isFulfilled = false;
+    order.isRefunded = false;
     await order.save(async function (err, order) {
       if (err) return res.json({ success: false, err });
       await SendPaymentEmail(order.email, order._id, merchant.name, merchant.email);

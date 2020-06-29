@@ -18,10 +18,55 @@ var config = {
   }),
 };
 
-let PushFundsTransaction = async () => {
-  // hard coded for now
+let ReverseFundsTransaction = async (payment) => {
+  // hardcode return transaction details
+  // should get pull transaction, sender details from payment and update payload
   var date = getLocalTime();
   var data = JSON.stringify({
+    transactionIdentifier: '381228649430011',
+    systemsTraceAuditNumber: '451050',
+    acquirerCountryCode: '608',
+    acquiringBin: '408999',
+    businessApplicationId: 'AA',
+    amount: '24.01',
+    cardAcceptor: {
+      address: { country: 'USA', county: 'San Mateo', state: 'CA', zipCode: '94404' },
+      idCode: 'VMT200911026070',
+      name: 'Visa Inc. USA-Foster City',
+      terminalId: '365539',
+    },
+    localTransactionDateTime: date,
+    originalDataElements: {
+      acquiringBin: '408999',
+      approvalCode: '20304B',
+      systemsTraceAuditNumber: '897825',
+      transmissionDateTime: '2020-06-29T06:14:21',
+    },
+    retrievalReferenceNumber: '330000550000',
+    senderCardExpiryDate: '2015-10',
+    senderCurrencyCode: 'USD',
+    senderPrimaryAccountNumber: '4895100000055127',
+  });
+  config.url = process.env.VD_REFUND_URL;
+  config.data = data;
+  axios(config)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+      throw new Error('visa direct push funds API error');
+    });
+};
+
+let PushFundsTransaction = async () => {
+  // sender card details and receipent card details are hardcoded
+  // receipient will be merchant
+  // sender will be customer
+  var date = getLocalTime();
+  var data = JSON.stringify({
+    systemsTraceAuditNumber: '451018',
+    retrievalReferenceNumber: '412770451018',
     acquirerCountryCode: '840',
     acquiringBin: '408999',
     amount: '124.05',
@@ -33,11 +78,8 @@ let PushFundsTransaction = async () => {
       terminalId: 'TID-9999',
     },
     localTransactionDateTime: date,
-    merchantCategoryCode: '6012',
-    pointOfServiceData: { motoECIIndicator: '0', panEntryMode: '90', posConditionCode: '00' },
     recipientName: 'rohan',
     recipientPrimaryAccountNumber: '4957030420210496',
-    retrievalReferenceNumber: '412770451018',
     senderAccountNumber: '4653459515756154',
     senderAddress: '901 Metro Center Blvd',
     senderCity: 'Foster City',
@@ -46,23 +88,7 @@ let PushFundsTransaction = async () => {
     senderReference: '',
     senderStateCode: 'CA',
     sourceOfFundsCode: '05',
-    systemsTraceAuditNumber: '451018',
     transactionCurrencyCode: 'USD',
-    transactionIdentifier: '381228649430015',
-    settlementServiceIndicator: '9',
-    colombiaNationalServiceData: {
-      countryCodeNationalService: '170',
-      nationalReimbursementFee: '20.00',
-      nationalNetMiscAmountType: 'A',
-      nationalNetReimbursementFeeBaseAmount: '20.00',
-      nationalNetMiscAmount: '10.00',
-      addValueTaxReturn: '10.00',
-      taxAmountConsumption: '10.00',
-      addValueTaxAmount: '10.00',
-      costTransactionIndicator: '0',
-      emvTransactionIndicator: '1',
-      nationalChargebackReason: '11',
-    },
   });
   config.url = process.env.VD_PUSH_URL;
   config.data = data;
@@ -77,9 +103,12 @@ let PushFundsTransaction = async () => {
 };
 
 let PullFundsTransaction = async () => {
-  // hard coded for now
+  // sender card details hardcoded for now
+  // sender will be customer
   var date = getLocalTime();
   var data = JSON.stringify({
+    systemsTraceAuditNumber: '451001',
+    retrievalReferenceNumber: '330000550000',
     acquirerCountryCode: '840',
     acquiringBin: '408999',
     amount: '124.02',
@@ -90,40 +119,11 @@ let PullFundsTransaction = async () => {
       name: 'Visa Inc. USA-Foster City',
       terminalId: 'ABCD1234',
     },
-    cavv: '0700100038238906000013405823891061668252',
-    foreignExchangeFeeTransaction: '11.99',
     localTransactionDateTime: date,
-    retrievalReferenceNumber: '330000550000',
     senderCardExpiryDate: '2015-10',
     senderCurrencyCode: 'USD',
     senderPrimaryAccountNumber: '4895142232120006',
     surcharge: '11.99',
-    systemsTraceAuditNumber: '451001',
-    nationalReimbursementFee: '11.22',
-    cpsAuthorizationCharacteristicsIndicator: 'Y',
-    addressVerificationData: { street: 'XYZ St', postalCode: '12345' },
-    settlementServiceIndicator: '9',
-    colombiaNationalServiceData: {
-      countryCodeNationalService: '170',
-      nationalReimbursementFee: '20.00',
-      nationalNetMiscAmountType: 'A',
-      nationalNetReimbursementFeeBaseAmount: '20.00',
-      nationalNetMiscAmount: '10.00',
-      addValueTaxReturn: '10.00',
-      taxAmountConsumption: '10.00',
-      addValueTaxAmount: '10.00',
-      costTransactionIndicator: '0',
-      emvTransactionIndicator: '1',
-      nationalChargebackReason: '11',
-    },
-    riskAssessmentData: {
-      delegatedAuthenticationIndicator: true,
-      lowValueExemptionIndicator: true,
-      traExemptionIndicator: true,
-      trustedMerchantExemptionIndicator: true,
-      scpExemptionIndicator: true,
-    },
-    visaMerchantIdentifier: '73625198',
   });
   config.url = process.env.VD_PULL_URL;
   config.data = data;
@@ -145,4 +145,4 @@ function getLocalTime() {
   return new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0];
 }
 
-module.exports = { PushFundsTransaction, PullFundsTransaction };
+module.exports = { PushFundsTransaction, PullFundsTransaction, ReverseFundsTransaction };

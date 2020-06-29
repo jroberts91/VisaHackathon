@@ -65,6 +65,23 @@
 
 ## api/payment
 
+- POST '/refund' refund the order to the sender (customer)
+
+```json
+Request
+
+{
+    "orderId": "5ef98d0161520d5d98d59133"
+}
+
+Response
+
+{
+    "success": true
+}
+
+```
+
 - POST '/direct' makes a payment by creating an order associated with payment, the backend will call and handle push and pull funds transfer (currently with dummy payload)
 
 ```json
