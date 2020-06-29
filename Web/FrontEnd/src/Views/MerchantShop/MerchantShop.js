@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Button, Popover, Table, Divider } from 'antd';
+import { Row, Col, Layout, Typography, Button, Popover, Table } from 'antd';
 import { defaultTheme } from '../../utils/theme';
 import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
@@ -152,7 +152,7 @@ export default class MerchantShop extends React.Component {
               Offers
             </AddButton>
           </Popover>
-          
+
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>
