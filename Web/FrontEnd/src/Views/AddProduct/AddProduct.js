@@ -47,7 +47,7 @@ export default class AddProduct extends React.Component {
           formData.append('files', value.originFileObj);
         }
       } else {
-        info.fileList.pop();
+        info.fileList.slice(0,4);
         message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
       }
     };
