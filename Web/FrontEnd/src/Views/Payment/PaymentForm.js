@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col, message } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, message, Alert } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 import API from '../../utils/baseUrl';
@@ -28,10 +28,45 @@ const PayButton = styled(Button)`
   margin-bottom: 0;
 `;
 
+const StyledAlerts = styled(Alert)``;
+
 export default class PaymentForm extends React.Component {
   formRef = React.createRef();
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      offers: [],
+      offerError: false,
+      totalPrice: this.props.totalPrice,
+    };
+  }
+
+  componentDidMount = () => {
+    this.getMerchantOffers();
+  };
+
+  test = (item) => {
+    const { offers } = this.state;
+    const currentOffer = offers[item];
+    if (this.props.totalPrice > currentOffer.minValue) {
+      this.setState({ offerError: false, totalPrice: this.props.totalPrice - currentOffer.value });
+    } else {
+      this.setState({ offerError: true, totalPrice: this.props.totalPrice, offerMinValue: currentOffer.minValue });
+    }
+  };
+
+  getMerchantOffers = () => {
+    API.get(`api/offers/visell/getByMerchant?merchantId=${this.props.merchantId}`)
+      .then((res) => {
+        console.log(res.data.offers);
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
+  };
+
   render() {
+    const { offers, totalPrice, offerError, offerMinValue } = this.state;
     const handlePay = (values) => {
       const { number, cvv } = values.card;
       const { address, country, postal, email, firstName, lastName, phoneNumber } = values.user;
@@ -190,14 +225,29 @@ export default class PaymentForm extends React.Component {
         >
           <Input.Password />
         </Form.Item>
-        <Row align="middle" justify="center" style={{ marginLeft: '150px' }}>
-          <Col span={12} align="center">
+        {offerError && (
+          <StyledAlerts message={`Did not reach min value of $${offerMinValue} w/o delivery`} type="error" showIcon />
+        )}
+        <Form.Item label="Offers">
+          <Select onSelect={this.test}>
+            {offers.map((item, index) => {
+              return <Option value={index}> {item.offerName} </Option>;
+            })}
+          </Select>
+        </Form.Item>
+        <Row align="middle" justify="right" style={{ marginLeft: '150px' }}>
+          <Col span={18} align="left">
             <Text
               strong
               style={{ fontSize: '18px' }}
-            >{`Total: $${this.props.totalPrice} + $${this.props.shippingFee} shipping`}</Text>
+            >{`Total: $${totalPrice} + $${this.props.shippingFee} delivery`}</Text>
           </Col>
-          <Col span={12} align="center">
+          <Col span={18} align="left">
+            <Text strong style={{ fontSize: '18px' }}>{`= $${
+              parseFloat(totalPrice) + parseFloat(this.props.shippingFee)
+            }`}</Text>
+          </Col>
+          <Col span={12} align="left">
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }} noStyle>
               <PayButton type="primary" htmlType="submit">
                 Pay via Visa
