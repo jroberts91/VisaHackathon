@@ -159,18 +159,11 @@ export default class MerchantShop extends React.Component {
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <Popover content={content}>
                 <AddButton type="primary" style={{ float: 'right' }}>
-                  Merchant Offers
+                  Offers
                 </AddButton>
               </Popover>
             </Col>
           )}
-
-          <Popover content={content}>
-            <AddButton type="primary" style={{ float: 'right' }}>
-              Offers
-            </AddButton>
-          </Popover>
-
         </Row>
         <ProductListContext.Provider value={this.state}>
           <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />

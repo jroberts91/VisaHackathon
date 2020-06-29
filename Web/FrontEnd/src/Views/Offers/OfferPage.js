@@ -84,41 +84,6 @@ export default class OfferPage extends React.Component {
               <TagOutlined /> Offers
             </Title>
           </Row>
-          <Title level={4}>Visa</Title>
-          <div
-            style={{
-              paddingBottom: '30px',
-              position: 'relative',
-            }}
-          >
-            <Carousel
-              swipeable={false}
-              draggable={false}
-              minimumTouchDrag={80}
-              responsive={responsive}
-              renderDotsOutside
-              showDots
-              ssr={true} // means to render carousel on server-side.
-              infinite={true}
-              keyBoardControl={true}
-              transitionDuration={500}
-              containerClass="carousel-container"
-              removeArrowOnDeviceType={['tablet', 'mobile']}
-              deviceType={this.props.deviceType}
-              dotListClass="custom-dot-list-style"
-              itemClass="carousel-item-padding-40-px"
-            >
-              {offers.map((product, index) => {
-                const { offerTitle, merchantName } = product;
-                const imgUrl = product.merchantImages[0].fileLocation;
-                return (
-                  <StyledOfferCard>
-                    <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
-                  </StyledOfferCard>
-                );
-              })}
-            </Carousel>
-          </div>
           <Title level={4}>Visell</Title>
           <div
             style={{
@@ -155,6 +120,41 @@ export default class OfferPage extends React.Component {
                       imgUrl={profileImage}
                       id={merchantId}
                     />
+                  </StyledOfferCard>
+                );
+              })}
+            </Carousel>
+          </div>
+          <Title level={4}>Visa</Title>
+          <div
+            style={{
+              paddingBottom: '30px',
+              position: 'relative',
+            }}
+          >
+            <Carousel
+              swipeable={false}
+              draggable={false}
+              minimumTouchDrag={80}
+              responsive={responsive}
+              renderDotsOutside
+              showDots
+              ssr={true} // means to render carousel on server-side.
+              infinite={true}
+              keyBoardControl={true}
+              transitionDuration={500}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={['tablet', 'mobile']}
+              deviceType={this.props.deviceType}
+              dotListClass="custom-dot-list-style"
+              itemClass="carousel-item-padding-40-px"
+            >
+              {offers.map((product, index) => {
+                const { offerTitle, merchantName } = product;
+                const imgUrl = product.merchantImages[0].fileLocation;
+                return (
+                  <StyledOfferCard>
+                    <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
                   </StyledOfferCard>
                 );
               })}

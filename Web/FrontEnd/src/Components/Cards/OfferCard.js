@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
 import API, { baseUrl } from '../../utils/baseUrl';
@@ -11,12 +11,18 @@ const StyledCard = styled(Card)`
   height: 250px;
 `;
 
+const StyledButton = styled(Button)`
+  position: absolute;
+  right: 0;
+  color: #1a1f71;
+`;
+
 class OfferDescription extends React.Component {
   render() {
     return (
       <div>
         <div>{this.props.description}</div>
-        <div>{this.props.code}</div>
+        <div>{this.props.code && <StyledButton type="link">Go to Shop</StyledButton>}</div>
       </div>
     );
   }
