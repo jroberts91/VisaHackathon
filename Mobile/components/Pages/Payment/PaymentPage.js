@@ -1,16 +1,17 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
 import { AsyncStorage } from 'react-native';
 import API from '../../utils/baseUrl';
+import { CreditCardInput } from 'react-native-credit-card-input';
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
+    marginTop: 50,
     alignItems: 'center',
   },
   innerView: {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    flex: 0.1,
+    flex: 0.05,
     height: 15,
     marginTop: 10,
     marginLeft: 10,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     color: '#1a1f71',
   },
   paymentHeader: {
-    bottom: '10%',
+    bottom: 20,
     textAlign: 'center',
     width: '80%',
     fontSize: 24,
@@ -216,37 +217,33 @@ export default class PaymentPage extends React.Component {
     return '';
   }
 
+  _onChangeDetails = (form) => {
+    const { cvv, expiry, number } = form.values;
+    this.setState({ cardNumber: number, expiryDate: expiry, cvv: cvv });
+  };
+
   getVisaDirectForm() {
+    const icons = {
+      cvc: require('../../../assets/stp_card_visa.png'),
+      cvc_amex: require('../../../assets/stp_card_visa.png'),
+      'american-express': require('../../../assets/stp_card_visa.png'),
+      'diners-club': require('../../../assets/stp_card_visa.png'),
+      'master-card': require('../../../assets/stp_card_visa.png'),
+      discover: require('../../../assets/stp_card_visa.png'),
+      jcb: require('../../../assets/stp_card_visa.png'),
+      placeholder: require('../../../assets/stp_card_visa.png'),
+      visa: require('../../../assets/stp_card_visa.png'),
+    };
+
+    const frontCardImage = require('../../../assets/visell-card-front.png');
     return (
       <View style={styles.innerView}>
-        <Input
-          inputContainerStyle={styles.cardInput}
-          label="Card Number"
-          placeholder="0000-0000-0000-0000"
-          onChangeText={(value) => this.setState({ cardNumber: value })}
-          errorStyle={{ color: 'red' }}
-          errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
-          leftIcon={<Icon name="credit-card" size={24} />}
-          rightIcon={<Image style={styles.tinyLogo} source={require('../../../images/visa-logo.png')} />}
-        />
         <View style={styles.cardContainer}>
-          <Input
-            containerStyle={styles.inputContainer}
-            inputContainerStyle={styles.expiryInput}
-            label="Expires"
-            placeholder="MM/YY"
-            onChangeText={(value) => this.setState({ expiryDate: value })}
-            errorStyle={{ color: 'red' }}
-            errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
-          />
-          <Input
-            containerStyle={styles.inputContainer}
-            inputContainerStyle={styles.cvvInput}
-            label="CVV"
-            placeholder="000"
-            onChangeText={(value) => this.setState({ cvv: value })}
-            errorStyle={{ color: 'red' }}
-            errorMessage={this.getCardErrorMsg(this.state.cvv)}
+          <CreditCardInput
+            onChange={this._onChangeDetails}
+            allowScroll={true}
+            cardBrandIcons={icons}
+            cardImageFront={frontCardImage}
           />
         </View>
         <ConfirmGoogleCaptcha
@@ -292,39 +289,41 @@ export default class PaymentPage extends React.Component {
           <Text style={styles.breadcrumbs}>{`Cart > `}</Text>
           <Text style={styles.breadcrumbsSelected}>Payment</Text>
         </View>
-        <View style={styles.centeredView}>
-          <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
-          <RadioForm formHorizontal={true} animation={true} initial={0}>
-            {radioProps.map((obj, i) => (
-              <RadioButton labelHorizontal={true} key={i}>
-                <RadioButtonInput
-                  obj={obj}
-                  index={i}
-                  isSelected={this.state.radioSelection === i}
-                  onPress={(value) => this.setState({ radioSelection: value })}
-                  buttonInnerColor={'#FAA913'}
-                  buttonOuterColor={'#FAA913'}
-                  buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
-                />
-                <RadioButtonLabel
-                  obj={obj}
-                  index={i}
-                  labelHorizontal={true}
-                  labelStyle={{ marginRight: 10 }}
-                  onPress={() => {}}
-                />
-              </RadioButton>
-            ))}
-          </RadioForm>
-          {this.state.radioSelection === 0 && this.getVisaDirectForm()}
-          {this.state.radioSelection === 1 && (
-            <View style={styles.innerView}>
-              <View style={styles.checkoutButton}>
-                <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.centeredView}>
+            <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
+            <RadioForm formHorizontal={true} animation={true} initial={0}>
+              {radioProps.map((obj, i) => (
+                <RadioButton labelHorizontal={true} key={i}>
+                  <RadioButtonInput
+                    obj={obj}
+                    index={i}
+                    isSelected={this.state.radioSelection === i}
+                    onPress={(value) => this.setState({ radioSelection: value })}
+                    buttonInnerColor={'#FAA913'}
+                    buttonOuterColor={'#FAA913'}
+                    buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
+                  />
+                  <RadioButtonLabel
+                    obj={obj}
+                    index={i}
+                    labelHorizontal={true}
+                    labelStyle={{ marginRight: 10 }}
+                    onPress={() => {}}
+                  />
+                </RadioButton>
+              ))}
+            </RadioForm>
+            {this.state.radioSelection === 0 && this.getVisaDirectForm()}
+            {this.state.radioSelection === 1 && (
+              <View style={styles.innerView}>
+                <View style={styles.checkoutButton}>
+                  <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+                </View>
               </View>
-            </View>
-          )}
-        </View>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
       </>
     );
   }
