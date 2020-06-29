@@ -112,20 +112,20 @@ router.post('/direct', async (req, res) => {
 
   let merchantId = orderBody.merchantId;
   const merchant = await Merchant.findOne({ _id: merchantId });
-  if (!merchant) return res.json({ success: false, msg:"merchant not found" });
+  if (!merchant) return res.json({ success: false, msg: 'merchant not found' });
 
   let code = orderBody.code;
   const offer = await Offer.findOne({ code: code, merchantId: merchantId });
-  if (!offer) return res.json({ success: false, msg: "offer not found" });
+  if (!offer) return res.json({ success: false, msg: 'offer not found' });
 
   if (offer.quantityUsed >= offer.quantity) {
-    return res.json({ success: false, msg: "offer fully redeemed" });
+    return res.json({ success: false, msg: 'offer fully redeemed' });
   }
   let offerNewQuantity = offer.quantityUsed + 1;
 
   let productId = orderBody.product;
   const product = await Product.findOne({ _id: productId });
-  if (!product) return res.json({ success: false,  msg:"product not found" });
+  if (!product) return res.json({ success: false, msg: 'product not found' });
 
   // check product belong to merchant
   if (product.merchantId != merchantId) {
@@ -161,7 +161,7 @@ router.post('/direct', async (req, res) => {
 
   // update offer qty
   await Offer.findOneAndUpdate({ _id: offer._id }, { quantityUsed: offerNewQuantity });
-  
+
   // update product qty
   await Product.findOneAndUpdate({ _id: productId }, { soldQty: newSoldQty });
 
