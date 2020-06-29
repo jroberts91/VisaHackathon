@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../utils/baseUrl';
 import { LineChart, XAxis, YAxis, Tooltip, Line, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 
 function Linechart(props) {

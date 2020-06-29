@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Spin } from 'antd';
+import { Row, Layout, Typography, Spin } from 'antd';
 import { TagOutlined } from '@ant-design/icons';
 import OfferCard from '../../Components/Cards/OfferCard';
 import API from '../../utils/baseUrl';
@@ -60,7 +60,7 @@ export default class OfferPage extends React.Component {
 
   getOffersFromApi = () => {
     this.setState({ notLoaded: true });
-    API.get('api/offers/list?max=' + '10')
+    API.get(`api/offers/list?max=${10}`)
       .then((res) => {
         console.log(res.data.Offers);
         this.setState({ notLoaded: false });
@@ -108,7 +108,7 @@ export default class OfferPage extends React.Component {
               itemClass="carousel-item-padding-40-px"
             >
               {offers.map((product, index) => {
-                const { programName, offerTitle, merchantName } = product;
+                const { offerTitle, merchantName } = product;
                 return (
                   <StyledOfferCard>
                     <OfferCard title={merchantName} description={offerTitle} />
@@ -142,7 +142,7 @@ export default class OfferPage extends React.Component {
               itemClass="carousel-item-padding-40-px"
             >
               {merchants.map((merchant, index) => {
-                const { name, profileImage, description, rating, _id } = merchant;
+                const { name, profileImage, _id } = merchant;
                 return (
                   <StyledOfferCard>
                     <OfferCard
