@@ -2,14 +2,12 @@ const express = require('express');
 const https = require('https');
 const axios = require('axios');
 const path = require('path');
+const { Offer } = require('../models/Offer');
+const { imageUpload } = require('../utils/imageUpload');
 fs = require('fs');
 
 const router = express.Router();
 require('dotenv').config();
-
-//=================================
-//             Offers
-//=================================
 
 var config = {
   method: 'get',
@@ -22,6 +20,30 @@ var config = {
     key: fs.readFileSync(path.resolve(__dirname, '../resources/key.pem')),
   }),
 };
+
+//=================================
+//             Offers
+//=================================
+
+router.post('/add', imageUpload, async (req, res) => {
+  const offer = new Offer(req.body);
+  offer.soldOut = false;
+  if (req.files) offer.merchantImage = req.files[0].path;
+  //save to mongoDB
+  try {
+    await offer.save();
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
+router.get('/visell/list', async (req, res) => {
+  Offer.find().exec((err, offers) => {
+    if (err) return res.status(400).json({ success: false, err });
+    res.status(200).json({ success: true, offers, postSize: offers.length });
+  });
+});
 
 // current implementation only gets all offers with no filter
 //?max=int
@@ -53,11 +75,17 @@ function minimizeAndReturnOfferResponse(data) {
   };
   var offers = data.Offers;
   for (var i in offers) {
+    var merchantImages = offers[i].merchantList[0].merchantImages;
+    for (var j in merchantImages) {
+      delete merchantImages[j].languageIds;
+      delete merchantImages[j].languages;
+    }
     response.Offers.push({
       programName: offers[i].programName,
       programId: offers[i].programId,
       merchantName: offers[i].merchantList[0].merchant,
       merchantId: offers[i].merchantList[0].merchantId,
+      merchantImages: offers[i].merchantList[0].merchantImages,
       soldOut: offers[i].soldOut,
       offerTitle: offers[i].offerTitle,
       validityFromDateTime: offers[i].validityFromDateTime,

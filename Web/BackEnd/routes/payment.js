@@ -141,7 +141,7 @@ router.post('/direct', async (req, res) => {
     order.isFulfilled = false;
     await order.save(async function (err, order) {
       if (err) return res.json({ success: false, err });
-      await SendPaymentEmail(order.email);
+      await SendPaymentEmail(order.email, order._id, merchant.name, merchant.email);
       return res.json({ success: true, orderId: order._id, paymentId: order.payment._id });
     });
   });
