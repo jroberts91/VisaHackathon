@@ -14,7 +14,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   innerView: {
-    width: '100%'
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   paymentHeader: {
     bottom: '10%',
@@ -66,15 +68,19 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   payButton: {
-    width: '90%',
+    width: '50%',
     display: 'flex',
-    alignItems: 'flex-end',
+    marginTop: '15%',
+    borderWidth: 2,
+    borderColor: '#1a1f71',
   },
   checkoutButton: {
-    width: '70%',
+    width: '50%',
     display: 'flex',
-    marginTop: '15%'
-  }
+    marginTop: '15%',
+    borderWidth: 2,
+    borderColor: '#1a1f71',
+  },
 });
 
 export default class PaymentPage extends React.Component {
@@ -84,7 +90,7 @@ export default class PaymentPage extends React.Component {
     expiryDate: null,
     cvv: null,
     keyboardUp: false,
-    radioSelection: 0
+    radioSelection: 0,
   };
 
   componentDidMount() {
@@ -118,9 +124,7 @@ export default class PaymentPage extends React.Component {
     });
   };
 
-  paymentVisaCheckout() {
-
-  }
+  paymentVisaCheckout() {}
 
   sendPayment() {
     const { products, cvv, cardNumber, expiryDate } = this.state;
@@ -198,48 +202,48 @@ export default class PaymentPage extends React.Component {
   getVisaDirectForm() {
     return (
       <View style={styles.innerView}>
-            <Input
-              inputContainerStyle={styles.cardInput}
-              label="Card Number"
-              placeholder="0000-0000-0000-0000"
-              onChangeText={(value) => this.setState({ cardNumber: value })}
-              errorStyle={{ color: 'red' }}
-              errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
-              leftIcon={<Icon name="credit-card" size={24} />}
-              rightIcon={<Image style={styles.tinyLogo} source={require('../../../images/visa-logo.png')} />}
-            />
-            <View style={styles.cardContainer}>
-              <Input
-                containerStyle={styles.inputContainer}
-                inputContainerStyle={styles.expiryInput}
-                label="Expires"
-                placeholder="MM/YY"
-                onChangeText={(value) => this.setState({ expiryDate: value })}
-                errorStyle={{ color: 'red' }}
-                errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
-              />
-              <Input
-                containerStyle={styles.inputContainer}
-                inputContainerStyle={styles.cvvInput}
-                label="CVV"
-                placeholder="000"
-                onChangeText={(value) => this.setState({ cvv: value })}
-                errorStyle={{ color: 'red' }}
-                errorMessage={this.getCardErrorMsg(this.state.cvv)}
-              />
-            </View>
-            <ConfirmGoogleCaptcha
-              ref={(_ref) => (this.captchaForm = _ref)}
-              siteKey={'6Lc_EqoZAAAAAGAzCKHzo2bEWXIvnMtETb9blmyq'}
-              baseUrl={'exp://192.168.0.188:19000'}
-              languageCode="en"
-              onMessage={this.onMessage}
-            />
-            <View style={styles.payButton}>
-              <Button raised="true" color="#1a1f71" title="Pay with Visa" onPress={() => this.attemptPayment()} />
-            </View>
-          </View>
-    )
+        <Input
+          inputContainerStyle={styles.cardInput}
+          label="Card Number"
+          placeholder="0000-0000-0000-0000"
+          onChangeText={(value) => this.setState({ cardNumber: value })}
+          errorStyle={{ color: 'red' }}
+          errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
+          leftIcon={<Icon name="credit-card" size={24} />}
+          rightIcon={<Image style={styles.tinyLogo} source={require('../../../images/visa-logo.png')} />}
+        />
+        <View style={styles.cardContainer}>
+          <Input
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.expiryInput}
+            label="Expires"
+            placeholder="MM/YY"
+            onChangeText={(value) => this.setState({ expiryDate: value })}
+            errorStyle={{ color: 'red' }}
+            errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
+          />
+          <Input
+            containerStyle={styles.inputContainer}
+            inputContainerStyle={styles.cvvInput}
+            label="CVV"
+            placeholder="000"
+            onChangeText={(value) => this.setState({ cvv: value })}
+            errorStyle={{ color: 'red' }}
+            errorMessage={this.getCardErrorMsg(this.state.cvv)}
+          />
+        </View>
+        <ConfirmGoogleCaptcha
+          ref={(_ref) => (this.captchaForm = _ref)}
+          siteKey={'6Lc_EqoZAAAAAGAzCKHzo2bEWXIvnMtETb9blmyq'}
+          baseUrl={'exp://192.168.0.188:19000'}
+          languageCode="en"
+          onMessage={this.onMessage}
+        />
+        <View style={styles.payButton}>
+          <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.attemptPayment()} />
+        </View>
+      </View>
+    );
   }
 
   render() {
@@ -257,55 +261,47 @@ export default class PaymentPage extends React.Component {
         <View style={styles.centeredView}>
           <Text>No item to Purchase</Text>
         </View>
-      )
+      );
     }
 
     let radioProps = [
       { label: 'Visa Direct', value: 0 },
-      { label: 'Visa Checkout', value: 1 }
-    ]
+      { label: 'Visa Checkout', value: 1 },
+    ];
 
     return (
       <View style={styles.centeredView}>
         <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
-        <RadioForm
-          formHorizontal={true}
-          animation={true}
-          initial={0}
-        >
-          {
-            radioProps.map((obj, i) => (
-              <RadioButton labelHorizontal={true} key={i} >
-                <RadioButtonInput
-                  obj={obj}
-                  index={i}
-                  isSelected={this.state.radioSelection === i}
-                  onPress={value => this.setState({ radioSelection: value })}
-                  buttonInnerColor={'#FAA913'}
-                  buttonOuterColor={'#FAA913'}
-                  buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
-                />
-                <RadioButtonLabel
-                  obj={obj}
-                  index={i}
-                  labelHorizontal={true}
-                  labelStyle={{ marginRight: 10 }}
-                  onPress={() => {}}
-                />
-              </RadioButton>
-            ))
-          }
+        <RadioForm formHorizontal={true} animation={true} initial={0}>
+          {radioProps.map((obj, i) => (
+            <RadioButton labelHorizontal={true} key={i}>
+              <RadioButtonInput
+                obj={obj}
+                index={i}
+                isSelected={this.state.radioSelection === i}
+                onPress={(value) => this.setState({ radioSelection: value })}
+                buttonInnerColor={'#FAA913'}
+                buttonOuterColor={'#FAA913'}
+                buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
+              />
+              <RadioButtonLabel
+                obj={obj}
+                index={i}
+                labelHorizontal={true}
+                labelStyle={{ marginRight: 10 }}
+                onPress={() => {}}
+              />
+            </RadioButton>
+          ))}
         </RadioForm>
-        {
-          this.state.radioSelection === 0 &&
-          this.getVisaDirectForm()
-        }
-        {
-          this.state.radioSelection === 1 &&
-          <View style={styles.checkoutButton}>
-              <Button raised="true" color="#1a1f71" title="Visa Checkout" onPress={() => this.paymentVisaCheckout()} />
+        {this.state.radioSelection === 0 && this.getVisaDirectForm()}
+        {this.state.radioSelection === 1 && (
+          <View style={styles.innerView}>
+            <View style={styles.checkoutButton}>
+              <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+            </View>
           </View>
-        }
+        )}
       </View>
     );
   }
