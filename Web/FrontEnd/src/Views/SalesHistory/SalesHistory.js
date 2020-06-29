@@ -15,8 +15,8 @@ const { Search } = Input;
 
 const orderListContext = React.createContext({
   orders: [],
-  toggleFulfilled: () => { },
-  toggleRefund: () => { }
+  toggleFulfilled: () => {},
+  toggleRefund: () => {},
 });
 
 class SalesTable extends React.Component {
@@ -29,7 +29,7 @@ class SalesTable extends React.Component {
     };
   }
 
-  componentDidMount = () => { };
+  componentDidMount = () => {};
 
   handleOk = (toggleFulfilled) => {
     this.setState({ isShowConfirmation: false });
@@ -40,13 +40,13 @@ class SalesTable extends React.Component {
     const { orderId } = this.state;
 
     const body = {
-      orderId: orderId
-    }
-    API.post('api/payment/refund', body).then(res => {
-      console.log(res)
+      orderId: orderId,
+    };
+    API.post('api/payment/refund', body).then((res) => {
+      console.log(res);
       this.setState({ isShowRefundConfirmation: false });
       toggleRefund();
-    })
+    });
   };
 
   changeFulfilledStatus = (toggleFulfilled) => {
@@ -232,11 +232,13 @@ class SalesTable extends React.Component {
             dataIndex="isRefunded"
             render={(text, record) => {
               return (
-                <Button type='primary' onClick={() =>
-                  this.setState({ isShowRefundConfirmation: true, orderId: record._id })}>
+                <Button
+                  type="primary"
+                  onClick={() => this.setState({ isShowRefundConfirmation: true, orderId: record._id })}
+                >
                   Refund
                 </Button>
-              )
+              );
             }}
           />
         </Table>
@@ -273,7 +275,7 @@ export default class SalesHistory extends React.Component {
             this.setState({ orders: res.data.orders });
           })
           .catch((err) => console.error(err));
-      }
+      },
     };
   }
 

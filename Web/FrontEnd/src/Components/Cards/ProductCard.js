@@ -66,11 +66,10 @@ export default class ProductCard extends React.Component {
   hideQRCode = () => {
     this.setState({ isShowQR: false });
   };
-  
+
   deleteItem = (productId, updateProductList) => {
-    API.get(`api/product/deleteProduct?id=${productId}`)
-    .then(res => updateProductList())
-  }
+    API.get(`api/product/deleteProduct?id=${productId}`).then((res) => updateProductList());
+  };
 
   getActionList = (productLink, isOwnerShop, productId, updateProductList) => {
     if (isOwnerShop) {
@@ -96,7 +95,7 @@ export default class ProductCard extends React.Component {
         <Button style={{ backgroundColor: '#fafafa', border: '0' }}>
           <EditOutlined />
         </Button>,
-        <Button 
+        <Button
           style={{ backgroundColor: '#fafafa', border: '0' }}
           onClick={(event) => {
             event.preventDefault();
@@ -164,4 +163,4 @@ export default class ProductCard extends React.Component {
   }
 }
 
-ProductCard.contextType = ProductListContext
+ProductCard.contextType = ProductListContext;

@@ -5,5 +5,5 @@ export const ProductListContext = React.createContext({
   products: [],
   merchantName: '',
   isOwnerShop: false,
-  updateProductList: () => { },
+  updateProductList: () => {},
 });

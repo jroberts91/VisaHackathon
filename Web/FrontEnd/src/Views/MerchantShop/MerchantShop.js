@@ -56,7 +56,8 @@ export default class MerchantShop extends React.Component {
       products: [],
       merchantName: '',
       isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
-      updateProductList: () => this.getProductFromApi(this.state.merchantId)};
+      updateProductList: () => this.getProductFromApi(this.state.merchantId),
+    };
   }
 
   getProductFromApi = (merchantId) => {
