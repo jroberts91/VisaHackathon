@@ -117,7 +117,7 @@ export default class Payment extends React.Component {
             <Link to={'/'} style={{ color: '#828282' }}>
               <ShopOutlined /> {headerName}
             </Link>{' '}
-            /
+            /{' '}
             <Link to={`/${merchantId}/product/${productId}`} style={{ color: '#828282' }}>
               {product.name}
             </Link>{' '}
