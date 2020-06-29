@@ -27,7 +27,7 @@ const StyledText = styled(Text)`
 
 const StyledLoginButton = styled(Button)`
   top: 15px;
-  right: 35px;
+  right: 30px;
   position: absolute;
   margin-right: 10px;
 `;
