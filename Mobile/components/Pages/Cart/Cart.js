@@ -58,9 +58,15 @@ export default class Cart extends React.Component {
 
   getAllAddedProducts = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const result = await AsyncStorage.multiGet(keys);
+    const cartKeys = keys.filter((key) => key !== 'Order');
+    const result = await AsyncStorage.multiGet(cartKeys);
     const addedProducts = result.map((req) => JSON.parse(req[1]));
     this.setState({ products: addedProducts });
+  };
+
+  removeProduct = (productId) => {
+    const filteredProducts = this.state.products.filter((product) => product.product._id !== productId);
+    this.setState({ products: filteredProducts });
   };
 
   header = () => {
@@ -91,15 +97,19 @@ export default class Cart extends React.Component {
   render() {
     const { products } = this.state;
     const { users } = this.props;
-    if (products == null) { // haven't finished loading from local storage
+    if (products == null) {
+      // haven't finished loading from local storage
       return null;
     }
+
+    // TODO: get navigation passed param and display success message
+
     return (
       <View style={styles.main}>
         <FlatList
           style={styles.scroll}
           data={products}
-          renderItem={({ item }) => <CardBox item={item} />}
+          renderItem={({ item }) => <CardBox item={item} removeProduct={this.removeProduct} />}
           ListHeaderComponent={this.header}
           ListFooterComponent={this.footer(products)}
           keyExtractor={(item, index) => index.toString()}

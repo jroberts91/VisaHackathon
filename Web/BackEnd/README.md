@@ -63,7 +63,27 @@
 - GET '/updateTotalQty' takes in 2 params (.../?id=${productId}&totalQty=${totalQty})
     - returns {success: true, product: product}    
 
+- GET '/deleteProduct' changes show:true to show:false based on productId in the params (.../get?id=${productId})
+    - returns {success: true}
+
 ## api/payment
+
+- POST '/refund' refund the order to the sender (customer)
+
+```json
+Request
+
+{
+    "orderId": "5ef98d0161520d5d98d59133"
+}
+
+Response
+
+{
+    "success": true
+}
+
+```
 
 - POST '/direct' makes a payment by creating an order associated with payment, the backend will call and handle push and pull funds transfer (currently with dummy payload)
 

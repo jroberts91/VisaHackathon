@@ -33,7 +33,7 @@ const StyledBreadCrumbsContainer = styled.div`
 `;
 
 const StyledTitleContainer = styled.div`
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
 `;
 

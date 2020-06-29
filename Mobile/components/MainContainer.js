@@ -4,6 +4,7 @@ import TopBar from './TopComponents/TopBar';
 import ScanPage from './Pages/Scan/ScanPage';
 import Cart from './Pages/Cart/Cart';
 import PaymentPage from './Pages/Payment/PaymentPage';
+import OrderSummaryPage from './Pages/OrderSummary/OrderSummaryPage';
 
 const styles = StyleSheet.create({
   main: {
@@ -19,7 +20,8 @@ export default class MainContainer extends React.Component {
         <TopBar openDrawer={openDrawer} openMessage={openMessage} />
         {pageName === 'Cart' && <Cart navigation={this.props.navigation} />}
         {pageName === 'Scan' && <ScanPage />}
-        {pageName === 'Payment' && <PaymentPage />}
+        {pageName === 'Payment' && <PaymentPage navigation={this.props.navigation} />}
+        {pageName === 'Order' && <OrderSummaryPage navigation={this.props.navigation} />}
       </View>
     );
   }

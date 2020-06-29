@@ -67,6 +67,19 @@ export default class MainTabs extends React.Component {
           }}
           options={{
             tabBarButton: () => null,
+            unmountOnBlur: true,
+          }}
+        />
+        <Tab.Screen
+          name="Order"
+          component={MainContainer}
+          initialParams={{
+            pageName: 'Order',
+            openDrawer: this.props.navigation.openDrawer,
+          }}
+          options={{
+            tabBarButton: () => null,
+            unmountOnBlur: true,
           }}
         />
       </Tab.Navigator>
