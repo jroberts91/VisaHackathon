@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Row, Col, Layout, Typography, Button } from 'antd';
+import { Row, Col, Layout, Typography, Button, Popover, Table, Divider } from 'antd';
 import { defaultTheme } from '../../utils/theme';
 import { ShopOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
@@ -9,6 +9,20 @@ import API from '../../utils/baseUrl';
 
 const { Content } = Layout;
 const { Title } = Typography;
+const columns = [
+  {
+    title: 'Offer',
+    dataIndex: 'offerName',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Code',
+    dataIndex: 'code',
+  },
+];
 
 const AddButton = styled(Button)`
   background: ${defaultTheme.colors.primary};
@@ -51,6 +65,7 @@ export default class MerchantShop extends React.Component {
       merchantId: this.props.match.params.merchantId,
       products: [],
       merchantName: '',
+      offers: [],
       isOwnerShop: this.props.match.params.merchantId === this.props.loggedInId,
     };
   }
@@ -74,10 +89,19 @@ export default class MerchantShop extends React.Component {
       .catch((err) => console.error(err));
   };
 
+  getMerchantOffersFromApi = (merchantId) => {
+    API.get('api/offers/visell/getByMerchant?merchantId=' + merchantId)
+      .then((res) => {
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
+  };
+
   componentDidMount = () => {
     const merchantId = this.state.merchantId;
     this.getProductFromApi(merchantId);
     this.getMerchantNameFromApi(merchantId);
+    this.getMerchantOffersFromApi(merchantId);
   };
 
   componentWillReceiveProps = (nextProps) => {
@@ -86,6 +110,7 @@ export default class MerchantShop extends React.Component {
       this.setState({ merchantId: newMerchantId });
       this.getProductFromApi(newMerchantId);
       this.getMerchantNameFromApi(newMerchantId);
+      this.getMerchantOffersFromApi(newMerchantId);
     }
     const nextIsOwnerShop = nextProps.loggedInId === newMerchantId;
     if (nextIsOwnerShop !== this.state.isOwnerShop) {
@@ -94,7 +119,7 @@ export default class MerchantShop extends React.Component {
   };
 
   render() {
-    const { merchantId, products, isOwnerShop, merchantName } = this.state;
+    const { merchantId, products, isOwnerShop, merchantName, offers } = this.state;
 
     let headerName;
 
@@ -103,6 +128,8 @@ export default class MerchantShop extends React.Component {
     } else {
       headerName = merchantName;
     }
+
+    const content = <Table columns={columns} dataSource={offers} />;
 
     return (
       <Content style={{ maxWidth: '1280px', margin: '0 auto', width: '90%' }}>
@@ -119,6 +146,13 @@ export default class MerchantShop extends React.Component {
               </Link>
             </Col>
           )}
+
+          <Popover content={content}>
+            <AddButton type="primary" style={{ float: 'right' }}>
+              Offers
+            </AddButton>
+          </Popover>
+          
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>
