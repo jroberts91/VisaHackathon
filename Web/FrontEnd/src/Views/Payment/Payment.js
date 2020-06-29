@@ -126,7 +126,7 @@ export default class Payment extends React.Component {
 
           <Popover content={content}>
             <AddButton type="primary" style={{ float: 'right' }}>
-              Offers you can use
+              Offers
             </AddButton>
           </Popover>
         </Row>
