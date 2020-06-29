@@ -85,7 +85,8 @@ export default class PaymentPage extends React.Component {
 
   getAllProductsInCart = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const result = await AsyncStorage.multiGet(keys);
+    const cartKeys = keys.filter((key) => key !== 'Order');
+    const result = await AsyncStorage.multiGet(cartKeys);
     const addedProducts = result.map((req) => JSON.parse(req[1]));
     this.setState({ products: addedProducts });
   };
@@ -110,7 +111,7 @@ export default class PaymentPage extends React.Component {
   sendPayment() {
     const { products, cvv, cardNumber, expiryDate } = this.state;
     const merchantId = products[0].product.merchantId;
-    const formattedCart = products.map((product) => {  
+    const formattedCart = products.map((product) => {
       return {
         quantity: product.qty,
         productId: product.product._id,
@@ -125,10 +126,16 @@ export default class PaymentPage extends React.Component {
     };
     API.post('/api/payment/mobile', body).then((res) => {
       if (res.data.success) {
+        const order = {
+          date: Date.now(),
+          products: products,
+        };
         // clear local storage since paid successful
-        AsyncStorage.clear()
-          .then(() => 
-          this.props.navigation.navigate('Cart', { paymentSuccess: true })) 
+        AsyncStorage.clear().then(() => {
+          // add current order
+          AsyncStorage.setItem('Order', JSON.stringify(order));
+          this.props.navigation.navigate('Order');
+        });
       }
     });
   }
@@ -162,10 +169,10 @@ export default class PaymentPage extends React.Component {
         this.captchaForm.hide();
         return;
       } else {
-        this.sendPayment();
         setTimeout(() => {
           this.captchaForm.hide();
         }, 5000);
+        this.sendPayment();
       }
     }
   };
