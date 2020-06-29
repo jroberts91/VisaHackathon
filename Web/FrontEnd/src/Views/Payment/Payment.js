@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message, Typography } from 'antd';
+import { Row, Col, Layout, message, Typography, Radio } from 'antd';
 import queryString from 'query-string';
 import API, { baseUrl } from '../../utils/baseUrl';
 import { ShopOutlined } from '@ant-design/icons';
@@ -18,6 +18,8 @@ const ErrorMessageContainer = styled.div`
   font-size: 16px;
 `;
 
+
+
 export default class Payment extends React.Component {
   constructor(props) {
     super(props);
@@ -29,10 +31,21 @@ export default class Payment extends React.Component {
       product: null,
       merchant: null,
       qty: queries.qty,
+      radioValue: 0
     };
   }
 
   componentDidMount = () => {
+    const script = document.createElement('script');
+
+    script.src = "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js"
+    document.body.appendChild(script)
+
+    const secondScript = document.createElement('script');
+
+    secondScript.src = "/visaCheckoutScript.js"
+    document.body.appendChild(secondScript)
+
     API.get(`api/product/get?id=${this.state.productId}`)
       .then((res) => {
         if (res.data.success) {
@@ -102,15 +115,28 @@ export default class Payment extends React.Component {
             />
           </Col>
           <Col lg={{ span: 12 }} span={24}>
+            <Radio.Group onChange={event => this.setState({ radioValue: event.target.value })} value={this.state.radioValue}>
+              <Radio value={0}>Visa Direct</Radio>
+              <Radio value={1}>Visa Checkout</Radio>
+            </Radio.Group>
             {/* TBC: shipping fee is not yet available in the backend, will set default as $2 */}
-            <PaymentForm
-              merchantId={merchantId}
-              productId={productId}
-              qty={qty}
-              totalPrice={totalPrice}
-              shippingFee={product.shippingFee || 2}
-              history={this.props.history}
-            />
+            {
+              this.state.radioValue === 0 &&
+              <PaymentForm
+                merchantId={merchantId}
+                productId={productId}
+                qty={qty}
+                totalPrice={totalPrice}
+                shippingFee={product.shippingFee || 2}
+                history={this.props.history}
+              />
+            }
+            {
+              this.state.radioValue === 1 &&
+              <img alt="Visa Checkout" className="v-button" role="button"
+                src="https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png" />
+            }
+
           </Col>
         </Row>
       </Content>
