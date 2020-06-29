@@ -45,12 +45,13 @@ let SendPaymentEmail = async (email, orderId, merchantName, merchantEmail) => {
   });
 };
 
-let SendFulfillEmail = async (email, orderId) => {
+let SendFulfillEmail = async (email, orderId, deliveryDays) => {
   readHTMLFile(__dirname + '/template/fulfill-email-template.html', function (err, html) {
     var template = handlebars.compile(html);
     var replacements = {
       orderSummaryLink: process.env.WEB_HOST + '/order/' + orderId,
       contactUsLink: process.env.WEB_HOST + '/contactUs',
+      deliveryDays: deliveryDays,
     };
     var htmlToSend = template(replacements);
     const mailOptions = {
