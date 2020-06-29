@@ -54,9 +54,7 @@ export default class Payment extends React.Component {
     };
   }
 
-  getMerchantOffersFromApi = (merchantId) => {
-    
-  };
+  getMerchantOffersFromApi = (merchantId) => {};
 
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
@@ -83,7 +81,6 @@ export default class Payment extends React.Component {
         this.setState({ offers: res.data.offers });
       })
       .catch((err) => console.error(err));
-
   };
 
   render() {
@@ -132,7 +129,6 @@ export default class Payment extends React.Component {
               Offers you can use
             </AddButton>
           </Popover>
-
         </Row>
         <Row align="middle">
           <Col lg={{ span: 12 }} span={24}>

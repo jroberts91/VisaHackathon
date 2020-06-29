@@ -139,20 +139,26 @@ export default class MerchantShop extends React.Component {
               <ShopOutlined /> {headerName}
             </Title>
           </Col>
-          {isOwnerShop && (
+          {isOwnerShop ? (
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <Link style={{ float: 'right' }} to={`/${merchantId}/addproduct`}>
                 <AddButton type="primary">Add New Product</AddButton>
               </Link>
+              <Popover content={content}>
+                <AddButton type="primary" style={{ float: 'right', marginRight: '20px' }}>
+                  Your Offers
+                </AddButton>
+              </Popover>
+            </Col>
+          ) : (
+            <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
+              <Popover content={content}>
+                <AddButton type="primary" style={{ float: 'right' }}>
+                  Merchant Offers
+                </AddButton>
+              </Popover>
             </Col>
           )}
-
-          <Popover content={content}>
-            <AddButton type="primary" style={{ float: 'right' }}>
-              Offers
-            </AddButton>
-          </Popover>
-
         </Row>
         <ProductList merchantId={merchantId} products={products} isOwnerShop={isOwnerShop} />
       </Content>
