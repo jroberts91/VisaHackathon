@@ -81,7 +81,7 @@ export default class ProductDetail extends React.Component {
     );
   };
 
-  getBody = (description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop, isLoggedIn) => {
+  getBody = (description, price, totalQty, qtySold, paymentLink, productId, isOwnerShop, isLoggedIn, deliveryDays) => {
     qtySold = qtySold || 0;
     totalQty = totalQty || 0;
 
@@ -100,10 +100,10 @@ export default class ProductDetail extends React.Component {
         <Row gutter={[32, { sm: 64, md: 80, lg: 96 }]}>
           <Col span={24}>{description || 'No Description Provided'}</Col>
         </Row>
-        <Row gutter={[0, { sm: 48, md: 64, lg: 80 }]}>${(price || 0).toFixed(2)}</Row>
+        <Row gutter={[0, { sm: 48, md: 64, lg: 64 }]}>${(price || 0).toFixed(2)}</Row>
         <Row gutter={[32, { sm: 48, md: 64, lg: 80 }]}>
           <Col style={{ fontSize: '1.2em' }} key={0} span={8}>
-            Quantity:{' '}
+            Quantity:&nbsp;
             <InputNumber
               style={{ width: '52px' }}
               min={1}
@@ -122,6 +122,11 @@ export default class ProductDetail extends React.Component {
               format={() => `${qtySold}/${totalQty} sold`}
             />
           </Col>
+        </Row>
+        <Row gutter={[32, 32]}>
+        <Col span={24}>Expected Delivery Days:&nbsp;&nbsp; 
+          <strong style={{fontSize: '1.2em'}}>{deliveryDays === undefined ? "Unstated" : deliveryDays }</strong>
+        </Col>
         </Row>
         <Row gutter={[32, 32]}>
           <Col key={2} span={12} style={{ fontSize: '1.1em', color: '#1A1F71' }}>
@@ -164,6 +169,7 @@ export default class ProductDetail extends React.Component {
       productId,
       isOwnerShop,
       isLoggedIn,
+      deliveryDays,
     } = this.props;
 
     return (
@@ -178,7 +184,8 @@ export default class ProductDetail extends React.Component {
             paymentLink,
             productId,
             isOwnerShop,
-            isLoggedIn
+            isLoggedIn,
+            deliveryDays
           )}
         />
       </Card>
