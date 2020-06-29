@@ -58,7 +58,8 @@ export default class Cart extends React.Component {
 
   getAllAddedProducts = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const result = await AsyncStorage.multiGet(keys);
+    const cartKeys = keys.filter((key) => key !== 'Order');
+    const result = await AsyncStorage.multiGet(cartKeys);
     const addedProducts = result.map((req) => JSON.parse(req[1]));
     this.setState({ products: addedProducts });
   };
