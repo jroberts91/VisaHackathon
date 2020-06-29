@@ -1,8 +1,7 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col, Tooltip, message } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, message } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import API from '../../utils/baseUrl';
 
 const { Option } = Select;

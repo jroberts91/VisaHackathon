@@ -12,7 +12,6 @@
     "icon": "./images/Logo.png",
     "splash": {
       "image": "./images/splash.png",
-      "resizeMode": "fit",
       "backgroundColor": "#00276A"
     },
     "updates": {
