@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Image, Keyboard } from 'react-native';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
@@ -11,6 +12,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  innerView: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    flex: 0.1,
+    height: 15,
+    marginTop: 10,
+    marginLeft: 10,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  breadcrumbs: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  breadcrumbsSelected: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#1a1f71',
   },
   paymentHeader: {
     bottom: '10%',
@@ -62,9 +85,18 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   payButton: {
-    width: '90%',
+    width: '50%',
     display: 'flex',
-    alignItems: 'flex-end',
+    marginTop: '15%',
+    borderWidth: 2,
+    borderColor: '#1a1f71',
+  },
+  checkoutButton: {
+    width: '50%',
+    display: 'flex',
+    marginTop: '15%',
+    borderWidth: 2,
+    borderColor: '#1a1f71',
   },
 });
 
@@ -75,6 +107,7 @@ export default class PaymentPage extends React.Component {
     expiryDate: null,
     cvv: null,
     keyboardUp: false,
+    radioSelection: 0,
   };
 
   componentDidMount() {
@@ -85,7 +118,8 @@ export default class PaymentPage extends React.Component {
 
   getAllProductsInCart = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const result = await AsyncStorage.multiGet(keys);
+    const cartKeys = keys.filter((key) => key !== 'Order');
+    const result = await AsyncStorage.multiGet(cartKeys);
     const addedProducts = result.map((req) => JSON.parse(req[1]));
     this.setState({ products: addedProducts });
   };
@@ -107,10 +141,12 @@ export default class PaymentPage extends React.Component {
     });
   };
 
+  paymentVisaCheckout() {}
+
   sendPayment() {
     const { products, cvv, cardNumber, expiryDate } = this.state;
     const merchantId = products[0].product.merchantId;
-    const formattedCart = products.map((product) => {  
+    const formattedCart = products.map((product) => {
       return {
         quantity: product.qty,
         productId: product.product._id,
@@ -125,10 +161,16 @@ export default class PaymentPage extends React.Component {
     };
     API.post('/api/payment/mobile', body).then((res) => {
       if (res.data.success) {
+        const order = {
+          date: Date.now(),
+          products: products,
+        };
         // clear local storage since paid successful
-        AsyncStorage.clear()
-          .then(() => 
-          this.props.navigation.navigate('Cart', { paymentSuccess: true })) 
+        AsyncStorage.clear().then(() => {
+          // add current order
+          AsyncStorage.setItem('Order', JSON.stringify(order));
+          this.props.navigation.navigate('Order');
+        });
       }
     });
   }
@@ -158,14 +200,11 @@ export default class PaymentPage extends React.Component {
 
   onMessage = (event) => {
     if (event && event.nativeEvent.data) {
-      if (['cancel', 'error', 'expire'].includes(event.nativeEvent.data)) {
+      if (['cancel', 'error'].includes(event.nativeEvent.data)) {
         this.captchaForm.hide();
         return;
       } else {
         this.sendPayment();
-        setTimeout(() => {
-          this.captchaForm.hide();
-        }, 5000);
       }
     }
   };
@@ -177,18 +216,9 @@ export default class PaymentPage extends React.Component {
     return '';
   }
 
-  render() {
-    const { products } = this.state;
-    if (products == null) {
-      return null;
-    }
-    const totalPrice = products.reduce((acc, product) => {
-      acc += product.product.price * product.qty;
-      return acc;
-    }, 0);
+  getVisaDirectForm() {
     return (
-      <View style={styles.centeredView}>
-        <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
+      <View style={styles.innerView}>
         <Input
           inputContainerStyle={styles.cardInput}
           label="Card Number"
@@ -227,9 +257,75 @@ export default class PaymentPage extends React.Component {
           onMessage={this.onMessage}
         />
         <View style={styles.payButton}>
-          <Button raised="true" color="#1a1f71" title="Pay with Visa" onPress={() => this.attemptPayment()} />
+          <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.attemptPayment()} />
         </View>
       </View>
+    );
+  }
+
+  render() {
+    const { products } = this.state;
+    if (products == null) {
+      return null;
+    }
+    const totalPrice = products.reduce((acc, product) => {
+      acc += product.product.price * product.qty;
+      return acc;
+    }, 0);
+
+    if (totalPrice === 0) {
+      return (
+        <View style={styles.centeredView}>
+          <Text>No item to Purchase</Text>
+        </View>
+      );
+    }
+
+    let radioProps = [
+      { label: 'Visa Direct', value: 0 },
+      { label: 'Visa Checkout', value: 1 },
+    ];
+
+    return (
+      <>
+        <View style={styles.header}>
+          <Text style={styles.breadcrumbs}>{`Cart > `}</Text>
+          <Text style={styles.breadcrumbsSelected}>Payment</Text>
+        </View>
+        <View style={styles.centeredView}>
+          <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
+          <RadioForm formHorizontal={true} animation={true} initial={0}>
+            {radioProps.map((obj, i) => (
+              <RadioButton labelHorizontal={true} key={i}>
+                <RadioButtonInput
+                  obj={obj}
+                  index={i}
+                  isSelected={this.state.radioSelection === i}
+                  onPress={(value) => this.setState({ radioSelection: value })}
+                  buttonInnerColor={'#FAA913'}
+                  buttonOuterColor={'#FAA913'}
+                  buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
+                />
+                <RadioButtonLabel
+                  obj={obj}
+                  index={i}
+                  labelHorizontal={true}
+                  labelStyle={{ marginRight: 10 }}
+                  onPress={() => {}}
+                />
+              </RadioButton>
+            ))}
+          </RadioForm>
+          {this.state.radioSelection === 0 && this.getVisaDirectForm()}
+          {this.state.radioSelection === 1 && (
+            <View style={styles.innerView}>
+              <View style={styles.checkoutButton}>
+                <Button raised="true" color="#1a1f71" title="Pay" onPress={() => this.paymentVisaCheckout()} />
+              </View>
+            </View>
+          )}
+        </View>
+      </>
     );
   }
 }

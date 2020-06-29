@@ -12,16 +12,16 @@ const styles = StyleSheet.create({
   header: {
     height: 45,
     marginTop: 10,
+    marginLeft: 10,
+  },
+  breadcrumbs: {
+    flex: 1,
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#1a1f71',
   },
   footer: {
     flexDirection: 'row',
-  },
-  shoppingCart: {
-    flex: 1,
-    textAlignVertical: 'center',
-    alignSelf: 'center',
-    fontWeight: 'bold',
-    fontSize: 20,
   },
   scroll: {
     flex: 1,
@@ -58,7 +58,8 @@ export default class Cart extends React.Component {
 
   getAllAddedProducts = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    const result = await AsyncStorage.multiGet(keys);
+    const cartKeys = keys.filter((key) => key !== 'Order');
+    const result = await AsyncStorage.multiGet(cartKeys);
     const addedProducts = result.map((req) => JSON.parse(req[1]));
     this.setState({ products: addedProducts });
   };
@@ -71,7 +72,7 @@ export default class Cart extends React.Component {
   header = () => {
     return (
       <View style={styles.header}>
-        <Text style={styles.shoppingCart}>Shopping Cart</Text>
+        <Text style={styles.breadcrumbs}>Cart</Text>
       </View>
     );
   };

@@ -47,19 +47,20 @@ export default class AddProduct extends React.Component {
           formData.append('files', value.originFileObj);
         }
       } else {
-        info.fileList.slice(0,4);
+        info.fileList.slice(0, 4);
         message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
       }
     };
 
     const handleCreate = (values) => {
-      const { name, price, quantity, description } = values.pdt;
+      const { name, price, quantity, description, deliveryDays } = values.pdt;
 
       const body = {
         name: name,
         description: description,
         price: price,
         totalQty: quantity,
+        deliveryDays: deliveryDays,
         merchantId: this.state.merchantId,
       };
 
@@ -122,6 +123,10 @@ export default class AddProduct extends React.Component {
 
               <Form.Item label="Quantity" name={['pdt', 'quantity']} rules={[{ required: true }]}>
                 <InputNumber placeholder="5" style={{ width: '60%' }} />
+              </Form.Item>
+
+              <Form.Item label="Delivery in Days" name={['pdt', 'deliveryDays']} rules={[{ required: true }]}>
+                <InputNumber placeholder="7" style={{ width: '60%' }} />
               </Form.Item>
 
               <Form.Item label="Description" name={['pdt', 'description']}>

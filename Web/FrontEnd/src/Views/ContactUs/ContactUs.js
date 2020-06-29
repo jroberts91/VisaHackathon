@@ -13,7 +13,6 @@ const validateMessages = {
   required: 'This field is required!',
 };
 
-
 const StyledImage = styled.img`
   position: relative;
   width: 70%;
@@ -35,11 +34,11 @@ export default class AddProduct extends React.Component {
     };
 
     const handleSubmit = (info) => {
-      message.success({ content: "Thank you for your feedback!"});
+      message.success({ content: 'Thank you for your feedback!' });
       this.props.history.push({
         pathname: `/`,
       });
-    }
+    };
 
     return (
       <Content style={{ maxWidth: '1280px', width: '90%', margin: '0 auto' }}>
