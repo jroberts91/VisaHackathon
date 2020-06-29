@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Image, Keyboard } from 'react-native';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import ConfirmGoogleCaptcha from 'react-native-google-recaptcha-v2';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input } from 'react-native-elements';
@@ -11,6 +12,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  innerView: {
+    width: '100%'
   },
   paymentHeader: {
     bottom: '10%',
@@ -66,6 +70,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'flex-end',
   },
+  checkoutButton: {
+    width: '70%',
+    display: 'flex',
+    marginTop: '15%'
+  }
 });
 
 export default class PaymentPage extends React.Component {
@@ -75,6 +84,7 @@ export default class PaymentPage extends React.Component {
     expiryDate: null,
     cvv: null,
     keyboardUp: false,
+    radioSelection: 0
   };
 
   componentDidMount() {
@@ -107,10 +117,14 @@ export default class PaymentPage extends React.Component {
     });
   };
 
+  paymentVisaCheckout() {
+
+  }
+
   sendPayment() {
     const { products, cvv, cardNumber, expiryDate } = this.state;
     const merchantId = products[0].product.merchantId;
-    const formattedCart = products.map((product) => {  
+    const formattedCart = products.map((product) => {
       return {
         quantity: product.qty,
         productId: product.product._id,
@@ -127,8 +141,8 @@ export default class PaymentPage extends React.Component {
       if (res.data.success) {
         // clear local storage since paid successful
         AsyncStorage.clear()
-          .then(() => 
-          this.props.navigation.navigate('Cart', { paymentSuccess: true })) 
+          .then(() =>
+            this.props.navigation.navigate('Cart', { paymentSuccess: true }))
       }
     });
   }
@@ -158,14 +172,11 @@ export default class PaymentPage extends React.Component {
 
   onMessage = (event) => {
     if (event && event.nativeEvent.data) {
-      if (['cancel', 'error', 'expire'].includes(event.nativeEvent.data)) {
+      if (['cancel', 'error'].includes(event.nativeEvent.data)) {
         this.captchaForm.hide();
         return;
       } else {
         this.sendPayment();
-        setTimeout(() => {
-          this.captchaForm.hide();
-        }, 5000);
       }
     }
   };
@@ -177,6 +188,53 @@ export default class PaymentPage extends React.Component {
     return '';
   }
 
+  getVisaDirectForm() {
+    return (
+      <View style={styles.innerView}>
+            <Input
+              inputContainerStyle={styles.cardInput}
+              label="Card Number"
+              placeholder="0000-0000-0000-0000"
+              onChangeText={(value) => this.setState({ cardNumber: value })}
+              errorStyle={{ color: 'red' }}
+              errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
+              leftIcon={<Icon name="credit-card" size={24} />}
+              rightIcon={<Image style={styles.tinyLogo} source={require('../../../images/visa-logo.png')} />}
+            />
+            <View style={styles.cardContainer}>
+              <Input
+                containerStyle={styles.inputContainer}
+                inputContainerStyle={styles.expiryInput}
+                label="Expires"
+                placeholder="MM/YY"
+                onChangeText={(value) => this.setState({ expiryDate: value })}
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
+              />
+              <Input
+                containerStyle={styles.inputContainer}
+                inputContainerStyle={styles.cvvInput}
+                label="CVV"
+                placeholder="000"
+                onChangeText={(value) => this.setState({ cvv: value })}
+                errorStyle={{ color: 'red' }}
+                errorMessage={this.getCardErrorMsg(this.state.cvv)}
+              />
+            </View>
+            <ConfirmGoogleCaptcha
+              ref={(_ref) => (this.captchaForm = _ref)}
+              siteKey={'6Lc_EqoZAAAAAGAzCKHzo2bEWXIvnMtETb9blmyq'}
+              baseUrl={'exp://192.168.0.188:19000'}
+              languageCode="en"
+              onMessage={this.onMessage}
+            />
+            <View style={styles.payButton}>
+              <Button raised="true" color="#1a1f71" title="Pay with Visa" onPress={() => this.attemptPayment()} />
+            </View>
+          </View>
+    )
+  }
+
   render() {
     const { products } = this.state;
     if (products == null) {
@@ -186,49 +244,60 @@ export default class PaymentPage extends React.Component {
       acc += product.product.price * product.qty;
       return acc;
     }, 0);
+
+    if (totalPrice === 0) {
+      return (
+        <View style={styles.centeredView}>
+          <Text>No item to Purchase</Text>
+        </View>
+      )
+    }
+
+    let radioProps = [
+      { label: 'Visa Direct', value: 0 },
+      { label: 'Visa Checkout', value: 1 }
+    ]
+
     return (
       <View style={styles.centeredView}>
         <Text style={styles.paymentHeader}>Total Amount: ${totalPrice.toFixed(2)}</Text>
-        <Input
-          inputContainerStyle={styles.cardInput}
-          label="Card Number"
-          placeholder="0000-0000-0000-0000"
-          onChangeText={(value) => this.setState({ cardNumber: value })}
-          errorStyle={{ color: 'red' }}
-          errorMessage={this.getCardErrorMsg(this.state.cardNumber)}
-          leftIcon={<Icon name="credit-card" size={24} />}
-          rightIcon={<Image style={styles.tinyLogo} source={require('../../../images/visa-logo.png')} />}
-        />
-        <View style={styles.cardContainer}>
-          <Input
-            containerStyle={styles.inputContainer}
-            inputContainerStyle={styles.expiryInput}
-            label="Expires"
-            placeholder="MM/YY"
-            onChangeText={(value) => this.setState({ expiryDate: value })}
-            errorStyle={{ color: 'red' }}
-            errorMessage={this.getCardErrorMsg(this.state.expiryDate)}
-          />
-          <Input
-            containerStyle={styles.inputContainer}
-            inputContainerStyle={styles.cvvInput}
-            label="CVV"
-            placeholder="000"
-            onChangeText={(value) => this.setState({ cvv: value })}
-            errorStyle={{ color: 'red' }}
-            errorMessage={this.getCardErrorMsg(this.state.cvv)}
-          />
-        </View>
-        <ConfirmGoogleCaptcha
-          ref={(_ref) => (this.captchaForm = _ref)}
-          siteKey={'6Lc_EqoZAAAAAGAzCKHzo2bEWXIvnMtETb9blmyq'}
-          baseUrl={'exp://192.168.0.188:19000'}
-          languageCode="en"
-          onMessage={this.onMessage}
-        />
-        <View style={styles.payButton}>
-          <Button raised="true" color="#1a1f71" title="Pay with Visa" onPress={() => this.attemptPayment()} />
-        </View>
+        <RadioForm
+          formHorizontal={true}
+          animation={true}
+          initial={0}
+        >
+          {
+            radioProps.map((obj, i) => (
+              <RadioButton labelHorizontal={true} key={i} >
+                <RadioButtonInput
+                  obj={obj}
+                  index={i}
+                  isSelected={this.state.radioSelection === i}
+                  onPress={value => this.setState({ radioSelection: value })}
+                  buttonInnerColor={'#FAA913'}
+                  buttonOuterColor={'#FAA913'}
+                  buttonWrapStyle={{ marginLeft: 10, paddingRight: 0 }}
+                />
+                <RadioButtonLabel
+                  obj={obj}
+                  index={i}
+                  labelHorizontal={true}
+                  labelStyle={{ marginRight: 10 }}
+                />
+              </RadioButton>
+            ))
+          }
+        </RadioForm>
+        {
+          this.state.radioSelection === 0 &&
+          this.getVisaDirectForm()
+        }
+        {
+          this.state.radioSelection === 1 &&
+          <View style={styles.checkoutButton}>
+              <Button raised="true" color="#1a1f71" title="Visa Checkout" onPress={() => this.paymentVisaCheckout()} />
+          </View>
+        }
       </View>
     );
   }
