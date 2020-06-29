@@ -97,7 +97,8 @@ Request
         "address": "def avenue 123",
         "phoneNumber": 344345,
         "email": "hello@gmail.com",
-        "quantity": 1
+        "quantity": 1,
+        "code": 12346
     },
     "payment": {
         "firstName": "yz1",
@@ -114,6 +115,15 @@ Response
     "orderId": "5ef050a91283634f80882bcc",
     "paymentId": "5ef050a91283634f80882bcb"
 }
+
+Offer fully redeemed
+
+{
+    "success": false,
+    "msg": "offer fully redeemed"
+}
+
+
 ```
 
 - POST '/mobile' makes a payment from mobile, all fields are required
