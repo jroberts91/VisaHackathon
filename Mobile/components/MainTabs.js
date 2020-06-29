@@ -48,7 +48,7 @@ export default class MainTabs extends React.Component {
             openDrawer: this.props.navigation.openDrawer,
             openMessage: this.props.navigation.push,
           }}
-          options={{ tabBarVisible: true }}
+          options={{ tabBarVisible: true, unmountOnBlur: true }}
         />
         <Tab.Screen
           name="Scan"
@@ -56,6 +56,17 @@ export default class MainTabs extends React.Component {
           initialParams={{
             pageName: 'Scan',
             openDrawer: this.props.navigation.openDrawer,
+          }}
+        />
+        <Tab.Screen
+          name="Payment"
+          component={MainContainer}
+          initialParams={{
+            pageName: 'Payment',
+            openDrawer: this.props.navigation.openDrawer,
+          }}
+          options={{
+            tabBarButton: () => null,
           }}
         />
       </Tab.Navigator>

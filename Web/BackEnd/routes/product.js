@@ -64,39 +64,35 @@ router.post('/getAll', (req, res) => {
 //?id=${productId}
 router.get('/get', async (req, res) => {
   let productId = req.query.id;
-  if (mongoose.isValidObjectId(productId)){
+  if (mongoose.isValidObjectId(productId)) {
     const product = await Product.findOne({ _id: productId });
     if (!product) return res.json({ success: false });
     return res.status(200).json({ success: true, product: product });
-  }
-  else return res.json({ success: false });
-  
+  } else return res.json({ success: false });
 });
 
 //?id=${productId}&soldQty=${soldQty}
 router.get('/updateSoldQty', async (req, res) => {
   let productId = req.query.id;
   let soldQty = req.query.soldQty;
-  if (mongoose.isValidObjectId(productId)){
+  if (mongoose.isValidObjectId(productId)) {
     const product = await Product.findOneAndUpdate({ _id: productId }, { soldQty: soldQty });
     if (!product) return res.json({ success: false });
     product.soldQty = soldQty;
     return res.status(200).json({ success: true, product: product });
-  }
-  else return res.json({ success: false });
+  } else return res.json({ success: false });
 });
 
 //?id=${productId}&totalQty=${totalQty}
 router.get('/updateTotalQty', async (req, res) => {
   let productId = req.query.id;
   let totalQty = req.query.totalQty;
-  if (mongoose.isValidObjectId(productId)){
+  if (mongoose.isValidObjectId(productId)) {
     const product = await Product.findOneAndUpdate({ _id: productId }, { totalQty: totalQty });
     if (!product) return res.json({ success: false });
     product.totalQty = totalQty;
     return res.status(200).json({ success: true, product: product });
-  }
-  else return res.json({ success: false });
+  } else return res.json({ success: false });
 });
 
 module.exports = router;

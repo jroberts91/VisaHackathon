@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableHighlight, Image } from 'react-native'
 import { Icon } from 'react-native-elements';
 import API, { baseUrl } from '../../utils/baseUrl';
 import NumericInput from 'react-native-numeric-input';
+import { AsyncStorage } from 'react-native';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -77,20 +78,47 @@ export default class ProductModal extends React.Component {
       .catch(() => this.setState({ isValidId: false }));
   }
 
+  handleAddProduct = async () => {
+    try {
+      // get previously added product with the same id, if any
+      const value = await AsyncStorage.getItem(this.props.productId);
+      let existingQuantity = 0;
+      if (value !== null) {
+        const previouslyAddedProduct = JSON.parse(value);
+        existingQuantity = previouslyAddedProduct.qty;
+      }
+
+      // create new order and add existing qty, if any
+      const updatedQty = this.state.purchaseQty + existingQuantity;
+      const order = {
+        product: this.state.product,
+        qty: updatedQty,
+      };
+      await AsyncStorage.setItem(this.props.productId, JSON.stringify(order));
+
+      const { setIsShowProductPage, setClearLastScannedId } = this.props;
+      setIsShowProductPage(false);
+      setClearLastScannedId();
+    } catch (error) {
+      // Error saving data
+      console.error(error);
+    }
+  };
+
   render() {
     const { product, isValidId } = this.state;
     if (product == null && isValidId == null) {
       return null;
     }
 
-    const { setisShowProductPage, setClearLastScannedId } = this.props;
+    const { setIsShowProductPage, setClearLastScannedId } = this.props;
     const amountLeft = isValidId ? product.totalQty - product.soldQty : 0;
     return (
       <View style={styles.centeredView}>
         <TouchableHighlight
           style={{ ...styles.backButton }}
           onPress={() => {
-            setisShowProductPage(false);
+            setIsShowProductPage(false);
             setClearLastScannedId();
           }}
         >
@@ -114,9 +142,7 @@ export default class ProductModal extends React.Component {
             />
             <TouchableHighlight
               style={{ ...styles.buyButton, backgroundColor: '#00276A' }}
-              onPress={() => {
-                // TODO: add product to cart
-              }}
+              onPress={this.handleAddProduct}
             >
               <Text style={styles.textStyle}>Add To Cart</Text>
             </TouchableHighlight>

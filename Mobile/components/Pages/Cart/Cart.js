@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, FlatList, Text } from 'react-native';
 import { Button } from 'react-native-elements';
 import CardBox from '../../Layout/CardBox';
-import API, { baseUrl } from '../../utils/baseUrl';
+import { AsyncStorage } from 'react-native';
 
 const styles = StyleSheet.create({
   main: {
@@ -49,26 +49,18 @@ const styles = StyleSheet.create({
 export default class Cart extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { products: [] };
+    this.state = { products: null };
   }
 
   componentDidMount = () => {
-    this.getAllProducts();
+    this.getAllAddedProducts();
   };
 
-  getAllProducts = () => {
-    console.log(1);
-    const body = {
-      merchantId: '5ee9856ede9f8478c570d1ea',
-    };
-    API.post(`${baseUrl}api/product/getAll`, body)
-      .then((res) => {
-        console.log(res.data.products);
-        if (res.data.success) {
-          this.setState({ products: res.data.products });
-        }
-      })
-      .catch(() => this.setState({ error: true }));
+  getAllAddedProducts = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    const result = await AsyncStorage.multiGet(keys);
+    const addedProducts = result.map((req) => JSON.parse(req[1]));
+    this.setState({ products: addedProducts });
   };
 
   header = () => {
@@ -79,11 +71,19 @@ export default class Cart extends React.Component {
     );
   };
 
-  footer = () => {
+  footer = (products) => {
+    const totalPrice = products.reduce((acc, product) => {
+      acc += product.product.price * product.qty;
+      return acc;
+    }, 0);
     return (
       <View style={styles.footer}>
-        <Text style={styles.totalCost}>Total Cost: $500</Text>
-        <Button buttonStyle={styles.buttonStyle} title="Payment" />
+        <Text style={styles.totalCost}>Total Cost: ${totalPrice.toFixed(2)}</Text>
+        <Button
+          buttonStyle={styles.buttonStyle}
+          title="Payment"
+          onPress={() => this.props.navigation.navigate('Payment')}
+        />
       </View>
     );
   };
@@ -91,6 +91,9 @@ export default class Cart extends React.Component {
   render() {
     const { products } = this.state;
     const { users } = this.props;
+    if (products == null) { // haven't finished loading from local storage
+      return null;
+    }
     return (
       <View style={styles.main}>
         <FlatList
@@ -98,7 +101,7 @@ export default class Cart extends React.Component {
           data={products}
           renderItem={({ item }) => <CardBox item={item} />}
           ListHeaderComponent={this.header}
-          ListFooterComponent={this.footer}
+          ListFooterComponent={this.footer(products)}
           keyExtractor={(item, index) => index.toString()}
         />
       </View>
