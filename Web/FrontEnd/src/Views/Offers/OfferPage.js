@@ -7,11 +7,16 @@ import API from '../../utils/baseUrl';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/core';
+import PulseLoader from 'react-spinners/PulseLoader';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-const StyledSpin = styled(Spin)`
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -43,7 +48,7 @@ const StyledOfferCard = styled.div`
 export default class OfferPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offers: [], visellOffers: [], notLoaded: true, visible: false };
+    this.state = { offers: [], visellOffers: [], notLoaded: true, visible: false, loading: true };
   }
 
   componentDidMount = () => {
@@ -103,7 +108,7 @@ export default class OfferPage extends React.Component {
     let body;
 
     if (notLoaded) {
-      body = <StyledSpin size="large" />;
+      body = <PulseLoader css={override} size={30} color={'#123abc'} />;
     } else {
       body = (
         <div>
