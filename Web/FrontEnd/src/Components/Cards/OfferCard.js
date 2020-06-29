@@ -8,15 +8,15 @@ import { Link } from 'react-router-dom';
 const { Meta } = Card;
 
 const StyledCard = styled(Card)`
-  height: 220px;
+  height: 250px;
 `;
 
 class OfferDescription extends React.Component {
   render() {
     return (
       <div>
-        <div>{this.props.offer}</div>
         <div>{this.props.description}</div>
+        <div>{this.props.code}</div>
       </div>
     );
   }
@@ -24,18 +24,17 @@ class OfferDescription extends React.Component {
 
 export default class OfferCard extends React.Component {
   render() {
-    const { title, description, offer, imgUrl, id } = this.props;
-    const fullImageUrl = imgUrl ? baseUrl + imgUrl : baseUrl + 'uploads\\1592987488416_FB_IMG_1589391975282.jpg';
+    const { title, description, code, imgUrl, id } = this.props;
 
     const merchantHref = `/${id}`;
 
     return (
       <Link to={merchantHref}>
         <StyledCard
-          cover={<img style={{ height: '110px', objectFit: 'cover' }} alt="example" src={fullImageUrl} />}
+          cover={<img style={{ height: '110px', objectFit: 'cover' }} alt="example" src={imgUrl} />}
           hoverable
         >
-          <Meta title={title} description={<OfferDescription description={description} offer={offer} />} />
+          <Meta title={title} description={<OfferDescription code={code} description={description} />} />
         </StyledCard>
       </Link>
     );

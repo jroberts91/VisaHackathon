@@ -42,23 +42,24 @@ const StyledOfferCard = styled.div`
 export default class OfferPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offers: [], merchants: [], notLoaded: true };
+    this.state = { offers: [], visellOffers: [], notLoaded: true };
   }
 
   componentDidMount = () => {
-    this.getOffersFromApi();
-    this.getAllMerchants();
+    this.getVisellOffersFromApi();
+    this.getVisaOffersFromApi();
   };
 
-  getAllMerchants = () => {
-    API.post('api/merchant/getAll')
+  getVisellOffersFromApi = () => {
+    API.get(`api/offers/visell/list`)
       .then((res) => {
-        this.setState({ merchants: res.data.merchants });
+        console.log('This are the visell offers ', res.data.offers);
+        this.setState({ visellOffers: res.data.offers });
       })
       .catch((err) => console.error(err));
   };
 
-  getOffersFromApi = () => {
+  getVisaOffersFromApi = () => {
     this.setState({ notLoaded: true });
     API.get(`api/offers/list?max=${10}`)
       .then((res) => {
@@ -70,7 +71,7 @@ export default class OfferPage extends React.Component {
   };
 
   render() {
-    const { offers, notLoaded, merchants } = this.state;
+    const { offers, notLoaded, visellOffers } = this.state;
     let body;
 
     if (notLoaded) {
@@ -109,9 +110,10 @@ export default class OfferPage extends React.Component {
             >
               {offers.map((product, index) => {
                 const { offerTitle, merchantName } = product;
+                const imgUrl = product.merchantImages[0].fileLocation;
                 return (
                   <StyledOfferCard>
-                    <OfferCard title={merchantName} description={offerTitle} />
+                    <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
                   </StyledOfferCard>
                 );
               })}
@@ -141,16 +143,17 @@ export default class OfferPage extends React.Component {
               dotListClass="custom-dot-list-style"
               itemClass="carousel-item-padding-40-px"
             >
-              {merchants.map((merchant, index) => {
-                const { name, profileImage, _id } = merchant;
+              {visellOffers.map((visellOffer, index) => {
+                const { merchantName, profileImage, merchantId, description, code } = visellOffer;
+                const thisCode = `Code: ${code}`;
                 return (
                   <StyledOfferCard>
                     <OfferCard
-                      title={name}
-                      description="Code: 20OFF"
-                      offer="$20 dollars off"
+                      title={merchantName}
+                      code={thisCode}
+                      description={description}
                       imgUrl={profileImage}
-                      id={_id}
+                      id={visellOffer}
                     />
                   </StyledOfferCard>
                 );
