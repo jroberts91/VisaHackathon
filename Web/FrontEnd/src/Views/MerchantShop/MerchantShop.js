@@ -19,10 +19,6 @@ const columns = [
     title: 'Description',
     dataIndex: 'description',
   },
-  {
-    title: 'Code',
-    dataIndex: 'code',
-  },
 ];
 
 const AddButton = styled(Button)`

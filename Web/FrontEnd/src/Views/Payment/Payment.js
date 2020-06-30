@@ -111,27 +111,21 @@ export default class Payment extends React.Component {
 
     const totalPrice = (product.price * qty).toFixed(2);
     return (
-      <Content style={{ maxWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
+      <Content style={{ maxWidth: '1280px', minWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
         <Row align="top" justify="space-between" style={{ margin: '0 0 50px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
             <Link to={'/'} style={{ color: '#828282' }}>
               <ShopOutlined /> {headerName}
             </Link>{' '}
-            /
+            /{' '}
             <Link to={`/${merchantId}/product/${productId}`} style={{ color: '#828282' }}>
               {product.name}
             </Link>{' '}
             / Payment
           </Title>
-
-          <Popover content={content}>
-            <AddButton type="primary" style={{ float: 'right' }}>
-              Offers
-            </AddButton>
-          </Popover>
         </Row>
         <Row align="middle">
-          <Col lg={{ span: 12 }} span={24}>
+          <Col lg={{ span: 10 }} span={24}>
             <PaymentProductCard
               imageUrl={`${baseUrl}${product.images[0]}`}
               qty={qty}
@@ -139,7 +133,7 @@ export default class Payment extends React.Component {
               title={product.name}
             />
           </Col>
-          <Col lg={{ span: 12 }} span={24}>
+          <Col lg={{ span: 14 }} span={24}>
             {/* TBC: shipping fee is not yet available in the backend, will set default as $2 */}
             <PaymentForm
               merchantId={merchantId}

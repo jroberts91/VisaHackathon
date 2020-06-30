@@ -124,9 +124,10 @@ export default class ProductDetail extends React.Component {
           </Col>
         </Row>
         <Row gutter={[32, 32]}>
-        <Col span={24}>Expected Delivery Days:&nbsp;&nbsp; 
-          <strong style={{fontSize: '1.2em'}}>{deliveryDays === undefined ? "Unstated" : deliveryDays }</strong>
-        </Col>
+          <Col span={24}>
+            Expected Delivery Days:&nbsp;&nbsp;
+            <strong style={{ fontSize: '1.2em' }}>{deliveryDays === undefined ? 'Unstated' : deliveryDays}</strong>
+          </Col>
         </Row>
         <Row gutter={[32, 32]}>
           <Col key={2} span={12} style={{ fontSize: '1.1em', color: '#1A1F71' }}>
