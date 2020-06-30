@@ -48,7 +48,7 @@ const DatePickGroup = styled.div`
   padding: 20px;
   padding-bottom: 45px;
   right: 15px;
-  top: 12%;
+  top: 117px;
   border-radius: 7px;
 `;
 
@@ -103,8 +103,9 @@ export default class Dashboard extends React.Component {
       activeIndexSalesAmount: 0,
       activeIndexSalesQuantity: 0,
       isChooseDate: false,
+      sumSales: 0,
       selectionRange: {
-        startDate: new Date(),
+        startDate: new Date(Date.now() - 864e5 * 13),
         endDate: new Date(),
         key: 'selection',
       },
@@ -131,7 +132,65 @@ export default class Dashboard extends React.Component {
     API.post('api/order/getAll', body)
       .then((res) => {
         if (res.data.success) {
-          this.setState({ orders: res.data.orders });
+          console.log(res.data.orders);
+          let orders = res.data.orders;
+
+          let d = new Date(Date.now() - 864e5 * 13);
+          let totalPrice = 0;
+          let salesQuantityData = [];
+          const salesAmountData = [];
+          const dailyRevenue = [];
+          let sales = {};
+          let data = {};
+
+          for (var i = 13; i >= 0; i--) {
+            //set keys for data, key = date
+            let index = {};
+            let d = new Date(Date.now() - 864e5 * i);
+            index.time = d;
+            index.Revenue = 0;
+            let key = d.getDate() + d.getMonth() * 28;
+            data[key] = index;
+          }
+
+          orders.map((order) => {
+            let orderDate = new Date(order.payment.dateTime);
+            if (orderDate >= d) {
+              let price = order.quantity * order.product.price;
+              totalPrice += price;
+
+              let name = order.product.name;
+              if (typeof sales[name] === 'undefined') {
+                sales[name] = [order.quantity, price];
+              } else {
+                sales[name][0] += order.quantity;
+                sales[name][1] += price;
+              }
+
+              let key = orderDate.getDate() + orderDate.getMonth() * 28;
+              data[key].Revenue += totalPrice;
+            }
+          });
+
+          for (const [key, value] of Object.entries(data)) {
+            value.time = value.time.toLocaleDateString();
+            dailyRevenue.push(value);
+          }
+
+          for (const [key, value] of Object.entries(sales)) {
+            let a = { name: key, value: value[1] };
+            salesAmountData.push(a);
+            let q = { name: key, value: value[0] };
+            salesQuantityData.push(q);
+          }
+
+          this.setState({
+            sumSales: totalPrice,
+            orders: orders,
+            salesQuantityData: salesQuantityData,
+            salesAmountData: salesAmountData,
+            dailyRevenue: dailyRevenue,
+          });
         }
         this.setState({ isMounted: true });
       })
@@ -142,6 +201,69 @@ export default class Dashboard extends React.Component {
     this.getAllOrders();
   }
 
+  updateData = (startDate, endDate) => {
+    const { orders } = this.state;
+
+    let totalPrice = 0;
+    let salesQuantityData = [];
+    const salesAmountData = [];
+    const dailyRevenue = [];
+    let sales = {};
+    let data = {};
+
+    const daysDiff = (new Date(endDate).getTime() - new Date(startDate).getTime()) / 864e5;
+    for (var i = daysDiff - 1; i >= 0; i--) {
+      //set keys for data, key = date
+      let index = {};
+      let d = new Date(new Date(endDate).getTime() - 864e5 * (i + 1));
+      index.time = d;
+      index.Revenue = 0;
+      let key = d.getDate() + d.getMonth() * 28;
+      data[key] = index;
+    }
+
+    orders.map((order) => {
+      let orderDate = new Date(order.payment.dateTime);
+      if (orderDate >= startDate && orderDate <= endDate) {
+        let price = order.quantity * order.product.price;
+        totalPrice += price;
+
+        let name = order.product.name;
+        if (typeof sales[name] === 'undefined') {
+          sales[name] = [order.quantity, price];
+        } else {
+          sales[name][0] += order.quantity;
+          sales[name][1] += price;
+        }
+
+        let key = orderDate.getDate() + orderDate.getMonth() * 28;
+        data[key].Revenue += totalPrice;
+      }
+    });
+
+    for (const [key, value] of Object.entries(data)) {
+      value.time = value.time.toLocaleDateString();
+      dailyRevenue.push(value);
+    }
+
+    for (const [key, value] of Object.entries(sales)) {
+      let a = { name: key, value: value[1] };
+      salesAmountData.push(a);
+      let q = { name: key, value: value[0] };
+      salesQuantityData.push(q);
+    }
+
+    console.log(salesAmountData);
+    console.log(salesQuantityData);
+
+    this.setState({
+      sumSales: totalPrice,
+      salesQuantityData: salesQuantityData,
+      salesAmountData: salesAmountData,
+      dailyRevenue: dailyRevenue,
+    });
+  };
+
   handleStartChooseDate = () => {
     const { isChooseDate } = this.state;
     this.setState({
@@ -151,6 +273,7 @@ export default class Dashboard extends React.Component {
 
   handleRangeChange = (payload) => {
     const { startDate, endDate } = payload.selection;
+    let newD = new Date(new Date(endDate).getTime() + 864e5);
     this.setState({
       selectionRange: {
         ...payload.selection,
@@ -158,11 +281,20 @@ export default class Dashboard extends React.Component {
         endDate,
       },
     });
+    this.updateData(startDate, newD);
   };
 
   render() {
     // layout is an array of objects, see the demo for more complete usage
-    const { orders, isChooseDate, selectionRange } = this.state;
+    const {
+      orders,
+      isChooseDate,
+      selectionRange,
+      sumSales,
+      salesQuantityData,
+      salesAmountData,
+      dailyRevenue,
+    } = this.state;
     const layout = [
       { i: 'a', x: 0, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
       { i: 'b', x: 4, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
@@ -171,56 +303,7 @@ export default class Dashboard extends React.Component {
     ];
     if (!this.state.isMounted) {
       return null;
-    }
-    let totalSales = 0; //totalSales
-    const dailyRevenue = []; //linechart
-    const salesAmountData = []; //piechart for sales amount
-    const salesQuantityData = []; //piechart for sales amount
-
-    let data = {}; //dict to arrange data for line chart
-    let sales = {}; //key=name, val=[qty,amt] dict to arrange data for piecharts
-    for (var i = 13; i >= 0; i--) {
-      //set keys for data, key = date
-      let index = {};
-      let d = new Date(Date.now() - 864e5 * i);
-      index.time = d;
-      index.Revenue = 0;
-      let key = d.getDate() + d.getMonth() * 28;
-      data[key] = index;
-    }
-
-    if (orders) {
-      let d = new Date(Date.now() - 864e5 * 13); //date 14 days ago
-      orders.map((order) => {
-        let orderDate = new Date(order.payment.dateTime);
-        if (orderDate >= d) {
-          //check for valid order date
-          // set data for line chart
-          let totalPrice = order.quantity * order.product.price;
-          let key = orderDate.getDate() + orderDate.getMonth() * 28;
-          data[key].Revenue += totalPrice;
-          //set data for piecharts and total sales
-          totalSales += totalPrice;
-          let name = order.product.name;
-          if (typeof sales[name] === 'undefined') {
-            sales[name] = [order.quantity, totalPrice];
-          } else {
-            sales[name][0] += order.quantity;
-            sales[name][1] += totalPrice;
-          }
-        }
-      });
-      for (const [key, value] of Object.entries(data)) {
-        value.time = value.time.toLocaleDateString();
-        dailyRevenue.push(value);
-      }
-      for (const [key, value] of Object.entries(sales)) {
-        let a = { name: key, value: value[1] };
-        salesAmountData.push(a);
-        let q = { name: key, value: value[0] };
-        salesQuantityData.push(q);
-      }
-    }
+    } //totalSales
 
     const parseDateToString = (date) => {
       let currentDate = new Date(date);
@@ -274,7 +357,7 @@ export default class Dashboard extends React.Component {
           <StyledDiv key="a" index={0}>
             <StyledTitleContainer>Total Sales</StyledTitleContainer>
             <ResponsiveContainer width="90%" height="90%">
-              <StyledTotalSalesContainer>{`$${totalSales.toFixed(2)}`}</StyledTotalSalesContainer>
+              <StyledTotalSalesContainer>{`$${sumSales.toFixed(2)}`}</StyledTotalSalesContainer>
             </ResponsiveContainer>
           </StyledDiv>
           <StyledDiv key="b" index={1}>
