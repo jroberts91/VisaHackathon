@@ -8,6 +8,11 @@ import { renderActiveShapeSalesQuantity, renderActiveShapeSalesAmount } from './
 import { PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
 import GridLayout from 'react-grid-layout';
 import Linechart from './Linechart';
+import { DateRangePicker } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import dateRangeLogo from '../../images/DateRangeIcon.svg';
+import { Button } from '@material-ui/core';
 
 const { Option } = Select;
 
@@ -23,6 +28,28 @@ const StyledDivBottom = styled.div`
   left: 0.833333% !important;
   min-width: 98.3333%;
   background: white;
+`;
+
+const CloseButton = styled.span`
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: 3px;
+  top: 3px;
+  font-size: 38px;
+`;
+
+const DatePickGroup = styled.div`
+  position: absolute;
+  z-index: 1;
+  background-color: #1a1f71;
+  padding: 20px;
+  padding-bottom: 45px;
+  right: 15px;
+  top: 12%;
+  border-radius: 7px;
 `;
 
 const StyledBreadCrumbsContainer = styled.div`
@@ -52,6 +79,21 @@ const StyledTotalSalesContainer = styled.div`
   font-weight: bold;
 `;
 
+const Icons = styled.img`
+  width: 24px;
+  height: 24px;
+  padding-right: 5px;
+`;
+
+const StyledButton = styled(Button)`
+  && {
+    color: grey;
+    border: 1px solid grey;
+    right: 15px;
+    position: absolute;
+  }
+`;
+
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -60,6 +102,12 @@ export default class Dashboard extends React.Component {
       isMounted: false,
       activeIndexSalesAmount: 0,
       activeIndexSalesQuantity: 0,
+      isChooseDate: false,
+      selectionRange: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+      },
     };
   }
 
@@ -94,8 +142,27 @@ export default class Dashboard extends React.Component {
     this.getAllOrders();
   }
 
+  handleStartChooseDate = () => {
+    const { isChooseDate } = this.state;
+    this.setState({
+      isChooseDate: !isChooseDate,
+    });
+  };
+
+  handleRangeChange = (payload) => {
+    const { startDate, endDate } = payload.selection;
+    this.setState({
+      selectionRange: {
+        ...payload.selection,
+        startDate,
+        endDate,
+      },
+    });
+  };
+
   render() {
     // layout is an array of objects, see the demo for more complete usage
+    const { orders, isChooseDate, selectionRange } = this.state;
     const layout = [
       { i: 'a', x: 0, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
       { i: 'b', x: 4, y: 0, w: 4, h: 9, minW: 4, useCSSTransforms: false, static: true },
@@ -105,7 +172,6 @@ export default class Dashboard extends React.Component {
     if (!this.state.isMounted) {
       return null;
     }
-    const { orders } = this.state;
     let totalSales = 0; //totalSales
     const dailyRevenue = []; //linechart
     const salesAmountData = []; //piechart for sales amount
@@ -156,6 +222,18 @@ export default class Dashboard extends React.Component {
       }
     }
 
+    const parseDateToString = (date) => {
+      let currentDate = new Date(date);
+      return currentDate
+        .toLocaleDateString('en-ZA', {
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        })
+        .split(' ')
+        .join(' ');
+    };
+
     // colors used for the pie charts
     const colorsArray = Object.values(defaultTheme.pieChartColors);
 
@@ -167,15 +245,20 @@ export default class Dashboard extends React.Component {
               <PieChartOutlined style={{ padding: '10px' }} />
               Dashboard
             </Col>
-            <Col span={12}>
-              <Form style={{ marginTop: '10px' }} size="large">
-                <Select defaultValue="Bi-Weekly">
-                  <Option value="Bi-Weekly">Bi-Weekly</Option>
-                  <Option value="Monthly">Monthly</Option>
-                  <Option value="Yearly">Yearly</Option>
-                </Select>
-              </Form>
-            </Col>
+            <StyledButton variant="outlined" onClick={this.handleStartChooseDate}>
+              <Icons src={dateRangeLogo} />
+              {parseDateToString(selectionRange.startDate)} {'  -  '}
+              {parseDateToString(selectionRange.endDate)}
+            </StyledButton>
+            {isChooseDate && (
+              <DatePickGroup>
+                <DateRangePicker
+                  ranges={[selectionRange]}
+                  editableDateInputs={true}
+                  onChange={this.handleRangeChange}
+                />
+              </DatePickGroup>
+            )}
           </Row>
         </StyledBreadCrumbsContainer>
         <StyledContainer
