@@ -123,12 +123,6 @@ export default class Payment extends React.Component {
             </Link>{' '}
             / Payment
           </Title>
-
-          <Popover content={content}>
-            <AddButton type="primary" style={{ float: 'right' }}>
-              Offers
-            </AddButton>
-          </Popover>
         </Row>
         <Row align="middle">
           <Col lg={{ span: 10 }} span={24}>

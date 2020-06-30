@@ -13,6 +13,7 @@ import {
   PieChartOutlined,
   SearchOutlined,
   MessageOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -56,8 +57,10 @@ export default class SideBar extends React.Component {
     const salesHistoryLink = `/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
+    const myOffersLink = `/myoffers`;
     const merchantLocator = '/merchantLocator';
     const contactLink = '/contactUs';
+    const FAQLink = '/FAQ';
 
     const getSelectedMerchantMenuItem = () => {
       const currentPath = window.location.pathname;
@@ -67,11 +70,17 @@ export default class SideBar extends React.Component {
       if (currentPath === myShopLink) {
         return '2';
       }
-      if (currentPath === salesHistoryLink) {
+      if (currentPath === myShopLink) {
         return '3';
       }
-      if (currentPath === contactLink) {
+      if (currentPath === salesHistoryLink) {
         return '4';
+      }
+      if (currentPath === contactLink) {
+        return '5';
+      }
+      if (currentPath === FAQLink) {
+        return '6';
       }
     };
 
@@ -90,6 +99,9 @@ export default class SideBar extends React.Component {
       if (currentPath === contactLink) {
         return '4';
       }
+      if (currentPath === FAQLink) {
+        return '5';
+      }
     };
 
     if (isLoggedIn) {
@@ -105,14 +117,24 @@ export default class SideBar extends React.Component {
             <Link to={myShopLink} />
           </StyledMenuItem>
 
-          <StyledMenuItem key="3" icon={<HistoryOutlined />}>
+          <StyledMenuItem key="3" icon={<TagOutlined />}>
+            My Offers
+            <Link to={myOffersLink} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<HistoryOutlined />}>
             Sales History
             <Link to={salesHistoryLink} />
           </StyledMenuItem>
 
-          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+          <StyledMenuItem key="5" icon={<MessageOutlined />}>
             Contact Us
             <Link to={contactLink} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="6" icon={<QuestionCircleOutlined />}>
+            FAQ
+            <Link to={FAQLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
@@ -137,6 +159,11 @@ export default class SideBar extends React.Component {
           <StyledMenuItem key="4" icon={<MessageOutlined />}>
             Contact Us
             <Link to={contactLink} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="5" icon={<QuestionCircleOutlined />}>
+            FAQ
+            <Link to={FAQLink} />
           </StyledMenuItem>
         </StyledMenu>
       );

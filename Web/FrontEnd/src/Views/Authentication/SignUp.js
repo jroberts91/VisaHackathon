@@ -120,6 +120,7 @@ export default class SignUp extends React.Component {
       address: '',
       cardNumber: '',
       files: '',
+      binNo: '',
       current: 0,
     };
   }
@@ -127,7 +128,7 @@ export default class SignUp extends React.Component {
   componentDidMount = () => {};
 
   handleSubmit = () => {
-    const { storeName, storeDescription, email, password, files, phoneNumber, address } = this.state;
+    const { storeName, storeDescription, email, password, files, phoneNumber, address, binNo } = this.state;
     const { history } = this.props;
     const body = {
       name: storeName,
@@ -136,6 +137,7 @@ export default class SignUp extends React.Component {
       description: storeDescription,
       phone: phoneNumber,
       address: address,
+      binNo: binNo,
     };
 
     let formData = new FormData();
@@ -226,6 +228,12 @@ export default class SignUp extends React.Component {
   handleChangeCardNumber = (event) => {
     this.setState({
       cardNumber: event.target.value,
+    });
+  };
+
+  handleChangeBinNo = (event) => {
+    this.setState({
+      binNo: event.target.value,
     });
   };
 
@@ -433,6 +441,15 @@ export default class SignUp extends React.Component {
                 required
                 fullWidth
                 label="Card Number"
+                size="small"
+              />
+              <StyledTextField
+                onChange={this.handleChangeBinNo}
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                helperText="Acquiring bin number provided by Visa licensed acquirer or representative"
+                label="Bin Number (Optional)"
                 size="small"
               />
               <StyledMaterialButtonLeft variant="contained" color="primary" onClick={this.prevSection}>
