@@ -94,8 +94,7 @@ export default class LoginPage extends React.Component {
     };
   }
 
-  recaptchaLoaded() {
-  }
+  recaptchaLoaded() {}
 
   handleSubscribe() {
     if (this.state.isVerified) {
@@ -152,8 +151,7 @@ export default class LoginPage extends React.Component {
     });
   };
 
-  handleCaptchaChange = (value) => {
-  };
+  handleCaptchaChange = (value) => {};
 
   render() {
     const { email, password, invalidLogin, isVerified } = this.state;
