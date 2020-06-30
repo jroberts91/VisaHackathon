@@ -118,7 +118,7 @@ export default class SideBar extends React.Component {
           </StyledMenuItem>
 
           <StyledMenuItem key="3" icon={<TagOutlined />}>
-            Offers
+            My Offers
             <Link to={myOffersLink} />
           </StyledMenuItem>
 
