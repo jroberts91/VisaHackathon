@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message, Typography, Popover, Table, Button } from 'antd';
+import { Row, Col, Layout, message, Typography, Popover, Table, Button, Radio } from 'antd';
 import queryString from 'query-string';
 import { defaultTheme } from '../../utils/theme';
 import API, { baseUrl } from '../../utils/baseUrl';
 import { ShopOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import CheckoutPaymentForm from './CheckoutPaymentForm';
 const { Content } = Layout;
 const { Title } = Typography;
 const columns = [
@@ -39,6 +41,7 @@ const ErrorMessageContainer = styled.div`
   font-size: 16px;
 `;
 
+
 export default class Payment extends React.Component {
   constructor(props) {
     super(props);
@@ -51,10 +54,11 @@ export default class Payment extends React.Component {
       merchant: null,
       qty: queries.qty,
       offers: [],
+      radioValue: 0
     };
   }
 
-  getMerchantOffersFromApi = (merchantId) => {};
+  getMerchantOffersFromApi = (merchantId) => { };
 
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
@@ -139,16 +143,33 @@ export default class Payment extends React.Component {
               title={product.name}
             />
           </Col>
-          <Col lg={{ span: 14 }} span={24}>
-            {/* TBC: shipping fee is not yet available in the backend, will set default as $2 */}
-            <PaymentForm
-              merchantId={merchantId}
-              productId={productId}
-              qty={qty}
-              totalPrice={totalPrice}
-              shippingFee={product.shippingFee || 2}
-              history={this.props.history}
-            />
+          <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
+            <Radio.Group onChange={event => this.setState({ radioValue: event.target.value })} value={this.state.radioValue}>
+              <Radio value={0}>Visa Direct</Radio>
+              <Radio value={1}>Visa Checkout</Radio>
+            </Radio.Group>
+            {
+              this.state.radioValue === 0 &&
+              <PaymentForm
+                merchantId={merchantId}
+                productId={productId}
+                qty={qty}
+                totalPrice={totalPrice}
+                shippingFee={product.shippingFee || 2}
+                history={this.props.history}
+              />
+            }
+            {
+              this.state.radioValue === 1 &&
+              <CheckoutPaymentForm
+                merchantId={merchantId}
+                productId={productId}
+                qty={qty}
+                totalPrice={totalPrice}
+                shippingFee={product.shippingFee || 2}
+                history={this.props.history}
+              />
+            }
           </Col>
         </Row>
       </Content>

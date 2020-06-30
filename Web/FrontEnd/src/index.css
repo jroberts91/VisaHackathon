@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+#checkoutButton {
+  position: absolute;
+  width: fit-content;
+  top: 60%;
+  left: 53%;
+  display: none;
+}
