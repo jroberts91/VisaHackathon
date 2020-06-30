@@ -115,8 +115,9 @@ export default class MerchantOffers extends React.Component {
           </Row>
           <Tabs defaultActiveKey="1">
             <TabPane tab="All" key={1}>
-              <Table columns={columns} dataSource={offers}></Table>
+              <Table columns={columns} dataSource={offers} />
             </TabPane>
+            <TabPane tab="Add Offers" key={2}></TabPane>
           </Tabs>
         </Content>
       </div>
