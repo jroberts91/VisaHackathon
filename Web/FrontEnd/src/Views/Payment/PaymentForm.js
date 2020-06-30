@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col, message } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, message, Alert } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 import API from '../../utils/baseUrl';
@@ -27,8 +27,16 @@ const validateMessages = {
 const PayButton = styled(Button)`
   background: ${defaultTheme.colors.primary};
   border-color: ${defaultTheme.colors.primary};
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
+
+const StyledCards = styled.div`
+  position: absolute;
+  right: 2%;
+  top: 40%;
+`;
+
+const StyledAlerts = styled(Alert)``;
 
 export default class PaymentForm extends React.Component {
   formRef = React.createRef();
@@ -41,10 +49,37 @@ export default class PaymentForm extends React.Component {
       cvv: '',
       expiry: '',
       cardFocused: '',
+      offers: [],
+      offerError: false,
+      totalPrice: this.props.totalPrice,
     };
   }
 
+  componentDidMount = () => {
+    this.getMerchantOffers();
+  };
+
+  test = (item) => {
+    const { offers } = this.state;
+    const currentOffer = offers[item];
+    if (this.props.totalPrice > currentOffer.minValue) {
+      this.setState({ offerError: false, totalPrice: this.props.totalPrice - currentOffer.value });
+    } else {
+      this.setState({ offerError: true, totalPrice: this.props.totalPrice, offerMinValue: currentOffer.minValue });
+    }
+  };
+
+  getMerchantOffers = () => {
+    API.get(`api/offers/visell/getByMerchant?merchantId=${this.props.merchantId}`)
+      .then((res) => {
+        console.log(res.data.offers);
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
+  };
+
   render() {
+    const { offers, totalPrice, offerError, offerMinValue } = this.state;
     const handlePay = (values) => {
       const { number, cvv } = values.card;
       const { address, country, postal, email, firstName, lastName, phoneNumber } = values.user;
@@ -180,23 +215,6 @@ export default class PaymentForm extends React.Component {
               <Input />
             </Form.Item>
           </Col>
-          <Col span={12} />
-        </Row>
-        <Row>
-          <Col span={12}>
-            <Form.Item
-              name={['user', 'postal']}
-              label="Postal Code"
-              validateTrigger="onSubmit"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Col>
           <Col span={12}>
             <Form.Item
               name={['user', 'country']}
@@ -218,9 +236,25 @@ export default class PaymentForm extends React.Component {
             </Form.Item>
           </Col>
         </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item
+              name={['user', 'postal']}
+              label="Postal Code"
+              validateTrigger="onSubmit"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
-        <Row style={{ marginBottom: '20px' }}>
-          <Col span={10}>
+        <Row>
+          <Col span={12}>
             <Form.Item
               name={['card', 'number']}
               label="Card No"
@@ -239,7 +273,21 @@ export default class PaymentForm extends React.Component {
               <Input />
             </Form.Item>
           </Col>
-          <Col span={7}>
+        </Row>
+        <StyledCards>
+          <Cards
+            issuer={'visa'}
+            focused={this.state.cardFocused}
+            acceptedCards={['visa']}
+            preview={true}
+            cvc={this.state.cvv}
+            name={`${this.state.firstName} ${this.state.lastName}`}
+            number={this.state.cardNumber}
+            expiry={this.state.expiry}
+          />
+        </StyledCards>
+        <Row>
+          <Col span={12}>
             <Form.Item
               name={['card', 'cvv']}
               label="CVV"
@@ -261,7 +309,9 @@ export default class PaymentForm extends React.Component {
               <Input.Password />
             </Form.Item>
           </Col>
-          <Col span={7}>
+        </Row>
+        <Row style={{ marginBottom: '40px' }}>
+          <Col span={12}>
             <Form.Item
               name={['card', 'expiry']}
               label="Expiry"
@@ -284,24 +334,31 @@ export default class PaymentForm extends React.Component {
             </Form.Item>
           </Col>
         </Row>
-        <Cards
-          issuer={'visa'}
-          focused={this.state.cardFocused}
-          acceptedCards={['visa']}
-          preview={true}
-          cvc={this.state.cvv}
-          name={`${this.state.firstName} ${this.state.lastName}`}
-          number={this.state.cardNumber}
-          expiry={this.state.expiry}
-        />
-        <Row align="middle" justify="center" style={{ marginLeft: '150px', marginTop: '30px' }}>
-          <Col span={12} align="center">
-            <Text
-              strong
-              style={{ fontSize: '18px' }}
-            >{`Total: $${this.props.totalPrice} + $${this.props.shippingFee} shipping`}</Text>
+        <Row>
+          <Col span={12}>
+            {offerError && (
+              <StyledAlerts
+                message={`Did not reach min value of $${offerMinValue} w/o delivery`}
+                type="error"
+                showIcon
+              />
+            )}
+            <Form.Item label="Offers">
+              <Select onSelect={this.test}>
+                {offers.map((item, index) => {
+                  return <Option value={index}> {item.offerName} </Option>;
+                })}
+              </Select>
+            </Form.Item>
           </Col>
-          <Col span={12} align="center">
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Text strong style={{ fontSize: '18px' }}>{`Total: $${totalPrice} + $${
+              this.props.shippingFee
+            } delivery = $${parseFloat(totalPrice) + parseFloat(this.props.shippingFee)}`}</Text>
+          </Col>
+          <Col span={12} align="right">
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }} noStyle>
               <PayButton type="primary" htmlType="submit">
                 Pay via Visa
