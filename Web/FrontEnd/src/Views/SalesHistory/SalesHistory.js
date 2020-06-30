@@ -117,9 +117,6 @@ class SalesTable extends React.Component {
     let data = orders ? orders : [];
     let dataSource = [];
     for (let elm of data) {
-      if (elm.isRefunded) {
-        continue;
-      }
       if (!this.props.statusTab) {
         if (elm.isFulfilled === this.props.isFulfilled) {
           dataSource.push(elm);
@@ -230,7 +227,9 @@ class SalesTable extends React.Component {
             title="Refund"
             dataIndex="isRefunded"
             render={(text, record) => {
-              return (
+              return record.isRefunded ? (
+                'Refunded'
+              ) : (
                 <Button
                   type="primary"
                   onClick={() => this.setState({ isShowRefundConfirmation: true, orderId: record._id })}
