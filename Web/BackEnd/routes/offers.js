@@ -4,7 +4,6 @@ const axios = require('axios');
 const path = require('path');
 const { Offer } = require('../models/Offer');
 const { Merchant } = require('../models/Merchant');
-const { ESRCH } = require('constants');
 
 fs = require('fs');
 
@@ -34,6 +33,7 @@ router.post('/add', async (req, res) => {
   const offer = new Offer(req.body);
   offer.merchantName = merchant.name;
   offer.quantityUsed = 0;
+  offer.deleted = false;
   offer.unique = req.body.code + merchantId;
   //save to mongoDB
   try {
@@ -44,8 +44,15 @@ router.post('/add', async (req, res) => {
   }
 });
 
+router.post('/visell/delete', async (req, res) => {
+  let offerId = req.body.offerId;
+  const offer = await Offer.findOneAndUpdate({ _id: offerId }, { deleted: true });
+  if (!offer) return res.json({ success: false, msg: 'offer delete failed' });
+  return res.status(200).json({ success: true });
+});
+
 router.get('/visell/list', async (req, res) => {
-  Offer.find().exec((err, offers) => {
+  Offer.find({ deleted: false }).exec((err, offers) => {
     if (err) return res.status(400).json({ success: false, err });
     res.json({ success: true, offers, postSize: offers.length });
   });
@@ -54,7 +61,7 @@ router.get('/visell/list', async (req, res) => {
 //?merchantId=${merchantId}
 router.get('/visell/getByMerchant', async (req, res) => {
   let merchantId = req.query.merchantId;
-  Offer.find({ merchantId: merchantId }).exec((err, offers) => {
+  Offer.find({ merchantId: merchantId, deleted: false }).exec((err, offers) => {
     if (err) return res.json({ success: false, err });
     res.json({ success: true, offers, postSize: offers.length });
   });
@@ -65,7 +72,7 @@ router.get('/visell/getByMerchant', async (req, res) => {
 router.get('/visell/redeem', async (req, res) => {
   let merchantId = req.query.merchantId;
   let code = req.query.code;
-  Offer.find({ merchantId: merchantId, code: code }).exec((err, offers) => {
+  Offer.find({ merchantId: merchantId, code: code, deleted: false }).exec((err, offers) => {
     if (err) return res.json({ success: false, err });
     if (!offers.length) return res.json({ success: false, msg: 'not found' });
     res.json({ success: true });

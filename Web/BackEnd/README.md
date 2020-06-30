@@ -301,6 +301,22 @@ Response
 }
 ```
 
+- POST '/visell/delete' set delete flag to true
+
+```json
+Request param
+
+{
+    "offerId": "5efad2329a35d96ffc635d89"
+}
+
+Response
+
+{
+    "success": true
+}
+```
+
 - GET '/visell/getByMerchant' gets all offers with merchantId
 
 ```json
