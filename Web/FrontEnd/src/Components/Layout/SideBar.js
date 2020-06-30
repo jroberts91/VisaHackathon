@@ -13,6 +13,7 @@ import {
   PieChartOutlined,
   SearchOutlined,
   MessageOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -59,6 +60,7 @@ export default class SideBar extends React.Component {
     const myOffersLink = `/myoffers`;
     const merchantLocator = '/merchantLocator';
     const contactLink = '/contactUs';
+    const FAQLink = '/FAQ';
 
     const getSelectedMerchantMenuItem = () => {
       const currentPath = window.location.pathname;
@@ -77,6 +79,9 @@ export default class SideBar extends React.Component {
       if (currentPath === contactLink) {
         return '5';
       }
+      if (currentPath === FAQLink) {
+        return '6';
+      }
     };
 
     const getSelectedBuyerMenuItem = () => {
@@ -93,6 +98,9 @@ export default class SideBar extends React.Component {
       }
       if (currentPath === contactLink) {
         return '4';
+      }
+      if (currentPath === FAQLink) {
+        return '5';
       }
     };
 
@@ -123,6 +131,11 @@ export default class SideBar extends React.Component {
             Contact Us
             <Link to={contactLink} />
           </StyledMenuItem>
+
+          <StyledMenuItem key="6" icon={<QuestionCircleOutlined />}>
+            FAQ
+            <Link to={FAQLink} />
+          </StyledMenuItem>
         </StyledMenu>
       );
     } else {
@@ -146,6 +159,11 @@ export default class SideBar extends React.Component {
           <StyledMenuItem key="4" icon={<MessageOutlined />}>
             Contact Us
             <Link to={contactLink} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="5" icon={<QuestionCircleOutlined />}>
+            FAQ
+            <Link to={FAQLink} />
           </StyledMenuItem>
         </StyledMenu>
       );
