@@ -184,7 +184,8 @@ export default class OfferPage extends React.Component {
             >
               {offers.map((product, index) => {
                 const { offerTitle, merchantName } = product;
-                const imgUrl = product.merchantImages[0].fileLocation;
+                console.log(product);
+                const imgUrl = product.imageList[0] ? product.imageList[0].fileLocation : null;
                 return (
                   <StyledOfferCard onClick={() => this.showModal(product)}>
                     <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
