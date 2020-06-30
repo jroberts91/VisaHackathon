@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import ReactDOM from 'react-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message, Typography, Popover, Table, Button, Radio } from 'antd';
+import { Row, Col, Layout, message, Typography, Radio, Tooltip } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 import queryString from 'query-string';
 import { defaultTheme } from '../../utils/theme';
 import API, { baseUrl } from '../../utils/baseUrl';
@@ -12,26 +12,6 @@ import styled from 'styled-components';
 import CheckoutPaymentForm from './CheckoutPaymentForm';
 const { Content } = Layout;
 const { Title } = Typography;
-const columns = [
-  {
-    title: 'Offer',
-    dataIndex: 'offerName',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-  },
-  {
-    title: 'Code',
-    dataIndex: 'code',
-  },
-];
-
-const AddButton = styled(Button)`
-  background: ${defaultTheme.colors.primary};
-  border-color: ${defaultTheme.colors.primary};
-  margin-bottom: 0;
-`;
 
 const ErrorMessageContainer = styled.div`
   position: absolute;
@@ -39,6 +19,10 @@ const ErrorMessageContainer = styled.div`
   left: 50%;
   transform: translate(-50%, 0);
   font-size: 16px;
+`;
+
+const StyledRadioGroup = styled(Radio.Group)`
+  margin-bottom: 5%;
 `;
 
 
@@ -87,10 +71,75 @@ export default class Payment extends React.Component {
       .catch((err) => console.error(err));
   };
 
+  getSinglePaymentMethodComponent = (product, qty, merchantId, productId, totalPrice) => {
+    return (
+      <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
+        <Row style={{ justifyContent: 'center' }}>
+          <Title
+            level={4}
+            style={{ color: `${defaultTheme.colors.primary}`, marginBottom: '10%', fontSize: '32px' }}
+          >
+            Visa Checkout
+          </Title>
+        </Row>
+        <CheckoutPaymentForm
+          merchantId={merchantId}
+          productId={productId}
+          qty={qty}
+          totalPrice={totalPrice}
+          shippingFee={product.shippingFee || 2}
+          history={this.props.history}
+        />
+      </Col>
+    );
+  }
+
+  getBothPaymentMethodComponent = (product, qty, merchantId, productId, totalPrice) => {
+    return (
+      <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
+        <Row style={{ justifyContent: 'center' }} align='center'>
+          <StyledRadioGroup onChange={event => this.setState({ radioValue: event.target.value })} value={this.state.radioValue}>
+            <Radio value={0}>Visa Direct&nbsp;
+                  <Tooltip title="Visa Direct payment involves paying on the current website">
+                <QuestionCircleFilled />
+              </Tooltip>
+            </Radio>
+            <Radio value={1}>Visa Checkout&nbsp;
+                  <Tooltip title="Visa Checkout payment involves a seperate registration and login on Visa's checkout platform">
+                <QuestionCircleFilled />
+              </Tooltip>
+            </Radio>
+          </StyledRadioGroup>
+        </Row>
+        {
+          this.state.radioValue === 0 &&
+          <PaymentForm
+            merchantId={merchantId}
+            productId={productId}
+            qty={qty}
+            totalPrice={totalPrice}
+            shippingFee={product.shippingFee || 2}
+            history={this.props.history}
+          />
+        }
+        {
+          this.state.radioValue === 1 &&
+          <CheckoutPaymentForm
+            merchantId={merchantId}
+            productId={productId}
+            qty={qty}
+            totalPrice={totalPrice}
+            shippingFee={product.shippingFee || 2}
+            history={this.props.history}
+          />
+        }
+      </Col>
+    );
+  }
+
   render() {
-    const { product, qty, merchantId, productId, merchant, isOwnerShop, offers } = this.state;
+    const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
     const { isLoggedIn } = this.props;
-    const content = <Table columns={columns} dataSource={offers} />;
 
     if (product == null || merchant == null) {
       // when product or merchant isn't populated yet
@@ -137,34 +186,11 @@ export default class Payment extends React.Component {
               title={product.name}
             />
           </Col>
-          <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
-            <Radio.Group onChange={event => this.setState({ radioValue: event.target.value })} value={this.state.radioValue}>
-              <Radio value={0}>Visa Direct</Radio>
-              <Radio value={1}>Visa Checkout</Radio>
-            </Radio.Group>
-            {
-              this.state.radioValue === 0 &&
-              <PaymentForm
-                merchantId={merchantId}
-                productId={productId}
-                qty={qty}
-                totalPrice={totalPrice}
-                shippingFee={product.shippingFee || 2}
-                history={this.props.history}
-              />
-            }
-            {
-              this.state.radioValue === 1 &&
-              <CheckoutPaymentForm
-                merchantId={merchantId}
-                productId={productId}
-                qty={qty}
-                totalPrice={totalPrice}
-                shippingFee={product.shippingFee || 2}
-                history={this.props.history}
-              />
-            }
-          </Col>
+          {
+            merchant.binNo ?
+              this.getBothPaymentMethodComponent(product, qty, merchantId, productId, totalPrice) :
+              this.getSinglePaymentMethodComponent(product, qty, merchantId, productId, totalPrice)
+          }
         </Row>
       </Content>
     );

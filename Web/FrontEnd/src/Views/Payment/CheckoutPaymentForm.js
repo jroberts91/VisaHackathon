@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Typography, Button, Select, Row, Col, message } from 'antd';
+import { Form, Input, Typography, Button, Select, Row, Col, message, Alert } from 'antd';
 import styled from 'styled-components';
 import { defaultTheme } from '../../utils/theme';
 import API from '../../utils/baseUrl';
@@ -26,31 +26,55 @@ const validateMessages = {
 const PayButton = styled(Button)`
   background: ${defaultTheme.colors.primary};
   border-color: ${defaultTheme.colors.primary};
-  margin-bottom: 0;
+  margin-bottom: 20px;
 `;
+
+const StyledAlerts = styled(Alert)``;
 
 export default class CheckoutPaymentForm extends React.Component {
   formRef = React.createRef();
   constructor(props) {
     super(props);
     this.state = {
+      offers: [],
+      offerError: false,
+      totalPrice: this.props.totalPrice,
       showCheckoutPage: false,
     }
   }
 
   componentDidMount = () => {
-    this.onVisaCheckoutReady();
+    this.getMerchantOffers();
   }
 
   componentWillUnmount = () => {
     document.getElementById('checkoutButton').style.display = "none";
   }
-  onVisaCheckoutReady = () => {
+
+  test = (item) => {
+    const { offers } = this.state;
+    const currentOffer = offers[item];
+    if (this.props.totalPrice > currentOffer.minValue) {
+      this.setState({ offerError: false, totalPrice: this.props.totalPrice - currentOffer.value });
+    } else {
+      this.setState({ offerError: true, totalPrice: this.props.totalPrice, offerMinValue: currentOffer.minValue });
+    }
+  };
+
+  getMerchantOffers = () => {
+    API.get(`api/offers/visell/getByMerchant?merchantId=${this.props.merchantId}`)
+      .then((res) => {
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  onVisaCheckoutReady = (totalPrice) => {
     window.V.init({
       apikey: "8XLNBQZUQJFZIFGKCH2P21Koq6pvrOmJc17tWwTsNRQVx_e0o",
       paymentRequest: {
         currencyCode: "SGD",
-        subtotal: "10.00",
+        subtotal: totalPrice,
         dataLevel: 'FULL'
       }
     });
@@ -64,11 +88,10 @@ export default class CheckoutPaymentForm extends React.Component {
         JSON.stringify(error));
     });
   }
+
   handlePaymentSuccess = () => {
-    console.log(this.state.formData)
     API.post('api/payment/direct', this.state.formData)
       .then((res) => {
-        console.log(res);
         if (res.data.success) {
           const { orderId } = res.data;
           // successful payment, direct user to order summary page
@@ -89,6 +112,7 @@ export default class CheckoutPaymentForm extends React.Component {
 
 
   render() {
+    const { offers, totalPrice, offerError, offerMinValue } = this.state;
     const handleNext = (values) => {
       const { address, country, postal, email, firstName, lastName, phoneNumber } = values.user;
       const data = {
@@ -108,6 +132,7 @@ export default class CheckoutPaymentForm extends React.Component {
         },
       };
       this.setState({ formData: data, showCheckoutPage: true });
+      this.onVisaCheckoutReady(totalPrice);
       document.getElementById('checkoutButton').style.display = "flex";
     };
     return (
@@ -197,9 +222,6 @@ export default class CheckoutPaymentForm extends React.Component {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={12} />
-            </Row>
-            <Row>
               <Col span={12}>
                 <Form.Item
                   name={['user', 'postal']}
@@ -214,7 +236,9 @@ export default class CheckoutPaymentForm extends React.Component {
                   <Input />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+            </Row>
+            <Row>
+            <Col span={12}>
                 <Form.Item
                   name={['user', 'country']}
                   label="Country"
@@ -234,15 +258,30 @@ export default class CheckoutPaymentForm extends React.Component {
                   </Select>
                 </Form.Item>
               </Col>
-            </Row>
-            <Row align="middle" justify="center" style={{ marginLeft: '150px', marginTop: '30px' }}>
-              <Col span={12} align="center">
-                <Text
-                  strong
-                  style={{ fontSize: '18px' }}
-                >{`Total: $${this.props.totalPrice} + $${this.props.shippingFee} shipping`}</Text>
+              <Col span={12}>
+                {offerError && (
+                  <StyledAlerts
+                    message={`Did not reach min value of $${offerMinValue} w/o delivery`}
+                    type="error"
+                    showIcon
+                  />
+                )}
+                <Form.Item label="Offers">
+                  <Select onSelect={this.test}>
+                    {offers.map((item, index) => {
+                      return <Option value={index}> {item.offerName} </Option>;
+                    })}
+                  </Select>
+                </Form.Item>
               </Col>
-              <Col span={12} align="center">
+            </Row>
+            <Row>
+              <Col span={12}>
+                <Text strong style={{ fontSize: '18px' }}>{`Total: $${totalPrice} + $${
+                  this.props.shippingFee
+                  } delivery = $${parseFloat(totalPrice) + parseFloat(this.props.shippingFee)}`}</Text>
+              </Col>
+              <Col span={12} align="right">
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }} noStyle>
                   <PayButton type="primary" htmlType="submit">
                     Next
