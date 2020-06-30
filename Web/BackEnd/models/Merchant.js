@@ -31,6 +31,9 @@ const merchantSchema = mongoose.Schema({
   phone: {
     type: String,
   },
+  binNo: {
+    type: String,
+  },
 });
 
 merchantSchema.index(
