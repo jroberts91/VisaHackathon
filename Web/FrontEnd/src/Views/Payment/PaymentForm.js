@@ -39,6 +39,8 @@ export default class PaymentForm extends React.Component {
       lastName: '',
       cardNumber: '',
       cvv: '',
+      expiry: '',
+      cardFocused: '',
     };
   }
 
@@ -105,6 +107,7 @@ export default class PaymentForm extends React.Component {
               validateTrigger="onSubmit"
               getValueFromEvent={(event) => {
                 this.setState({ firstName: event.target.value });
+                this.setState({ cardFocused: 'name' });
                 return event.target.value;
               }}
             >
@@ -118,6 +121,7 @@ export default class PaymentForm extends React.Component {
               validateTrigger="onSubmit"
               getValueFromEvent={(event) => {
                 this.setState({ lastName: event.target.value });
+                this.setState({ cardFocused: 'name' });
                 return event.target.value;
               }}
               rules={[
@@ -216,10 +220,10 @@ export default class PaymentForm extends React.Component {
         </Row>
 
         <Row style={{ marginBottom: '20px' }}>
-          <Col span={12}>
+          <Col span={10}>
             <Form.Item
               name={['card', 'number']}
-              label="Credit Card No"
+              label="Card No"
               validateTrigger="onSubmit"
               rules={[
                 {
@@ -228,16 +232,17 @@ export default class PaymentForm extends React.Component {
               ]}
               getValueFromEvent={(event) => {
                 this.setState({ cardNumber: event.target.value });
+                this.setState({ cardFocused: 'number' });
                 return event.target.value;
               }}
             >
               <Input />
             </Form.Item>
           </Col>
-          <Col span={12}>
+          <Col span={7}>
             <Form.Item
               name={['card', 'cvv']}
-              label="CVV number"
+              label="CVV"
               validateTrigger="onSubmit"
               rules={[
                 {
@@ -249,6 +254,29 @@ export default class PaymentForm extends React.Component {
               ]}
               getValueFromEvent={(event) => {
                 this.setState({ cvv: event.target.value });
+                this.setState({ cardFocused: 'cvc' });
+                return event.target.value;
+              }}
+            >
+              <Input.Password />
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item
+              name={['card', 'expiry']}
+              label="Expiry"
+              validateTrigger="onSubmit"
+              rules={[
+                {
+                  required: true,
+                  pattern: new RegExp('^[0-9]{3,4}$'),
+                  //        pattern: new RegExp('/^[0-9]{3,4}$/'),
+                  message: 'CVV is the 3/4 digit number on the back of your Visa card.',
+                },
+              ]}
+              getValueFromEvent={(event) => {
+                this.setState({ expiry: event.target.value });
+                this.setState({ cardFocused: 'expiry' });
                 return event.target.value;
               }}
             >
@@ -258,11 +286,13 @@ export default class PaymentForm extends React.Component {
         </Row>
         <Cards
           issuer={'visa'}
+          focused={this.state.cardFocused}
           acceptedCards={['visa']}
           preview={true}
           cvc={this.state.cvv}
           name={`${this.state.firstName} ${this.state.lastName}`}
           number={this.state.cardNumber}
+          expiry={this.state.expiry}
         />
         <Row align="middle" justify="center" style={{ marginLeft: '150px', marginTop: '30px' }}>
           <Col span={12} align="center">
