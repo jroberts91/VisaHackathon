@@ -314,7 +314,7 @@ export default class Profile extends React.Component {
             <Radio value="edit">Edit</Radio>
           </Radio.Group>
         </ModeContainer>
-        <Row align="middle" style={{ marginTop: '15%' }}>
+        <Row align="middle" style={{ marginTop: '1%' }}>
           <Col lg={{ span: 12 }} span={24}>
             <LeftProfileSection
               mode={mode}
