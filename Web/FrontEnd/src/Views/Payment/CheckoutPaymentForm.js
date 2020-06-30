@@ -40,16 +40,16 @@ export default class CheckoutPaymentForm extends React.Component {
       offerError: false,
       totalPrice: this.props.totalPrice,
       showCheckoutPage: false,
-    }
+    };
   }
 
   componentDidMount = () => {
     this.getMerchantOffers();
-  }
+  };
 
   componentWillUnmount = () => {
-    document.getElementById('checkoutButton').style.display = "none";
-  }
+    document.getElementById('checkoutButton').style.display = 'none';
+  };
 
   test = (item) => {
     const { offers } = this.state;
@@ -71,23 +71,21 @@ export default class CheckoutPaymentForm extends React.Component {
 
   onVisaCheckoutReady = (totalPrice) => {
     window.V.init({
-      apikey: "8XLNBQZUQJFZIFGKCH2P21Koq6pvrOmJc17tWwTsNRQVx_e0o",
+      apikey: '8XLNBQZUQJFZIFGKCH2P21Koq6pvrOmJc17tWwTsNRQVx_e0o',
       paymentRequest: {
-        currencyCode: "SGD",
+        currencyCode: 'SGD',
         subtotal: totalPrice,
-        dataLevel: 'FULL'
-      }
+        dataLevel: 'FULL',
+      },
     });
-    window.V.on("payment.success", this.handlePaymentSuccess);
-    window.V.on("payment.cancel", function (payment) {
-      console.log("payment.cancel: \n" + JSON.stringify(payment));
+    window.V.on('payment.success', this.handlePaymentSuccess);
+    window.V.on('payment.cancel', function (payment) {
+      console.log('payment.cancel: \n' + JSON.stringify(payment));
     });
-    window.V.on("payment.error", function (payment, error) {
-      console.log("payment.error: \n" +
-        JSON.stringify(payment) + "\n" +
-        JSON.stringify(error));
+    window.V.on('payment.error', function (payment, error) {
+      console.log('payment.error: \n' + JSON.stringify(payment) + '\n' + JSON.stringify(error));
     });
-  }
+  };
 
   handlePaymentSuccess = () => {
     API.post('api/payment/direct', this.state.formData)
@@ -108,8 +106,7 @@ export default class CheckoutPaymentForm extends React.Component {
         }
       })
       .catch((err) => console.error(err));
-  }
-
+  };
 
   render() {
     const { offers, totalPrice, offerError, offerMinValue } = this.state;
@@ -133,12 +130,11 @@ export default class CheckoutPaymentForm extends React.Component {
       };
       this.setState({ formData: data, showCheckoutPage: true });
       this.onVisaCheckoutReady(totalPrice);
-      document.getElementById('checkoutButton').style.display = "flex";
+      document.getElementById('checkoutButton').style.display = 'flex';
     };
     return (
       <>
-        {
-          !this.state.showCheckoutPage &&
+        {!this.state.showCheckoutPage && (
           <Form
             {...layout}
             ref={this.formRef}
@@ -238,7 +234,7 @@ export default class CheckoutPaymentForm extends React.Component {
               </Col>
             </Row>
             <Row>
-            <Col span={12}>
+              <Col span={12}>
                 <Form.Item
                   name={['user', 'country']}
                   label="Country"
@@ -279,18 +275,18 @@ export default class CheckoutPaymentForm extends React.Component {
               <Col span={12}>
                 <Text strong style={{ fontSize: '18px' }}>{`Total: $${totalPrice} + $${
                   this.props.shippingFee
-                  } delivery = $${parseFloat(totalPrice) + parseFloat(this.props.shippingFee)}`}</Text>
+                } delivery = $${parseFloat(totalPrice) + parseFloat(this.props.shippingFee)}`}</Text>
               </Col>
               <Col span={12} align="right">
                 <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }} noStyle>
                   <PayButton type="primary" htmlType="submit">
                     Next
-              </PayButton>
+                  </PayButton>
                 </Form.Item>
               </Col>
             </Row>
           </Form>
-        }
+        )}
       </>
     );
   }

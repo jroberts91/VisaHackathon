@@ -227,9 +227,9 @@ class SalesTable extends React.Component {
             title="Refund"
             dataIndex="isRefunded"
             render={(text, record) => {
-              return (
-                record.isRefunded ?
-                "Refunded" :
+              return record.isRefunded ? (
+                'Refunded'
+              ) : (
                 <Button
                   type="primary"
                   onClick={() => this.setState({ isShowRefundConfirmation: true, orderId: record._id })}

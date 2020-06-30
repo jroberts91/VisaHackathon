@@ -25,7 +25,6 @@ const StyledRadioGroup = styled(Radio.Group)`
   margin-bottom: 5%;
 `;
 
-
 export default class Payment extends React.Component {
   constructor(props) {
     super(props);
@@ -38,11 +37,11 @@ export default class Payment extends React.Component {
       merchant: null,
       qty: queries.qty,
       offers: [],
-      radioValue: 0
+      radioValue: 0,
     };
   }
 
-  getMerchantOffersFromApi = (merchantId) => { };
+  getMerchantOffersFromApi = (merchantId) => {};
 
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
@@ -75,10 +74,7 @@ export default class Payment extends React.Component {
     return (
       <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
         <Row style={{ justifyContent: 'center' }}>
-          <Title
-            level={4}
-            style={{ color: `${defaultTheme.colors.primary}`, marginBottom: '10%', fontSize: '32px' }}
-          >
+          <Title level={4} style={{ color: `${defaultTheme.colors.primary}`, marginBottom: '10%', fontSize: '32px' }}>
             Visa Checkout
           </Title>
         </Row>
@@ -92,27 +88,31 @@ export default class Payment extends React.Component {
         />
       </Col>
     );
-  }
+  };
 
   getBothPaymentMethodComponent = (product, qty, merchantId, productId, totalPrice) => {
     return (
       <Col lg={{ span: 14 }} span={24} style={{ minHeight: 300 }}>
-        <Row style={{ justifyContent: 'center' }} align='center'>
-          <StyledRadioGroup onChange={event => this.setState({ radioValue: event.target.value })} value={this.state.radioValue}>
-            <Radio value={0}>Visa Direct&nbsp;
-                  <Tooltip title="Visa Direct payment involves paying on the current website">
+        <Row style={{ justifyContent: 'center' }} align="center">
+          <StyledRadioGroup
+            onChange={(event) => this.setState({ radioValue: event.target.value })}
+            value={this.state.radioValue}
+          >
+            <Radio value={0}>
+              Visa Direct&nbsp;
+              <Tooltip title="Visa Direct payment involves paying on the current website">
                 <QuestionCircleFilled />
               </Tooltip>
             </Radio>
-            <Radio value={1}>Visa Checkout&nbsp;
-                  <Tooltip title="Visa Checkout payment involves a seperate registration and login on Visa's checkout platform">
+            <Radio value={1}>
+              Visa Checkout&nbsp;
+              <Tooltip title="Visa Checkout payment involves a seperate registration and login on Visa's checkout platform">
                 <QuestionCircleFilled />
               </Tooltip>
             </Radio>
           </StyledRadioGroup>
         </Row>
-        {
-          this.state.radioValue === 0 &&
+        {this.state.radioValue === 0 && (
           <PaymentForm
             merchantId={merchantId}
             productId={productId}
@@ -121,9 +121,8 @@ export default class Payment extends React.Component {
             shippingFee={product.shippingFee || 2}
             history={this.props.history}
           />
-        }
-        {
-          this.state.radioValue === 1 &&
+        )}
+        {this.state.radioValue === 1 && (
           <CheckoutPaymentForm
             merchantId={merchantId}
             productId={productId}
@@ -132,10 +131,10 @@ export default class Payment extends React.Component {
             shippingFee={product.shippingFee || 2}
             history={this.props.history}
           />
-        }
+        )}
       </Col>
     );
-  }
+  };
 
   render() {
     const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
@@ -186,11 +185,9 @@ export default class Payment extends React.Component {
               title={product.name}
             />
           </Col>
-          {
-            merchant.binNo ?
-              this.getBothPaymentMethodComponent(product, qty, merchantId, productId, totalPrice) :
-              this.getSinglePaymentMethodComponent(product, qty, merchantId, productId, totalPrice)
-          }
+          {merchant.binNo
+            ? this.getBothPaymentMethodComponent(product, qty, merchantId, productId, totalPrice)
+            : this.getSinglePaymentMethodComponent(product, qty, merchantId, productId, totalPrice)}
         </Row>
       </Content>
     );

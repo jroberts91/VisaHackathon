@@ -15,7 +15,12 @@ ReactDOM.render(
 // el.setAttribute("id", "checkoutButton");
 ReactDOM.render(
   <React.StrictMode>
-    <img alt="Visa Checkout" class="v-button" role="button" src="https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png" />
+    <img
+      alt="Visa Checkout"
+      class="v-button"
+      role="button"
+      src="https://sandbox.secure.checkout.visa.com/wallet-services-web/xo/button.png"
+    />
   </React.StrictMode>,
   document.getElementById('checkoutButton')
 );
