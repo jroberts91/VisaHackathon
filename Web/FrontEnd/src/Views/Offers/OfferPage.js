@@ -48,7 +48,7 @@ const StyledOfferCard = styled.div`
 export default class OfferPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { offers: [], visellOffers: [], notLoaded: true, visible: false, loading: true };
+    this.state = { offers: [], visellOffers: [], notLoaded: true, visible: false, loading: true, modalShortDesc: '' };
   }
 
   componentDidMount = () => {
@@ -57,27 +57,26 @@ export default class OfferPage extends React.Component {
   };
 
   showModal = (product) => {
-    const { merchantName, offerTitle, promotionFromDateTime, promotionToDateTime } = product;
-    console.log(merchantName);
-    console.log(offerTitle);
+    const { offerTitle, promotionFromDateTime, promotionToDateTime } = product;
+    const merchantName = product.merchantList[0].merchant;
+    const offerShortDescription = product.offerShortDescription.text;
     this.setState({
       visible: true,
       modalHeader: merchantName,
       modalOfferTitle: offerTitle,
       modalStartDate: promotionFromDateTime,
       modalEndDate: promotionToDateTime,
+      modalShortDesc: offerShortDescription,
     });
   };
 
   handleOk = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });
@@ -104,7 +103,16 @@ export default class OfferPage extends React.Component {
   };
 
   render() {
-    const { offers, notLoaded, visellOffers, modalHeader, modalOfferTitle, modalStartDate, modalEndDate } = this.state;
+    const {
+      offers,
+      notLoaded,
+      visellOffers,
+      modalHeader,
+      modalOfferTitle,
+      modalStartDate,
+      modalEndDate,
+      modalShortDesc,
+    } = this.state;
     let body;
 
     if (notLoaded) {
@@ -183,9 +191,9 @@ export default class OfferPage extends React.Component {
               itemClass="carousel-item-padding-40-px"
             >
               {offers.map((product, index) => {
-                const { offerTitle, merchantName } = product;
-                console.log(product);
+                const { offerTitle } = product;
                 const imgUrl = product.imageList[0] ? product.imageList[0].fileLocation : null;
+                const merchantName = product.merchantList[0].merchant;
                 return (
                   <StyledOfferCard onClick={() => this.showModal(product)}>
                     <OfferCard title={merchantName} description={offerTitle} imgUrl={imgUrl} />
@@ -196,8 +204,10 @@ export default class OfferPage extends React.Component {
           </div>
           <Modal title={modalHeader} visible={this.state.visible} onOk={this.handleOk} onCancel={this.handleCancel}>
             <p>{modalOfferTitle}</p>
-            <p>Start Date: {modalStartDate}</p>
-            <p>End Date: {modalEndDate}</p>
+            <p>{modalShortDesc}</p>
+            <p>
+              Date: {modalStartDate} - {modalEndDate}{' '}
+            </p>
           </Modal>
         </div>
       );

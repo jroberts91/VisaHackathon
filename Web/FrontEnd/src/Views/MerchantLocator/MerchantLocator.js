@@ -54,8 +54,8 @@ function MerchantLocator() {
     let body = { lat: Lat, lng: Lng, name: Name };
     API.post('api/merchantLocator/getAll', body)
       .then((res) => {
-        if (res.success === false) console.log('cannot fetch merchant');
-        else {
+        if (res.success === false) {
+        } else {
           let merchants = {};
           merchants = res.data.data.merchantLocatorServiceResponse.response;
           if (merchants) setVisaMerch(merchants);

@@ -31,7 +31,6 @@ export default class ImageGrid extends React.Component {
         </Row>
         <Row gutter={[32, 32]}>
           {images.map((url, index) => {
-            console.log(index);
             if (index === this.state.imageIndex) {
               return null;
             }

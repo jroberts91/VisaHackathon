@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Row, Col, Layout, Typography, Button, Popover, Table } from 'antd';
 import { defaultTheme } from '../../utils/theme';
-import { ShopOutlined } from '@ant-design/icons';
+import { ShopOutlined, TagOutlined, PlusOutlined } from '@ant-design/icons';
 import ProductCard from '../../Components/Cards/ProductCard';
 import API from '../../utils/baseUrl';
 import { ProductListContext } from '../../utils/merchantShopContext';
@@ -25,6 +25,10 @@ const AddButton = styled(Button)`
   background: ${defaultTheme.colors.primary};
   border-color: ${defaultTheme.colors.primary};
   margin-bottom: 0;
+`;
+
+const StyledButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
 `;
 
 class ProductList extends React.Component {
@@ -143,12 +147,24 @@ export default class MerchantShop extends React.Component {
           {isOwnerShop ? (
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <Link style={{ float: 'right' }} to={`/${merchantId}/addproduct`}>
-                <AddButton type="primary">Add New Product</AddButton>
+                <StyledButton
+                  type="primary"
+                  size="large"
+                  shape="circle"
+                  style={{ float: 'right', marginRight: '20px' }}
+                >
+                  <PlusOutlined />
+                </StyledButton>
               </Link>
               <Popover content={content}>
-                <AddButton type="primary" style={{ float: 'right', marginRight: '20px' }}>
-                  Your Offers
-                </AddButton>
+                <StyledButton
+                  type="primary"
+                  size="large"
+                  shape="circle"
+                  style={{ float: 'right', marginRight: '20px' }}
+                >
+                  <TagOutlined />
+                </StyledButton>
               </Popover>
             </Col>
           ) : (
