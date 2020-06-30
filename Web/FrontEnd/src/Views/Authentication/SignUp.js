@@ -163,7 +163,6 @@ export default class SignUp extends React.Component {
           }
         });
       }
-      console.log(res.data.loginSuccess);
     });
   };
 
@@ -238,7 +237,6 @@ export default class SignUp extends React.Component {
   };
 
   handleChangePic = (info) => {
-    console.log(info.file);
     this.setState({
       uploaded: true,
       files: info.file,

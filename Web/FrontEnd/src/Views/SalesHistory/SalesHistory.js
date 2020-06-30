@@ -43,7 +43,6 @@ class SalesTable extends React.Component {
       orderId: orderId,
     };
     API.post('api/payment/refund', body).then((res) => {
-      console.log(res);
       this.setState({ isShowRefundConfirmation: false });
       toggleRefund();
     });

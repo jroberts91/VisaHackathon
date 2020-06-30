@@ -95,7 +95,6 @@ export default class LoginPage extends React.Component {
   }
 
   recaptchaLoaded() {
-    console.log('capcha successfully loaded');
   }
 
   handleSubscribe() {
@@ -114,7 +113,6 @@ export default class LoginPage extends React.Component {
 
   componentDidMount = () => {
     if (this.captchaDemo) {
-      console.log('started, just a second...');
       this.captchaDemo.reset();
     }
   };
@@ -136,7 +134,6 @@ export default class LoginPage extends React.Component {
   };
 
   handleSignUp = () => {
-    console.log(this.state.email);
     this.props.history.push({
       pathname: '/signup',
     });
@@ -156,7 +153,6 @@ export default class LoginPage extends React.Component {
   };
 
   handleCaptchaChange = (value) => {
-    console.log('This is the captcha ', value);
   };
 
   render() {

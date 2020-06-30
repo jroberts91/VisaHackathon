@@ -64,7 +64,6 @@ export default class TopBar extends React.Component {
         .then((res) => {
           if (res.data.success) {
             const { profileImage } = res.data.merchant;
-            console.log(profileImage, 'This is the profile image');
             this.setState({
               profileImage: profileImage,
             });

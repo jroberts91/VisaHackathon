@@ -58,8 +58,6 @@ export default class OfferPage extends React.Component {
 
   showModal = (product) => {
     const { merchantName, offerTitle, promotionFromDateTime, promotionToDateTime } = product;
-    console.log(merchantName);
-    console.log(offerTitle);
     this.setState({
       visible: true,
       modalHeader: merchantName,
@@ -70,14 +68,12 @@ export default class OfferPage extends React.Component {
   };
 
   handleOk = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });
   };
 
   handleCancel = (e) => {
-    console.log(e);
     this.setState({
       visible: false,
     });
@@ -184,7 +180,6 @@ export default class OfferPage extends React.Component {
             >
               {offers.map((product, index) => {
                 const { offerTitle, merchantName } = product;
-                console.log(product);
                 const imgUrl = product.imageList[0] ? product.imageList[0].fileLocation : null;
                 return (
                   <StyledOfferCard onClick={() => this.showModal(product)}>

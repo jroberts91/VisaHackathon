@@ -72,7 +72,6 @@ export default class PaymentForm extends React.Component {
   getMerchantOffers = () => {
     API.get(`api/offers/visell/getByMerchant?merchantId=${this.props.merchantId}`)
       .then((res) => {
-        console.log(res.data.offers);
         this.setState({ offers: res.data.offers });
       })
       .catch((err) => console.error(err));
@@ -103,7 +102,6 @@ export default class PaymentForm extends React.Component {
       };
       API.post('api/payment/direct', data)
         .then((res) => {
-          console.log(res);
           if (res.data.success) {
             const { orderId } = res.data;
             // successful payment, direct user to order summary page
