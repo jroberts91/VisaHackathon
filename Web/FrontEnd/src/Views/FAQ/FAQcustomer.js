@@ -15,7 +15,7 @@ const StyledImage = styled.img`
   width: 70%;
   margin: 10%;
 `;
-export default class AddProduct extends React.Component {
+export default class CustomerQuestions extends React.Component {
   formRef = React.createRef();
 
   constructor(props) {
