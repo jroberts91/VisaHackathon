@@ -39,6 +39,7 @@ const CloseButton = styled.span`
   right: 3px;
   top: 3px;
   font-size: 38px;
+  color: #faa913;
 `;
 
 const DatePickGroup = styled.div`
@@ -335,6 +336,7 @@ export default class Dashboard extends React.Component {
             </StyledButton>
             {isChooseDate && (
               <DatePickGroup>
+                <CloseButton onClick={this.handleStartChooseDate}>&times;</CloseButton>
                 <DateRangePicker
                   ranges={[selectionRange]}
                   editableDateInputs={true}
