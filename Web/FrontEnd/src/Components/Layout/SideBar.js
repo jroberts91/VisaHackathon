@@ -56,6 +56,7 @@ export default class SideBar extends React.Component {
     const salesHistoryLink = `/history`;
     const myShopLink = `/${this.props.merchantId}`;
     const offersLink = `/offers`;
+    const myOffersLink = `/myoffers`;
     const merchantLocator = '/merchantLocator';
     const contactLink = '/contactUs';
 
@@ -67,11 +68,14 @@ export default class SideBar extends React.Component {
       if (currentPath === myShopLink) {
         return '2';
       }
-      if (currentPath === salesHistoryLink) {
+      if (currentPath === myShopLink) {
         return '3';
       }
-      if (currentPath === contactLink) {
+      if (currentPath === salesHistoryLink) {
         return '4';
+      }
+      if (currentPath === contactLink) {
+        return '5';
       }
     };
 
@@ -105,12 +109,17 @@ export default class SideBar extends React.Component {
             <Link to={myShopLink} />
           </StyledMenuItem>
 
-          <StyledMenuItem key="3" icon={<HistoryOutlined />}>
+          <StyledMenuItem key="3" icon={<TagOutlined />}>
+            Offers
+            <Link to={myOffersLink} />
+          </StyledMenuItem>
+
+          <StyledMenuItem key="4" icon={<HistoryOutlined />}>
             Sales History
             <Link to={salesHistoryLink} />
           </StyledMenuItem>
 
-          <StyledMenuItem key="4" icon={<MessageOutlined />}>
+          <StyledMenuItem key="5" icon={<MessageOutlined />}>
             Contact Us
             <Link to={contactLink} />
           </StyledMenuItem>
