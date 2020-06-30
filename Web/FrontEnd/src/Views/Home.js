@@ -13,6 +13,7 @@ import OrderSummary from './OrderSummary/OrderSummary';
 import AddProduct from './AddProduct/AddProduct';
 import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
+import MerchantOffers from './Offers/MerchantOffers';
 import MerchantLocator from './MerchantLocator/MerchantLocator';
 import CustomerQuestions from './FAQ/FAQcustomer';
 import MerchantQuestions from './FAQ/FAQmerchant';
@@ -87,6 +88,9 @@ export default class Home extends React.Component {
               <Route path="/" exact render={(props) => <Dashboard loggedInUserId={merchantId} {...props} />} />
             ) : (
               <Route path="/" exact component={HomeBody} />
+            )}
+            {isLoggedIn && (
+              <Route path="/myoffers" exact render={(props) => <MerchantOffers merchantId={merchantId} {...props} />} />
             )}
             {isLoggedIn && (
               <Route path="/history" exact render={(props) => <SalesHistory merchantId={merchantId} {...props} />} />

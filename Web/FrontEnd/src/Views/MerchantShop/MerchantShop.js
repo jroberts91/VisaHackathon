@@ -19,10 +19,6 @@ const columns = [
     title: 'Description',
     dataIndex: 'description',
   },
-  {
-    title: 'Code',
-    dataIndex: 'code',
-  },
 ];
 
 const AddButton = styled(Button)`
@@ -159,7 +155,7 @@ export default class MerchantShop extends React.Component {
             <Col key={1} lg={{ span: 12 }} md={{ span: 12 }} sm={{ span: 24 }} span={24}>
               <Popover content={content}>
                 <AddButton type="primary" style={{ float: 'right' }}>
-                  Merchant Offers
+                  Offers
                 </AddButton>
               </Popover>
             </Col>
