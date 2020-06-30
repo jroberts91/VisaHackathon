@@ -26,7 +26,6 @@ export default class MerchantOffers extends React.Component {
   getMerchantOffersFromApi = (merchantId) => {
     API.get(`api/offers/visell/getByMerchant?merchantId=${merchantId}`)
       .then((res) => {
-        console.log(res.data.offers);
         this.setState({ offers: res.data.offers });
       })
       .catch((err) => console.error(err));
@@ -43,14 +42,12 @@ export default class MerchantOffers extends React.Component {
 
   deleteOffer = () => {
     const { currentOfferId } = this.state;
-    console.log(currentOfferId);
     const body = {
       offerId: currentOfferId,
     };
     API.post('api/offers/visell/delete', body)
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data);
           this.setState({ showDeleteModal: false });
         }
       })

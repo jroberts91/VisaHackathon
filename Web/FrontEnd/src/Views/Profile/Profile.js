@@ -84,7 +84,7 @@ class LeftProfileSection extends React.Component {
 
 class RightProfileSection extends React.Component {
   render() {
-    const { name, description, email, address, phone, cardNumber, mode } = this.props;
+    const { name, description, email, address, phone, cardNumber, mode, binNo } = this.props;
     const {
       editedName,
       editedDescription,
@@ -92,11 +92,13 @@ class RightProfileSection extends React.Component {
       editedAddress,
       editedPhone,
       editedCardNumber,
+      editedBinNo,
       onChangeName,
       onChangeEmail,
       onChangeDescription,
       onChangeAddress,
       onChangeCardNumber,
+      onChangeBinNo,
       onChangePhoneNumber,
     } = this.props;
 
@@ -130,6 +132,10 @@ class RightProfileSection extends React.Component {
             {mode === 'view' ? cardNumber : <Input value={editedCardNumber} onChange={onChangeCardNumber} />}
           </Col>
         </Row>
+        <Row span={24} style={{ minHeight: '50px' }}>
+          <Col span={8}>Bin Number:</Col>
+          <Col span={16}>{mode === 'view' ? binNo : <Input value={editedBinNo} onChange={onChangeBinNo} />}</Col>
+        </Row>
       </Col>
     );
   }
@@ -147,6 +153,7 @@ export default class Profile extends React.Component {
       phone: '',
       address: '',
       cardNumber: '',
+      binNo: '',
       isMounted: false,
       mode: 'view',
       editedName: '',
@@ -154,6 +161,7 @@ export default class Profile extends React.Component {
       editedDescription: '',
       editedPhone: '',
       editedCardNumber: '',
+      editedBinNo: '',
       editedAddress: '',
       editedProfileImage: '',
       files: null,
@@ -164,7 +172,7 @@ export default class Profile extends React.Component {
     API.get(`api/merchant/get?id=${this.state.merchantId}`)
       .then((res) => {
         if (res.data.success) {
-          const { name, email, description, profileImage, address, phone, cardNumber } = res.data.merchant;
+          const { name, email, description, profileImage, address, phone, cardNumber, binNo } = res.data.merchant;
           this.setState({
             name: name,
             email: email,
@@ -173,6 +181,7 @@ export default class Profile extends React.Component {
             address: address,
             phone: phone,
             cardNumber: cardNumber,
+            binNo: binNo,
           });
 
           // initialize edited fields as the same value
@@ -184,6 +193,7 @@ export default class Profile extends React.Component {
             editedPhone: phone,
             editedCardNumber: cardNumber,
             editedProfileImage: profileImage,
+            editedBinNo: binNo,
           });
         } else {
           message.error({
@@ -207,6 +217,7 @@ export default class Profile extends React.Component {
       editedPhone,
       editedCardNumber,
       editedProfileImage,
+      editedBinNo,
       files,
     } = this.state;
 
@@ -217,6 +228,7 @@ export default class Profile extends React.Component {
       address: editedAddress,
       phone: editedPhone,
       cardNumber: editedCardNumber,
+      binNo: editedBinNo,
     };
 
     // submission of text fields
@@ -234,6 +246,7 @@ export default class Profile extends React.Component {
             phone: editedPhone,
             cardNumber: editedCardNumber,
             profileImage: editedProfileImage,
+            binNo: editedBinNo,
           });
         } else {
           message.error({ content: 'Error while trying to update profile', duration: 5 });
@@ -269,6 +282,7 @@ export default class Profile extends React.Component {
       profileImage,
       phone,
       cardNumber,
+      binNo,
       address,
       isMounted,
       mode,
@@ -281,6 +295,7 @@ export default class Profile extends React.Component {
       editedAddress,
       editedPhone,
       editedCardNumber,
+      editedBinNo,
       editedProfileImage,
     } = this.state;
     if (!isMounted) {
@@ -314,7 +329,7 @@ export default class Profile extends React.Component {
             <Radio value="edit">Edit</Radio>
           </Radio.Group>
         </ModeContainer>
-        <Row align="middle" style={{ marginTop: '15%' }}>
+        <Row align="middle" style={{ marginTop: '1%' }}>
           <Col lg={{ span: 12 }} span={24}>
             <LeftProfileSection
               mode={mode}
@@ -333,17 +348,20 @@ export default class Profile extends React.Component {
               address={address}
               cardNumber={cardNumber}
               phone={phone}
+              binNo={binNo}
               editedName={editedName}
               editedDescription={editedDescription}
               editedEmail={editedEmail}
               editedAddress={editedAddress}
               editedCardNumber={editedCardNumber}
               editedPhone={editedPhone}
+              editedBinNo={editedBinNo}
               onChangeName={(e) => this.setState({ editedName: e.target.value })}
               onChangeEmail={(e) => this.setState({ editedEmail: e.target.value })}
               onChangeAddress={(e) => this.setState({ editedAddress: e.target.value })}
               onChangeDescription={(e) => this.setState({ editedDescription: e.target.value })}
               onChangeCardNumber={(e) => this.setState({ editedCardNumber: e.target.value })}
+              onChangeBinNo={(e) => this.setState({ editedBinNo: e.target.value })}
               onChangePhoneNumber={(e) => this.setState({ editedPhone: e.target.value })}
               mode={mode}
             />
