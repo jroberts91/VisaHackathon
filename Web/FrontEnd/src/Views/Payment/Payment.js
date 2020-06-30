@@ -2,13 +2,34 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PaymentProductCard from '../../Components/Cards/PaymentProductCard';
 import PaymentForm from './PaymentForm';
-import { Row, Col, Layout, message, Typography } from 'antd';
+import { Row, Col, Layout, message, Typography, Popover, Table, Button } from 'antd';
 import queryString from 'query-string';
+import { defaultTheme } from '../../utils/theme';
 import API, { baseUrl } from '../../utils/baseUrl';
 import { ShopOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 const { Content } = Layout;
 const { Title } = Typography;
+const columns = [
+  {
+    title: 'Offer',
+    dataIndex: 'offerName',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Code',
+    dataIndex: 'code',
+  },
+];
+
+const AddButton = styled(Button)`
+  background: ${defaultTheme.colors.primary};
+  border-color: ${defaultTheme.colors.primary};
+  margin-bottom: 0;
+`;
 
 const ErrorMessageContainer = styled.div`
   position: absolute;
@@ -29,8 +50,11 @@ export default class Payment extends React.Component {
       product: null,
       merchant: null,
       qty: queries.qty,
+      offers: [],
     };
   }
+
+  getMerchantOffersFromApi = (merchantId) => {};
 
   componentDidMount = () => {
     API.get(`api/product/get?id=${this.state.productId}`)
@@ -51,11 +75,19 @@ export default class Payment extends React.Component {
         this.setState({ merchant: res.data.merchant });
       })
       .catch((err) => console.error(err));
+
+    API.get(`api/offers/visell/getByMerchant?merchantId=${this.state.merchantId}`)
+      .then((res) => {
+        this.setState({ offers: res.data.offers });
+      })
+      .catch((err) => console.error(err));
   };
 
   render() {
-    const { product, qty, merchantId, productId, merchant, isOwnerShop } = this.state;
+    const { product, qty, merchantId, productId, merchant, isOwnerShop, offers } = this.state;
     const { isLoggedIn } = this.props;
+    const content = <Table columns={columns} dataSource={offers} />;
+
     if (product == null || merchant == null) {
       // when product or merchant isn't populated yet
       return null;
@@ -79,21 +111,27 @@ export default class Payment extends React.Component {
 
     const totalPrice = (product.price * qty).toFixed(2);
     return (
-      <Content style={{ maxWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
+      <Content style={{ maxWidth: '1280px', minWidth: '1280px', margin: '0 auto', marginTop: '5vh' }}>
         <Row align="top" justify="space-between" style={{ margin: '0 0 50px 0' }}>
           <Title level={4} style={{ color: '#828282' }}>
             <Link to={'/'} style={{ color: '#828282' }}>
               <ShopOutlined /> {headerName}
             </Link>{' '}
-            /
+            /{' '}
             <Link to={`/${merchantId}/product/${productId}`} style={{ color: '#828282' }}>
               {product.name}
             </Link>{' '}
             / Payment
           </Title>
+
+          <Popover content={content}>
+            <AddButton type="primary" style={{ float: 'right' }}>
+              Offers
+            </AddButton>
+          </Popover>
         </Row>
         <Row align="middle">
-          <Col lg={{ span: 12 }} span={24}>
+          <Col lg={{ span: 10 }} span={24}>
             <PaymentProductCard
               imageUrl={`${baseUrl}${product.images[0]}`}
               qty={qty}
@@ -101,7 +139,7 @@ export default class Payment extends React.Component {
               title={product.name}
             />
           </Col>
-          <Col lg={{ span: 12 }} span={24}>
+          <Col lg={{ span: 14 }} span={24}>
             {/* TBC: shipping fee is not yet available in the backend, will set default as $2 */}
             <PaymentForm
               merchantId={merchantId}

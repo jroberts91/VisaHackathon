@@ -12,7 +12,7 @@ const { Title } = Typography;
 
 class ProductDisplay extends React.Component {
   render() {
-    const { images, name, price, rating, description, totalQty, soldQty } = this.props.product;
+    const { images, name, price, rating, description, totalQty, soldQty, deliveryDays } = this.props.product;
     const merchant = this.props.merchant;
     const paymentLink = this.props.paymentLink;
     const productId = this.props.productId;
@@ -36,6 +36,7 @@ class ProductDisplay extends React.Component {
               productId={productId}
               isOwnerShop={isOwnerShop}
               isLoggedIn={isLoggedIn}
+              deliveryDays={deliveryDays}
             />
           </Col>
         </Row>
