@@ -81,7 +81,8 @@ router.get('/list', async (req, res) => {
   axios(config)
     .then(function (response) {
       var data = response.data;
-      return res.json(minimizeAndReturnOfferResponse(data));
+      // return res.json(minimizeAndReturnOfferResponse(data));
+      return res.json(data);
     })
     .catch(function (error) {
       console.log(error);
