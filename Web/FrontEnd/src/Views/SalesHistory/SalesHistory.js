@@ -43,7 +43,6 @@ class SalesTable extends React.Component {
       orderId: orderId,
     };
     API.post('api/payment/refund', body).then((res) => {
-      console.log(res);
       this.setState({ isShowRefundConfirmation: false });
       toggleRefund();
     });
@@ -118,9 +117,6 @@ class SalesTable extends React.Component {
     let data = orders ? orders : [];
     let dataSource = [];
     for (let elm of data) {
-      if (elm.isRefunded) {
-        continue;
-      }
       if (!this.props.statusTab) {
         if (elm.isFulfilled === this.props.isFulfilled) {
           dataSource.push(elm);
@@ -232,6 +228,8 @@ class SalesTable extends React.Component {
             dataIndex="isRefunded"
             render={(text, record) => {
               return (
+                record.isRefunded ?
+                "Refunded" :
                 <Button
                   type="primary"
                   onClick={() => this.setState({ isShowRefundConfirmation: true, orderId: record._id })}
