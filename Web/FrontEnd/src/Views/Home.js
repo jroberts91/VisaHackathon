@@ -14,6 +14,8 @@ import AddProduct from './AddProduct/AddProduct';
 import Profile from './Profile/Profile';
 import OfferPage from './Offers/OfferPage';
 import MerchantLocator from './MerchantLocator/MerchantLocator';
+import CustomerQuestions from './FAQ/FAQcustomer';
+import MerchantQuestions from './FAQ/FAQmerchant';
 import ContactUs from './ContactUs/ContactUs';
 import API from '../utils/baseUrl';
 
@@ -99,6 +101,8 @@ export default class Home extends React.Component {
             {!isLoggedIn && <Route path="/offers" component={OfferPage} />}
             {!isLoggedIn && <Route path="/merchantLocator" component={MerchantLocator} />}
             {<Route path="/contactUs" component={ContactUs} />}
+            {!isLoggedIn && <Route path="/FAQ" component={CustomerQuestions} />}
+            {isLoggedIn && <Route path="/FAQ" component={MerchantQuestions} />}
             <Route
               path="/:merchantId/product/:productId"
               exact
