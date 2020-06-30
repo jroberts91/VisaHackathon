@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Row, Layout, Typography, Collapse } from 'antd';
+import { Row, Col, Layout, Typography, Collapse } from 'antd';
 import { QuestionCircleOutlined, CaretRightOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import { Link } from 'react-router-dom';
+import image from '../../images/FAQ.png';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -12,7 +13,6 @@ const { Panel } = Collapse;
 const StyledImage = styled.img`
   position: relative;
   width: 70%;
-  height: 50%;
   margin: 10%;
 `;
 
@@ -34,53 +34,60 @@ export default class AddProduct extends React.Component {
           </Row>
 
           <Row>
-            <Collapse accordion
-              defaultActiveKey={['1']}
-              bordered={false}
-              expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-              style={{ width: '100%' }}
-            >
-              <Panel header=" How do I promote my product? " key="1">
-                <p style={{ paddingLeft: 24 }}>
-                  {' '}
-                  You can promote your product through various means, such as by setting up a Facebook or Instagram
-                  account. You can visit
-                  <a href="https://www.forbes.com/sites/allbusiness/2018/03/27/10-expert-social-media-tips-to-help-your-small-business-succeed/#32c40b7f14a1">
-                    {' '}
-                    this
-                  </a>{' '}
-                  article by Forbes to help you get started on establishing a social media presence.{' '}
-                </p>
-              </Panel>
+            <Col lg={{ span: 8 }} span={24}>
+              <StyledImage src={image} />
+            </Col>
 
-              <Panel header="Where can I contact Visell for issues I have with the website?" key="2">
-                <p style={{ paddingLeft: 24 }}>
-                  You can send us your queries by contacting us
-                  <Link to={`/contactUs`}> here</Link>.
-                </p>
-              </Panel>
-
-              <Panel
-                header="I'm interested in Visa loyalty programs as a merchant, how I do get more information?  "
-                key="3"
+            <Col lg={{ span: 16 }} span={24}>
+              <Collapse
+                accordion
+                defaultActiveKey={['1']}
+                bordered={false}
+                expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+                style={{ width: '100%' }}
               >
-                <p style={{ paddingLeft: 24 }}>
-                  You can visit Visa's merchant partnership and loyalty programs
-                  <a href="https://www.visa.com.sg/run-your-business/commercial-solutions/solutions/merchant-marketing.html">
+                <Panel header=" How do I promote my product? " key="1">
+                  <p style={{ paddingLeft: 24 }}>
                     {' '}
-                    here
-                  </a>
-                  .
-                </p>
-              </Panel>
+                    You can promote your product through various means, such as by setting up a Facebook or Instagram
+                    account. You can visit
+                    <a href="https://www.forbes.com/sites/allbusiness/2018/03/27/10-expert-social-media-tips-to-help-your-small-business-succeed/#32c40b7f14a1">
+                      {' '}
+                      this
+                    </a>{' '}
+                    article by Forbes to help you get started on establishing a social media presence.{' '}
+                  </p>
+                </Panel>
 
-              <Panel header="How do I add offers to my product?" key="4">
-                <p style={{ paddingLeft: 24 }}>
-                  You can send us your offers by contacting us
-                  <Link to={`/contactUs`}> here</Link>. We would help you add them to your shop.
-                </p>
-              </Panel>
-            </Collapse>
+                <Panel header="Where can I contact Visell for issues I have with the website?" key="2">
+                  <p style={{ paddingLeft: 24 }}>
+                    You can send us your queries by contacting us
+                    <Link to={`/contactUs`}> here</Link>.
+                  </p>
+                </Panel>
+
+                <Panel
+                  header="I'm interested in Visa loyalty programs as a merchant, how I do get more information?  "
+                  key="3"
+                >
+                  <p style={{ paddingLeft: 24 }}>
+                    You can visit Visa's merchant partnership and loyalty programs
+                    <a href="https://www.visa.com.sg/run-your-business/commercial-solutions/solutions/merchant-marketing.html">
+                      {' '}
+                      here
+                    </a>
+                    .
+                  </p>
+                </Panel>
+
+                <Panel header="How do I add offers to my product?" key="4">
+                  <p style={{ paddingLeft: 24 }}>
+                    You can send us your offers by contacting us
+                    <Link to={`/contactUs`}> here</Link>. We would help you add them to your shop.
+                  </p>
+                </Panel>
+              </Collapse>
+            </Col>
           </Row>
         </div>
       </Content>
