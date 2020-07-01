@@ -133,7 +133,6 @@ export default class Dashboard extends React.Component {
     API.post('api/order/getAll', body)
       .then((res) => {
         if (res.data.success) {
-          console.log(res.data.orders);
           let orders = res.data.orders;
 
           let d = new Date(Date.now() - 864e5 * 13);
@@ -253,9 +252,6 @@ export default class Dashboard extends React.Component {
       let q = { name: key, value: value[0] };
       salesQuantityData.push(q);
     }
-
-    console.log(salesAmountData);
-    console.log(salesQuantityData);
 
     this.setState({
       sumSales: totalPrice,

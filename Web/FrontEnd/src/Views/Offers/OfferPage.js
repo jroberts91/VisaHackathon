@@ -85,7 +85,6 @@ export default class OfferPage extends React.Component {
   getVisellOffersFromApi = () => {
     API.get(`api/offers/visell/list`)
       .then((res) => {
-        console.log('This are the visell offers ', res.data.offers);
         this.setState({ visellOffers: res.data.offers });
       })
       .catch((err) => console.error(err));
@@ -95,7 +94,6 @@ export default class OfferPage extends React.Component {
     this.setState({ notLoaded: true });
     API.get(`api/offers/list?max=${10}`)
       .then((res) => {
-        console.log(res.data.Offers);
         this.setState({ notLoaded: false });
         this.setState({ offers: res.data.Offers });
       })
