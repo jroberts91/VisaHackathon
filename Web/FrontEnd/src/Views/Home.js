@@ -73,7 +73,7 @@ export default class Home extends React.Component {
     return (
       <Layout>
         <SideBar collapsed={collapsed} isLoggedIn={isLoggedIn} merchantId={merchantId} />
-        <Layout className="site-layout">
+        <Layout className="site-layout" style={{overflowY: 'hidden'}}>
           <TopBar
             toggleSideDrawer={toggleSideDrawer}
             collapsed={collapsed}
