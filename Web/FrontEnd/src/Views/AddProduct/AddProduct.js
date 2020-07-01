@@ -43,21 +43,15 @@ export default class AddProduct extends React.Component {
     const { imgUrls } = this.state;
 
     const handleUpload = (info) => {
-      formData.delete('files');
-      let counter = 0;
-      let imgUrls = [];
-      console.log(info);
-      for (var value of info.fileList) {
-        counter = counter + 1;
-        console.log(info);
-        if (counter <= 4) {
+      if (info.fileList.length <= 4) {
+        formData.delete('files');
+        for (var value of info.fileList) {
           formData.append('files', value.originFileObj);
-          imgUrls.push(value.name);
         }
+      } else {
+        info.fileList.slice(0, 4);
+        message.error({ content: 'You have more than 4 Images, only first 4 files will be uploaded.', duration: 5 });
       }
-      this.setState({
-        imgUrls: imgUrls,
-      });
     };
 
     const handleCreate = (values) => {
@@ -109,7 +103,7 @@ export default class AddProduct extends React.Component {
           <Row align="top">
             <Col lg={{ span: 12 }} span={24}>
               <Form.Item name={['pdt', 'images']} wrapperCol={{ span: 20 }}>
-                <Dragger multiple={true} onChange={handleUpload} showUploadList={false} beforeUpload={() => false}>
+                <Dragger multiple={true} onChange={handleUpload} beforeUpload={() => false}>
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                   </p>
@@ -117,9 +111,6 @@ export default class AddProduct extends React.Component {
                   <p className="ant-upload-hint">Maximum of 4 images only.</p>
                 </Dragger>
               </Form.Item>
-              {imgUrls.map((item) => {
-                return <div>{item}</div>;
-              })}
             </Col>
 
             <Col lg={{ span: 12 }} span={24}>
